@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -33,23 +34,328 @@ public class DeleteRecordsRequest implements IndexedRecord {
             .record("DeleteRecordsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("expressions").type().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("expressions").type().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private List<String> expressions;
+    private Map<String, String> options;
+    /**
+     * Constructs a DeleteRecordsRequest object with default parameters.
+     */
+    public DeleteRecordsRequest() {
+        tableName = "";
+        expressions = new ArrayList<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a DeleteRecordsRequest object with the specified parameters.
+     *
+     * @param tableName   Name of the table from which to delete records. The
+     *                    set must be a currently existing table and not a
+     *                    collection or a view.
+     * @param expressions A list of the actual predicates, one for each
+     *                    select; format should follow the guidelines provided
+     *                    <a href="../../../../../concepts/expressions.html"
+     *                    target="_top">here</a>. Specifying one or more
+     *                    {@code expressions} is mutually exclusive to
+     *                    specifying {@code record_id} in the {@code options}.
+     * @param options     Optional parameters.
+     *                    <ul>
+     *                            <li> {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
+     *                    GLOBAL_EXPRESSION}: An optional global expression to
+     *                    reduce the search space of the {@code expressions}.  The
+     *                    default value is ''.
+     *                            <li> {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
+     *                    RECORD_ID}: A record ID identifying a single record,
+     *                    obtained at the time of {@link
+     *                    com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
+     *                    insertion of the record} or by calling {@link
+     *                    com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
+     *                    with the *return_record_ids* option. This option cannot
+     *                    be used to delete records from <a
+     *                    href="../../../../../concepts/tables.html#replication"
+     *                    target="_top">replicated</a> tables.
+     *                            <li> {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
+     *                    DELETE_ALL_RECORDS}: If set to {@code true}, all records
+     *                    in the table will be deleted. If set to {@code false},
+     *                    then the option is effectively ignored.
+     *                    Supported values:
+     *                    <ul>
+     *                            <li> {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE
+     *                    TRUE}
+     *                            <li> {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
+     *                    FALSE}
+     *                    </ul>
+     *                    The default value is {@link
+     *                    com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
+     *                    FALSE}.
+     *                    </ul>
+     *                    The default value is an empty {@link Map}.
+     */
+    public DeleteRecordsRequest(String tableName, List<String> expressions, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table from which to delete records. The set must be
+     * a currently existing table and not a collection or a view.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table from which to delete records. The
+     *                  set must be a currently existing table and not a
+     *                  collection or a view.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public DeleteRecordsRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return A list of the actual predicates, one for each select; format
+     * should follow the guidelines provided <a
+     * href="../../../../../concepts/expressions.html"
+     * target="_top">here</a>. Specifying one or more {@code
+     * expressions} is mutually exclusive to specifying {@code
+     * record_id} in the {@code options}.
+     */
+    public List<String> getExpressions() {
+        return expressions;
+    }
+
+    /**
+     * @param expressions A list of the actual predicates, one for each
+     *                    select; format should follow the guidelines provided
+     *                    <a href="../../../../../concepts/expressions.html"
+     *                    target="_top">here</a>. Specifying one or more
+     *                    {@code expressions} is mutually exclusive to
+     *                    specifying {@code record_id} in the {@code options}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public DeleteRecordsRequest setExpressions(List<String> expressions) {
+        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
+     * GLOBAL_EXPRESSION}: An optional global expression to reduce the
+     * search space of the {@code expressions}.  The default value is
+     * ''.
+     *         <li> {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
+     * RECORD_ID}: A record ID identifying a single record, obtained at
+     * the time of {@link
+     * com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
+     * insertion of the record} or by calling {@link
+     * com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
+     * with the *return_record_ids* option. This option cannot be used
+     * to delete records from <a
+     * href="../../../../../concepts/tables.html#replication"
+     * target="_top">replicated</a> tables.
+     *         <li> {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
+     * DELETE_ALL_RECORDS}: If set to {@code true}, all records in the
+     * table will be deleted. If set to {@code false}, then the option
+     * is effectively ignored.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE FALSE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
+     *                GLOBAL_EXPRESSION}: An optional global expression to
+     *                reduce the search space of the {@code expressions}.  The
+     *                default value is ''.
+     *                        <li> {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
+     *                RECORD_ID}: A record ID identifying a single record,
+     *                obtained at the time of {@link
+     *                com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
+     *                insertion of the record} or by calling {@link
+     *                com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
+     *                with the *return_record_ids* option. This option cannot
+     *                be used to delete records from <a
+     *                href="../../../../../concepts/tables.html#replication"
+     *                target="_top">replicated</a> tables.
+     *                        <li> {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
+     *                DELETE_ALL_RECORDS}: If set to {@code true}, all records
+     *                in the table will be deleted. If set to {@code false},
+     *                then the option is effectively ignored.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public DeleteRecordsRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.expressions;
+
+            case 2:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.expressions = (List<String>) value;
+                break;
+
+            case 2:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        DeleteRecordsRequest that = (DeleteRecordsRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.expressions.equals(that.expressions)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("expressions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.expressions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.expressions.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -123,341 +429,8 @@ public class DeleteRecordsRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private List<String> expressions;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a DeleteRecordsRequest object with default parameters.
-     */
-    public DeleteRecordsRequest() {
-        tableName = "";
-        expressions = new ArrayList<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a DeleteRecordsRequest object with the specified parameters.
-     * 
-     * @param tableName  Name of the table from which to delete records. The
-     *                   set must be a currently existing table and not a
-     *                   collection or a view.
-     * @param expressions  A list of the actual predicates, one for each
-     *                     select; format should follow the guidelines provided
-     *                     <a href="../../../../../concepts/expressions.html"
-     *                     target="_top">here</a>. Specifying one or more
-     *                     {@code expressions} is mutually exclusive to
-     *                     specifying {@code record_id} in the {@code options}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
-     *                 GLOBAL_EXPRESSION}: An optional global expression to
-     *                 reduce the search space of the {@code expressions}.  The
-     *                 default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
-     *                 RECORD_ID}: A record ID identifying a single record,
-     *                 obtained at the time of {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
-     *                 insertion of the record} or by calling {@link
-     *                 com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
-     *                 with the *return_record_ids* option. This option cannot
-     *                 be used to delete records from <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a> tables.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
-     *                 DELETE_ALL_RECORDS}: If set to {@code true}, all records
-     *                 in the table will be deleted. If set to {@code false},
-     *                 then the option is effectively ignored.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public DeleteRecordsRequest(String tableName, List<String> expressions, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table from which to delete records. The set must be
-     *         a currently existing table and not a collection or a view.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table from which to delete records. The
-     *                   set must be a currently existing table and not a
-     *                   collection or a view.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public DeleteRecordsRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return A list of the actual predicates, one for each select; format
-     *         should follow the guidelines provided <a
-     *         href="../../../../../concepts/expressions.html"
-     *         target="_top">here</a>. Specifying one or more {@code
-     *         expressions} is mutually exclusive to specifying {@code
-     *         record_id} in the {@code options}.
-     * 
-     */
-    public List<String> getExpressions() {
-        return expressions;
-    }
-
-    /**
-     * 
-     * @param expressions  A list of the actual predicates, one for each
-     *                     select; format should follow the guidelines provided
-     *                     <a href="../../../../../concepts/expressions.html"
-     *                     target="_top">here</a>. Specifying one or more
-     *                     {@code expressions} is mutually exclusive to
-     *                     specifying {@code record_id} in the {@code options}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public DeleteRecordsRequest setExpressions(List<String> expressions) {
-        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
-     *         GLOBAL_EXPRESSION}: An optional global expression to reduce the
-     *         search space of the {@code expressions}.  The default value is
-     *         ''.
-     *                 <li> {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
-     *         RECORD_ID}: A record ID identifying a single record, obtained at
-     *         the time of {@link
-     *         com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
-     *         insertion of the record} or by calling {@link
-     *         com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
-     *         with the *return_record_ids* option. This option cannot be used
-     *         to delete records from <a
-     *         href="../../../../../concepts/tables.html#replication"
-     *         target="_top">replicated</a> tables.
-     *                 <li> {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
-     *         DELETE_ALL_RECORDS}: If set to {@code true}, all records in the
-     *         table will be deleted. If set to {@code false}, then the option
-     *         is effectively ignored.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE FALSE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#GLOBAL_EXPRESSION
-     *                 GLOBAL_EXPRESSION}: An optional global expression to
-     *                 reduce the search space of the {@code expressions}.  The
-     *                 default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#RECORD_ID
-     *                 RECORD_ID}: A record ID identifying a single record,
-     *                 obtained at the time of {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)
-     *                 insertion of the record} or by calling {@link
-     *                 com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}
-     *                 with the *return_record_ids* option. This option cannot
-     *                 be used to delete records from <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a> tables.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#DELETE_ALL_RECORDS
-     *                 DELETE_ALL_RECORDS}: If set to {@code true}, all records
-     *                 in the table will be deleted. If set to {@code false},
-     *                 then the option is effectively ignored.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.DeleteRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public DeleteRecordsRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.expressions;
-
-            case 2:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.expressions = (List<String>)value;
-                break;
-
-            case 2:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        DeleteRecordsRequest that = (DeleteRecordsRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.expressions.equals( that.expressions )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "expressions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.expressions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.expressions.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

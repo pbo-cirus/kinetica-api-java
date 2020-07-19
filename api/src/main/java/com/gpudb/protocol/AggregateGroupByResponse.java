@@ -7,11 +7,12 @@ package com.gpudb.protocol;
 
 import com.gpudb.Record;
 import com.gpudb.Type;
+import org.apache.avro.generic.GenericData;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.avro.generic.GenericData;
 
 
 /**
@@ -33,20 +34,15 @@ public class AggregateGroupByResponse {
     }
 
     /**
-     * 
      * @return Avro binary encoded response.
-     * 
      */
     public List<Record> getData() {
         return data;
     }
 
     /**
-     * 
-     * @param data  Avro binary encoded response.
-     * 
+     * @param data Avro binary encoded response.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateGroupByResponse setData(List<Record> data) {
         this.data = (data == null) ? new ArrayList<Record>() : data;
@@ -54,20 +50,15 @@ public class AggregateGroupByResponse {
     }
 
     /**
-     * 
      * @return Total/Filtered number of records.
-     * 
      */
     public long getTotalNumberOfRecords() {
         return totalNumberOfRecords;
     }
 
     /**
-     * 
-     * @param totalNumberOfRecords  Total/Filtered number of records.
-     * 
+     * @param totalNumberOfRecords Total/Filtered number of records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateGroupByResponse setTotalNumberOfRecords(long totalNumberOfRecords) {
         this.totalNumberOfRecords = totalNumberOfRecords;
@@ -75,20 +66,15 @@ public class AggregateGroupByResponse {
     }
 
     /**
-     * 
      * @return Too many records. Returned a partial set.
-     * 
      */
     public boolean getHasMoreRecords() {
         return hasMoreRecords;
     }
 
     /**
-     * 
-     * @param hasMoreRecords  Too many records. Returned a partial set.
-     * 
+     * @param hasMoreRecords Too many records. Returned a partial set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateGroupByResponse setHasMoreRecords(boolean hasMoreRecords) {
         this.hasMoreRecords = hasMoreRecords;
@@ -96,20 +82,15 @@ public class AggregateGroupByResponse {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateGroupByResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -117,71 +98,67 @@ public class AggregateGroupByResponse {
     }
 
     /**
-     * 
      * @return The {@link Type} object containing the type of the dynamically
-     *         generated data.
-     * 
+     * generated data.
      */
     public Type getDataType() {
         return dataType;
     }
 
     /**
-     * 
-     * @param dataType  The {@link Type} object containing the type of the
-     *                  dynamically generated data.
-     * 
+     * @param dataType The {@link Type} object containing the type of the
+     *                 dynamically generated data.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateGroupByResponse setDataType(Type dataType) {
         this.dataType = dataType;
         return this;
     }
+
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AggregateGroupByResponse that = (AggregateGroupByResponse)obj;
+        AggregateGroupByResponse that = (AggregateGroupByResponse) obj;
 
-        return ( this.data.equals( that.data )
-                 && ( this.totalNumberOfRecords == that.totalNumberOfRecords )
-                 && ( this.hasMoreRecords == that.hasMoreRecords )
-                 && this.info.equals( that.info )
-                 && this.dataType.equals( that.dataType ) );
+        return (this.data.equals(that.data)
+                && (this.totalNumberOfRecords == that.totalNumberOfRecords)
+                && (this.hasMoreRecords == that.hasMoreRecords)
+                && this.info.equals(that.info)
+                && this.dataType.equals(that.dataType));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "data" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.data ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "totalNumberOfRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.totalNumberOfRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "hasMoreRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.hasMoreRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "dataType" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.dataType ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("data"));
+        builder.append(": ");
+        builder.append(gd.toString(this.data));
+        builder.append(", ");
+        builder.append(gd.toString("totalNumberOfRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.totalNumberOfRecords));
+        builder.append(", ");
+        builder.append(gd.toString("hasMoreRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.hasMoreRecords));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append(", ");
+        builder.append(gd.toString("dataType"));
+        builder.append(": ");
+        builder.append(gd.toString(this.dataType));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -190,8 +167,8 @@ public class AggregateGroupByResponse {
     public int hashCode() {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.data.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.totalNumberOfRecords).hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.hasMoreRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.totalNumberOfRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.hasMoreRecords).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         hashCode = (31 * hashCode) + this.dataType.hashCode();
         return hashCode;

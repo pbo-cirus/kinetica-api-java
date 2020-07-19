@@ -1,15 +1,10 @@
 package com.gpudb;
 
-import java.nio.ByteBuffer;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
+
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * Abstract class that provides default implementations of most methods of
@@ -17,6 +12,164 @@ import org.apache.avro.generic.GenericData;
  * {@link #getType()}, {@link #get(int)}, and {@link #put(int, Object)} methods.
  */
 public abstract class RecordBase implements Record {
+    @Override
+    public Schema getSchema() {
+        return getType().getSchema();
+    }
+
+    @Override
+    public Object get(String name) {
+        int index = getType().getColumnIndex(name);
+
+        if (index == -1) {
+            return null;
+        }
+
+        return get(index);
+    }
+
+    @Override
+    public ByteBuffer getBytes(int index) {
+        return (ByteBuffer) get(index);
+    }
+
+    @Override
+    public ByteBuffer getBytes(String name) {
+        return (ByteBuffer) get(name);
+    }
+
+    @Override
+    public Double getDouble(int index) {
+        return (Double) get(index);
+    }
+
+    @Override
+    public Double getDouble(String name) {
+        return (Double) get(name);
+    }
+
+    @Override
+    public Float getFloat(int index) {
+        return (Float) get(index);
+    }
+
+    @Override
+    public Float getFloat(String name) {
+        return (Float) get(name);
+    }
+
+    @Override
+    public Integer getInt(int index) {
+        return (Integer) get(index);
+    }
+
+    @Override
+    public Integer getInt(String name) {
+        return (Integer) get(name);
+    }
+
+    @Override
+    public Long getLong(int index) {
+        return (Long) get(index);
+    }
+
+    @Override
+    public Long getLong(String name) {
+        return (Long) get(name);
+    }
+
+    @Override
+    public String getString(int index) {
+        return (String) get(index);
+    }
+
+    @Override
+    public String getString(String name) {
+        return (String) get(name);
+    }
+
+    @Override
+    public void put(String name, Object value) {
+        int index = getType().getColumnIndex(name);
+
+        if (index == -1) {
+            throw new IllegalArgumentException("Field " + name + " does not exist.");
+        }
+
+        put(index, value);
+    }
+
+    @Override
+    public Map<String, Object> getDataMap() {
+        return new RecordMap();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        RecordBase that = (RecordBase) obj;
+
+        if (!that.getType().equals(this.getType())) {
+            return false;
+        }
+
+        int columnCount = this.getType().getColumnCount();
+
+        for (int i = 0; i < columnCount; i++) {
+            if (!Objects.equals(that.get(i), this.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        int columnCount = getType().getColumnCount();
+
+        for (int i = 0; i < columnCount; i++) {
+            hashCode = 31 * hashCode;
+            Object value = get(i);
+
+            if (value != null) {
+                hashCode += value.hashCode();
+            }
+        }
+
+        return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        Type type = getType();
+        int columnCount = type.getColumnCount();
+
+        for (int i = 0; i < columnCount; i++) {
+            if (i > 0) {
+                builder.append(",");
+            }
+
+            builder.append(gd.toString(type.getColumn(i).getName()));
+            builder.append(":");
+            builder.append(gd.toString(get(i)));
+        }
+
+        builder.append("}");
+        return builder.toString();
+    }
+
     private final class RecordEntry implements Map.Entry<String, Object> {
         private final int index;
 
@@ -30,7 +183,7 @@ public abstract class RecordBase implements Record {
                 return false;
             }
 
-            Map.Entry<?, ?> e = (Map.Entry)o;
+            Map.Entry<?, ?> e = (Map.Entry) o;
 
             Object k1 = getKey();
             Object k2 = e.getKey();
@@ -161,7 +314,7 @@ public abstract class RecordBase implements Record {
                 throw new ClassCastException("Key must be a string.");
             }
 
-            return RecordBase.this.getType().getColumn((String)key) != null;
+            return RecordBase.this.getType().getColumn((String) key) != null;
         }
 
         @Override
@@ -179,7 +332,7 @@ public abstract class RecordBase implements Record {
                 throw new ClassCastException("Key must be a string.");
             }
 
-            int columnIndex = RecordBase.this.getType().getColumnIndex((String)key);
+            int columnIndex = RecordBase.this.getType().getColumnIndex((String) key);
 
             if (columnIndex == -1) {
                 return null;
@@ -224,175 +377,5 @@ public abstract class RecordBase implements Record {
         public String toString() {
             return RecordBase.this.toString();
         }
-    }
-
-    @Override
-    public Schema getSchema() {
-        return getType().getSchema();
-    }
-
-    @Override
-    public Object get(String name) {
-        int index = getType().getColumnIndex(name);
-
-        if (index == -1) {
-            return null;
-        }
-
-        return get(index);
-    }
-
-    @Override
-    public ByteBuffer getBytes(int index)
-    {
-        return (ByteBuffer)get(index);
-    }
-
-    @Override
-    public ByteBuffer getBytes(String name)
-    {
-        return (ByteBuffer)get(name);
-    }
-
-    @Override
-    public Double getDouble(int index)
-    {
-        return (Double)get(index);
-    }
-
-    @Override
-    public Double getDouble(String name)
-    {
-        return (Double)get(name);
-    }
-
-    @Override
-    public Float getFloat(int index)
-    {
-        return (Float)get(index);
-    }
-
-    @Override
-    public Float getFloat(String name)
-    {
-        return (Float)get(name);
-    }
-
-    @Override
-    public Integer getInt(int index)
-    {
-        return (Integer)get(index);
-    }
-
-    @Override
-    public Integer getInt(String name)
-    {
-        return (Integer)get(name);
-    }
-
-    @Override
-    public Long getLong(int index)
-    {
-        return (Long)get(index);
-    }
-
-    @Override
-    public Long getLong(String name)
-    {
-        return (Long)get(name);
-    }
-
-    @Override
-    public String getString(int index)
-    {
-        return (String)get(index);
-    }
-
-    @Override
-    public String getString(String name)
-    {
-        return (String)get(name);
-    }
-
-    @Override
-    public void put(String name, Object value) {
-        int index = getType().getColumnIndex(name);
-
-        if (index == -1) {
-            throw new IllegalArgumentException("Field " + name + " does not exist.");
-        }
-
-        put(index, value);
-    }
-
-    @Override
-    public Map<String, Object> getDataMap() {
-        return new RecordMap();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-
-        RecordBase that = (RecordBase)obj;
-
-        if (!that.getType().equals(this.getType())) {
-            return false;
-        }
-
-        int columnCount = this.getType().getColumnCount();
-
-        for (int i = 0; i < columnCount; i++) {
-            if (!Objects.equals(that.get(i), this.get(i))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        int columnCount = getType().getColumnCount();
-
-        for (int i = 0; i < columnCount; i++) {
-            hashCode = 31 * hashCode;
-            Object value = get(i);
-
-            if (value != null) {
-                hashCode += value.hashCode();
-            }
-        }
-
-        return hashCode;
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append("{");
-        Type type = getType();
-        int columnCount = type.getColumnCount();
-
-        for (int i = 0; i < columnCount; i++) {
-            if (i > 0) {
-                builder.append(",");
-            }
-
-            builder.append(gd.toString(type.getColumn(i).getName()));
-            builder.append(":");
-            builder.append(gd.toString(get(i)));
-        }
-
-        builder.append("}");
-        return builder.toString();
     }
 }

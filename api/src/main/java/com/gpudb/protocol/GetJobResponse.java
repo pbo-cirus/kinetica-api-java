@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,30 +23,494 @@ public class GetJobResponse implements IndexedRecord {
             .record("GetJobResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("endpoint").type().stringType().noDefault()
-                .name("jobStatus").type().stringType().noDefault()
-                .name("running").type().booleanType().noDefault()
-                .name("progress").type().intType().noDefault()
-                .name("successful").type().booleanType().noDefault()
-                .name("responseEncoding").type().stringType().noDefault()
-                .name("jobResponse").type().bytesType().noDefault()
-                .name("jobResponseStr").type().stringType().noDefault()
-                .name("statusMap").type().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("endpoint").type().stringType().noDefault()
+            .name("jobStatus").type().stringType().noDefault()
+            .name("running").type().booleanType().noDefault()
+            .name("progress").type().intType().noDefault()
+            .name("successful").type().booleanType().noDefault()
+            .name("responseEncoding").type().stringType().noDefault()
+            .name("jobResponse").type().bytesType().noDefault()
+            .name("jobResponseStr").type().stringType().noDefault()
+            .name("statusMap").type().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String endpoint;
+    private String jobStatus;
+    private boolean running;
+    private int progress;
+    private boolean successful;
+    private String responseEncoding;
+    private ByteBuffer jobResponse;
+    private String jobResponseStr;
+    private Map<String, String> statusMap;
+    private Map<String, String> info;
+    /**
+     * Constructs a GetJobResponse object with default parameters.
+     */
+    public GetJobResponse() {
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return The endpoint which is being executed asynchronously.  E.g.
+     * '/alter/table'.
+     */
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    /**
+     * @param endpoint The endpoint which is being executed asynchronously.
+     *                 E.g. '/alter/table'.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setEndpoint(String endpoint) {
+        this.endpoint = (endpoint == null) ? "" : endpoint;
+        return this;
+    }
+
+    /**
+     * @return Status of the submitted job.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.JobStatus#RUNNING RUNNING}:
+     * The job is currently executing.
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.JobStatus#DONE DONE}: The job
+     * execution has successfully completed and the response is
+     * included in the {@code jobResponse} or {@code jobResponseStr}
+     * field
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.JobStatus#ERROR ERROR}: The
+     * job was attempted, but an error was encountered.  The {@code
+     * statusMap} contains the details of the error in error_message
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.JobStatus#CANCELLED
+     * CANCELLED}: Job cancellation was requested while the execution
+     * was in progress.
+     * </ul>
+     */
+    public String getJobStatus() {
+        return jobStatus;
+    }
+
+    /**
+     * @param jobStatus Status of the submitted job.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.GetJobResponse.JobStatus#RUNNING
+     *                  RUNNING}: The job is currently executing.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.GetJobResponse.JobStatus#DONE
+     *                  DONE}: The job execution has successfully completed
+     *                  and the response is included in the {@code
+     *                  jobResponse} or {@code jobResponseStr} field
+     *                          <li> {@link
+     *                  com.gpudb.protocol.GetJobResponse.JobStatus#ERROR
+     *                  ERROR}: The job was attempted, but an error was
+     *                  encountered.  The {@code statusMap} contains the
+     *                  details of the error in error_message
+     *                          <li> {@link
+     *                  com.gpudb.protocol.GetJobResponse.JobStatus#CANCELLED
+     *                  CANCELLED}: Job cancellation was requested while the
+     *                  execution was in progress.
+     *                  </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setJobStatus(String jobStatus) {
+        this.jobStatus = (jobStatus == null) ? "" : jobStatus;
+        return this;
+    }
+
+    /**
+     * @return True if the end point is still executing.
+     */
+    public boolean getRunning() {
+        return running;
+    }
+
+    /**
+     * @param running True if the end point is still executing.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setRunning(boolean running) {
+        this.running = running;
+        return this;
+    }
+
+    /**
+     * @return Approximate percentage of the job completed.
+     */
+    public int getProgress() {
+        return progress;
+    }
+
+    /**
+     * @param progress Approximate percentage of the job completed.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setProgress(int progress) {
+        this.progress = progress;
+        return this;
+    }
+
+    /**
+     * @return True if the job execution completed and no errors were
+     * encountered.
+     */
+    public boolean getSuccessful() {
+        return successful;
+    }
+
+    /**
+     * @param successful True if the job execution completed and no errors
+     *                   were encountered.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setSuccessful(boolean successful) {
+        this.successful = successful;
+        return this;
+    }
+
+    /**
+     * @return The encoding of the job result (contained in {@code jobResponse}
+     * or {@code jobResponseStr}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.ResponseEncoding#BINARY
+     * BINARY}: The job result is binary-encoded.  It is contained in
+     * {@code jobResponse}.
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.ResponseEncoding#JSON JSON}:
+     * The job result is json-encoded.  It is contained in {@code
+     * jobResponseStr}.
+     * </ul>
+     */
+    public String getResponseEncoding() {
+        return responseEncoding;
+    }
+
+    /**
+     * @param responseEncoding The encoding of the job result (contained in
+     *                         {@code jobResponse} or {@code jobResponseStr}.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.GetJobResponse.ResponseEncoding#BINARY
+     *                         BINARY}: The job result is binary-encoded.  It
+     *                         is contained in {@code jobResponse}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.GetJobResponse.ResponseEncoding#JSON
+     *                         JSON}: The job result is json-encoded.  It is
+     *                         contained in {@code jobResponseStr}.
+     *                         </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setResponseEncoding(String responseEncoding) {
+        this.responseEncoding = (responseEncoding == null) ? "" : responseEncoding;
+        return this;
+    }
+
+    /**
+     * @return The binary-encoded response of the job.  This field is populated
+     * only when the job has completed and {@code responseEncoding} is
+     * {@code binary}
+     */
+    public ByteBuffer getJobResponse() {
+        return jobResponse;
+    }
+
+    /**
+     * @param jobResponse The binary-encoded response of the job.  This field
+     *                    is populated only when the job has completed and
+     *                    {@code responseEncoding} is {@code binary}
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setJobResponse(ByteBuffer jobResponse) {
+        this.jobResponse = (jobResponse == null) ? ByteBuffer.wrap(new byte[0]) : jobResponse;
+        return this;
+    }
+
+    /**
+     * @return The json-encoded response of the job.  This field is populated
+     * only when the job has completed and {@code responseEncoding} is
+     * {@code json}
+     */
+    public String getJobResponseStr() {
+        return jobResponseStr;
+    }
+
+    /**
+     * @param jobResponseStr The json-encoded response of the job.  This field
+     *                       is populated only when the job has completed and
+     *                       {@code responseEncoding} is {@code json}
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setJobResponseStr(String jobResponseStr) {
+        this.jobResponseStr = (jobResponseStr == null) ? "" : jobResponseStr;
+        return this;
+    }
+
+    /**
+     * @return Map of various status strings for the executed job.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.GetJobResponse.StatusMap#ERROR_MESSAGE
+     * ERROR_MESSAGE}: Explains what error occurred while running the
+     * job asynchronously.  This entry only exists when the job status
+     * is {@code ERROR}.
+     * </ul>
+     */
+    public Map<String, String> getStatusMap() {
+        return statusMap;
+    }
+
+    /**
+     * @param statusMap Map of various status strings for the executed job.
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.GetJobResponse.StatusMap#ERROR_MESSAGE
+     *                  ERROR_MESSAGE}: Explains what error occurred while
+     *                  running the job asynchronously.  This entry only
+     *                  exists when the job status is {@code ERROR}.
+     *                  </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setStatusMap(Map<String, String> statusMap) {
+        this.statusMap = (statusMap == null) ? new LinkedHashMap<String, String>() : statusMap;
+        return this;
+    }
+
+    /**
+     * @return Additional information.
+     */
+    public Map<String, String> getInfo() {
+        return info;
+    }
+
+    /**
+     * @param info Additional information.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public GetJobResponse setInfo(Map<String, String> info) {
+        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.endpoint;
+
+            case 1:
+                return this.jobStatus;
+
+            case 2:
+                return this.running;
+
+            case 3:
+                return this.progress;
+
+            case 4:
+                return this.successful;
+
+            case 5:
+                return this.responseEncoding;
+
+            case 6:
+                return this.jobResponse;
+
+            case 7:
+                return this.jobResponseStr;
+
+            case 8:
+                return this.statusMap;
+
+            case 9:
+                return this.info;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.endpoint = (String) value;
+                break;
+
+            case 1:
+                this.jobStatus = (String) value;
+                break;
+
+            case 2:
+                this.running = (Boolean) value;
+                break;
+
+            case 3:
+                this.progress = (Integer) value;
+                break;
+
+            case 4:
+                this.successful = (Boolean) value;
+                break;
+
+            case 5:
+                this.responseEncoding = (String) value;
+                break;
+
+            case 6:
+                this.jobResponse = (ByteBuffer) value;
+                break;
+
+            case 7:
+                this.jobResponseStr = (String) value;
+                break;
+
+            case 8:
+                this.statusMap = (Map<String, String>) value;
+                break;
+
+            case 9:
+                this.info = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        GetJobResponse that = (GetJobResponse) obj;
+
+        return (this.endpoint.equals(that.endpoint)
+                && this.jobStatus.equals(that.jobStatus)
+                && (this.running == that.running)
+                && (this.progress == that.progress)
+                && (this.successful == that.successful)
+                && this.responseEncoding.equals(that.responseEncoding)
+                && this.jobResponse.equals(that.jobResponse)
+                && this.jobResponseStr.equals(that.jobResponseStr)
+                && this.statusMap.equals(that.statusMap)
+                && this.info.equals(that.info));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("endpoint"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endpoint));
+        builder.append(", ");
+        builder.append(gd.toString("jobStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobStatus));
+        builder.append(", ");
+        builder.append(gd.toString("running"));
+        builder.append(": ");
+        builder.append(gd.toString(this.running));
+        builder.append(", ");
+        builder.append(gd.toString("progress"));
+        builder.append(": ");
+        builder.append(gd.toString(this.progress));
+        builder.append(", ");
+        builder.append(gd.toString("successful"));
+        builder.append(": ");
+        builder.append(gd.toString(this.successful));
+        builder.append(", ");
+        builder.append(gd.toString("responseEncoding"));
+        builder.append(": ");
+        builder.append(gd.toString(this.responseEncoding));
+        builder.append(", ");
+        builder.append(gd.toString("jobResponse"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobResponse));
+        builder.append(", ");
+        builder.append(gd.toString("jobResponseStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobResponseStr));
+        builder.append(", ");
+        builder.append(gd.toString("statusMap"));
+        builder.append(": ");
+        builder.append(gd.toString(this.statusMap));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.endpoint.hashCode();
+        hashCode = (31 * hashCode) + this.jobStatus.hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.running).hashCode();
+        hashCode = (31 * hashCode) + this.progress;
+        hashCode = (31 * hashCode) + ((Boolean) this.successful).hashCode();
+        hashCode = (31 * hashCode) + this.responseEncoding.hashCode();
+        hashCode = (31 * hashCode) + this.jobResponse.hashCode();
+        hashCode = (31 * hashCode) + this.jobResponseStr.hashCode();
+        hashCode = (31 * hashCode) + this.statusMap.hashCode();
+        hashCode = (31 * hashCode) + this.info.hashCode();
+        return hashCode;
+    }
 
     /**
      * Status of the submitted job.
@@ -89,9 +554,9 @@ public class GetJobResponse implements IndexedRecord {
          */
         public static final String CANCELLED = "CANCELLED";
 
-        private JobStatus() {  }
+        private JobStatus() {
+        }
     }
-
 
     /**
      * The encoding of the job result (contained in {@code jobResponse} or
@@ -121,9 +586,9 @@ public class GetJobResponse implements IndexedRecord {
          */
         public static final String JSON = "json";
 
-        private ResponseEncoding() {  }
+        private ResponseEncoding() {
+        }
     }
-
 
     /**
      * Map of various status strings for the executed job.
@@ -144,533 +609,8 @@ public class GetJobResponse implements IndexedRecord {
          */
         public static final String ERROR_MESSAGE = "error_message";
 
-        private StatusMap() {  }
-    }
-
-    private String endpoint;
-    private String jobStatus;
-    private boolean running;
-    private int progress;
-    private boolean successful;
-    private String responseEncoding;
-    private ByteBuffer jobResponse;
-    private String jobResponseStr;
-    private Map<String, String> statusMap;
-    private Map<String, String> info;
-
-
-    /**
-     * Constructs a GetJobResponse object with default parameters.
-     */
-    public GetJobResponse() {
-    }
-
-    /**
-     * 
-     * @return The endpoint which is being executed asynchronously.  E.g.
-     *         '/alter/table'.
-     * 
-     */
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    /**
-     * 
-     * @param endpoint  The endpoint which is being executed asynchronously.
-     *                  E.g. '/alter/table'.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setEndpoint(String endpoint) {
-        this.endpoint = (endpoint == null) ? "" : endpoint;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Status of the submitted job.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.JobStatus#RUNNING RUNNING}:
-     *         The job is currently executing.
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.JobStatus#DONE DONE}: The job
-     *         execution has successfully completed and the response is
-     *         included in the {@code jobResponse} or {@code jobResponseStr}
-     *         field
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.JobStatus#ERROR ERROR}: The
-     *         job was attempted, but an error was encountered.  The {@code
-     *         statusMap} contains the details of the error in error_message
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.JobStatus#CANCELLED
-     *         CANCELLED}: Job cancellation was requested while the execution
-     *         was in progress.
-     *         </ul>
-     * 
-     */
-    public String getJobStatus() {
-        return jobStatus;
-    }
-
-    /**
-     * 
-     * @param jobStatus  Status of the submitted job.
-     *                   Supported values:
-     *                   <ul>
-     *                           <li> {@link
-     *                   com.gpudb.protocol.GetJobResponse.JobStatus#RUNNING
-     *                   RUNNING}: The job is currently executing.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.GetJobResponse.JobStatus#DONE
-     *                   DONE}: The job execution has successfully completed
-     *                   and the response is included in the {@code
-     *                   jobResponse} or {@code jobResponseStr} field
-     *                           <li> {@link
-     *                   com.gpudb.protocol.GetJobResponse.JobStatus#ERROR
-     *                   ERROR}: The job was attempted, but an error was
-     *                   encountered.  The {@code statusMap} contains the
-     *                   details of the error in error_message
-     *                           <li> {@link
-     *                   com.gpudb.protocol.GetJobResponse.JobStatus#CANCELLED
-     *                   CANCELLED}: Job cancellation was requested while the
-     *                   execution was in progress.
-     *                   </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setJobStatus(String jobStatus) {
-        this.jobStatus = (jobStatus == null) ? "" : jobStatus;
-        return this;
-    }
-
-    /**
-     * 
-     * @return True if the end point is still executing.
-     * 
-     */
-    public boolean getRunning() {
-        return running;
-    }
-
-    /**
-     * 
-     * @param running  True if the end point is still executing.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setRunning(boolean running) {
-        this.running = running;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Approximate percentage of the job completed.
-     * 
-     */
-    public int getProgress() {
-        return progress;
-    }
-
-    /**
-     * 
-     * @param progress  Approximate percentage of the job completed.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setProgress(int progress) {
-        this.progress = progress;
-        return this;
-    }
-
-    /**
-     * 
-     * @return True if the job execution completed and no errors were
-     *         encountered.
-     * 
-     */
-    public boolean getSuccessful() {
-        return successful;
-    }
-
-    /**
-     * 
-     * @param successful  True if the job execution completed and no errors
-     *                    were encountered.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setSuccessful(boolean successful) {
-        this.successful = successful;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The encoding of the job result (contained in {@code jobResponse}
-     *         or {@code jobResponseStr}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.ResponseEncoding#BINARY
-     *         BINARY}: The job result is binary-encoded.  It is contained in
-     *         {@code jobResponse}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.ResponseEncoding#JSON JSON}:
-     *         The job result is json-encoded.  It is contained in {@code
-     *         jobResponseStr}.
-     *         </ul>
-     * 
-     */
-    public String getResponseEncoding() {
-        return responseEncoding;
-    }
-
-    /**
-     * 
-     * @param responseEncoding  The encoding of the job result (contained in
-     *                          {@code jobResponse} or {@code jobResponseStr}.
-     *                          Supported values:
-     *                          <ul>
-     *                                  <li> {@link
-     *                          com.gpudb.protocol.GetJobResponse.ResponseEncoding#BINARY
-     *                          BINARY}: The job result is binary-encoded.  It
-     *                          is contained in {@code jobResponse}.
-     *                                  <li> {@link
-     *                          com.gpudb.protocol.GetJobResponse.ResponseEncoding#JSON
-     *                          JSON}: The job result is json-encoded.  It is
-     *                          contained in {@code jobResponseStr}.
-     *                          </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setResponseEncoding(String responseEncoding) {
-        this.responseEncoding = (responseEncoding == null) ? "" : responseEncoding;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The binary-encoded response of the job.  This field is populated
-     *         only when the job has completed and {@code responseEncoding} is
-     *         {@code binary}
-     * 
-     */
-    public ByteBuffer getJobResponse() {
-        return jobResponse;
-    }
-
-    /**
-     * 
-     * @param jobResponse  The binary-encoded response of the job.  This field
-     *                     is populated only when the job has completed and
-     *                     {@code responseEncoding} is {@code binary}
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setJobResponse(ByteBuffer jobResponse) {
-        this.jobResponse = (jobResponse == null) ? ByteBuffer.wrap( new byte[0] ) : jobResponse;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The json-encoded response of the job.  This field is populated
-     *         only when the job has completed and {@code responseEncoding} is
-     *         {@code json}
-     * 
-     */
-    public String getJobResponseStr() {
-        return jobResponseStr;
-    }
-
-    /**
-     * 
-     * @param jobResponseStr  The json-encoded response of the job.  This field
-     *                        is populated only when the job has completed and
-     *                        {@code responseEncoding} is {@code json}
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setJobResponseStr(String jobResponseStr) {
-        this.jobResponseStr = (jobResponseStr == null) ? "" : jobResponseStr;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Map of various status strings for the executed job.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.GetJobResponse.StatusMap#ERROR_MESSAGE
-     *         ERROR_MESSAGE}: Explains what error occurred while running the
-     *         job asynchronously.  This entry only exists when the job status
-     *         is {@code ERROR}.
-     *         </ul>
-     * 
-     */
-    public Map<String, String> getStatusMap() {
-        return statusMap;
-    }
-
-    /**
-     * 
-     * @param statusMap  Map of various status strings for the executed job.
-     *                   <ul>
-     *                           <li> {@link
-     *                   com.gpudb.protocol.GetJobResponse.StatusMap#ERROR_MESSAGE
-     *                   ERROR_MESSAGE}: Explains what error occurred while
-     *                   running the job asynchronously.  This entry only
-     *                   exists when the job status is {@code ERROR}.
-     *                   </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setStatusMap(Map<String, String> statusMap) {
-        this.statusMap = (statusMap == null) ? new LinkedHashMap<String, String>() : statusMap;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional information.
-     * 
-     */
-    public Map<String, String> getInfo() {
-        return info;
-    }
-
-    /**
-     * 
-     * @param info  Additional information.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public GetJobResponse setInfo(Map<String, String> info) {
-        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.endpoint;
-
-            case 1:
-                return this.jobStatus;
-
-            case 2:
-                return this.running;
-
-            case 3:
-                return this.progress;
-
-            case 4:
-                return this.successful;
-
-            case 5:
-                return this.responseEncoding;
-
-            case 6:
-                return this.jobResponse;
-
-            case 7:
-                return this.jobResponseStr;
-
-            case 8:
-                return this.statusMap;
-
-            case 9:
-                return this.info;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private StatusMap() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.endpoint = (String)value;
-                break;
-
-            case 1:
-                this.jobStatus = (String)value;
-                break;
-
-            case 2:
-                this.running = (Boolean)value;
-                break;
-
-            case 3:
-                this.progress = (Integer)value;
-                break;
-
-            case 4:
-                this.successful = (Boolean)value;
-                break;
-
-            case 5:
-                this.responseEncoding = (String)value;
-                break;
-
-            case 6:
-                this.jobResponse = (ByteBuffer)value;
-                break;
-
-            case 7:
-                this.jobResponseStr = (String)value;
-                break;
-
-            case 8:
-                this.statusMap = (Map<String, String>)value;
-                break;
-
-            case 9:
-                this.info = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        GetJobResponse that = (GetJobResponse)obj;
-
-        return ( this.endpoint.equals( that.endpoint )
-                 && this.jobStatus.equals( that.jobStatus )
-                 && ( this.running == that.running )
-                 && ( this.progress == that.progress )
-                 && ( this.successful == that.successful )
-                 && this.responseEncoding.equals( that.responseEncoding )
-                 && this.jobResponse.equals( that.jobResponse )
-                 && this.jobResponseStr.equals( that.jobResponseStr )
-                 && this.statusMap.equals( that.statusMap )
-                 && this.info.equals( that.info ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "endpoint" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endpoint ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "jobStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "running" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.running ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "progress" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.progress ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "successful" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.successful ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "responseEncoding" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.responseEncoding ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "jobResponse" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobResponse ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "jobResponseStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobResponseStr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "statusMap" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.statusMap ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.endpoint.hashCode();
-        hashCode = (31 * hashCode) + this.jobStatus.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.running).hashCode();
-        hashCode = (31 * hashCode) + this.progress;
-        hashCode = (31 * hashCode) + ((Boolean)this.successful).hashCode();
-        hashCode = (31 * hashCode) + this.responseEncoding.hashCode();
-        hashCode = (31 * hashCode) + this.jobResponse.hashCode();
-        hashCode = (31 * hashCode) + this.jobResponseStr.hashCode();
-        hashCode = (31 * hashCode) + this.statusMap.hashCode();
-        hashCode = (31 * hashCode) + this.info.hashCode();
-        return hashCode;
     }
 
 }

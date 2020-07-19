@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,28 +23,13 @@ public class CreateJoinTableResponse implements IndexedRecord {
             .record("CreateJoinTableResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("joinTableName").type().stringType().noDefault()
-                .name("count").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("joinTableName").type().stringType().noDefault()
+            .name("count").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String joinTableName;
     private long count;
     private Map<String, String> info;
-
-
     /**
      * Constructs a CreateJoinTableResponse object with default parameters.
      */
@@ -51,20 +37,25 @@ public class CreateJoinTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code joinTableName}.
-     * 
      */
     public String getJoinTableName() {
         return joinTableName;
     }
 
     /**
-     * 
-     * @param joinTableName  Value of {@code joinTableName}.
-     * 
+     * @param joinTableName Value of {@code joinTableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJoinTableResponse setJoinTableName(String joinTableName) {
         this.joinTableName = (joinTableName == null) ? "" : joinTableName;
@@ -72,22 +63,17 @@ public class CreateJoinTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The number of records in the join table filtered by the given
-     *         select expression.
-     * 
+     * select expression.
      */
     public long getCount() {
         return count;
     }
 
     /**
-     * 
-     * @param count  The number of records in the join table filtered by the
-     *               given select expression.
-     * 
+     * @param count The number of records in the join table filtered by the
+     *              given select expression.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJoinTableResponse setCount(long count) {
         this.count = count;
@@ -95,20 +81,15 @@ public class CreateJoinTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJoinTableResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -118,9 +99,8 @@ public class CreateJoinTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -130,13 +110,10 @@ public class CreateJoinTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -158,27 +135,25 @@ public class CreateJoinTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.joinTableName = (String)value;
+                this.joinTableName = (String) value;
                 break;
 
             case 1:
-                this.count = (Long)value;
+                this.count = (Long) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -188,38 +163,38 @@ public class CreateJoinTableResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateJoinTableResponse that = (CreateJoinTableResponse)obj;
+        CreateJoinTableResponse that = (CreateJoinTableResponse) obj;
 
-        return ( this.joinTableName.equals( that.joinTableName )
-                 && ( this.count == that.count )
-                 && this.info.equals( that.info ) );
+        return (this.joinTableName.equals(that.joinTableName)
+                && (this.count == that.count)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "joinTableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.joinTableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "count" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.count ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("joinTableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.joinTableName));
+        builder.append(", ");
+        builder.append(gd.toString("count"));
+        builder.append(": ");
+        builder.append(gd.toString(this.count));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -228,7 +203,7 @@ public class CreateJoinTableResponse implements IndexedRecord {
     public int hashCode() {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.joinTableName.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.count).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.count).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

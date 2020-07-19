@@ -7,14 +7,15 @@
 package com.gpudb.protocol;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class VisualizeImageClassbreakRequest implements IndexedRecord {
@@ -23,145 +24,32 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
             .record("VisualizeImageClassbreakRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("worldTableNames").type().array().items().stringType().noDefault()
-                .name("xColumnName").type().stringType().noDefault()
-                .name("yColumnName").type().stringType().noDefault()
-                .name("geometryColumnName").type().stringType().noDefault()
-                .name("trackIds").type().array().items().array().items().stringType().noDefault()
-                .name("cbAttr").type().stringType().noDefault()
-                .name("cbVals").type().array().items().stringType().noDefault()
-                .name("cbPointcolorAttr").type().stringType().noDefault()
-                .name("cbPointcolorVals").type().array().items().stringType().noDefault()
-                .name("cbPointsizeAttr").type().stringType().noDefault()
-                .name("cbPointsizeVals").type().array().items().stringType().noDefault()
-                .name("cbPointshapeAttr").type().stringType().noDefault()
-                .name("cbPointshapeVals").type().array().items().stringType().noDefault()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("projection").type().stringType().noDefault()
-                .name("bgColor").type().longType().noDefault()
-                .name("styleOptions").type().map().values().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
-                .name("cbTransparencyVec").type().array().items().intType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("worldTableNames").type().array().items().stringType().noDefault()
+            .name("xColumnName").type().stringType().noDefault()
+            .name("yColumnName").type().stringType().noDefault()
+            .name("geometryColumnName").type().stringType().noDefault()
+            .name("trackIds").type().array().items().array().items().stringType().noDefault()
+            .name("cbAttr").type().stringType().noDefault()
+            .name("cbVals").type().array().items().stringType().noDefault()
+            .name("cbPointcolorAttr").type().stringType().noDefault()
+            .name("cbPointcolorVals").type().array().items().stringType().noDefault()
+            .name("cbPointsizeAttr").type().stringType().noDefault()
+            .name("cbPointsizeVals").type().array().items().stringType().noDefault()
+            .name("cbPointshapeAttr").type().stringType().noDefault()
+            .name("cbPointshapeVals").type().array().items().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("projection").type().stringType().noDefault()
+            .name("bgColor").type().longType().noDefault()
+            .name("styleOptions").type().map().values().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
+            .name("cbTransparencyVec").type().array().items().intType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    public static final class Projection {
-
-        public static final String EPSG_4326 = "EPSG:4326";
-
-        public static final String PLATE_CARREE = "PLATE_CARREE";
-
-        public static final String _900913 = "900913";
-
-        public static final String EPSG_900913 = "EPSG:900913";
-
-        public static final String _102100 = "102100";
-
-        public static final String EPSG_102100 = "EPSG:102100";
-
-        public static final String _3857 = "3857";
-
-        public static final String EPSG_3857 = "EPSG:3857";
-
-        public static final String WEB_MERCATOR = "WEB_MERCATOR";
-
-
-        private Projection() {  }
-    }
-
-
-    public static final class StyleOptions {
-
-        public static final String DO_POINTS = "do_points";
-
-        public static final String TRUE = "true";
-
-        public static final String FALSE = "false";
-
-        public static final String DO_SHAPES = "do_shapes";
-
-        public static final String DO_TRACKS = "do_tracks";
-
-        public static final String DO_SYMBOLOGY = "do_symbology";
-
-        public static final String POINTCOLORS = "pointcolors";
-
-        public static final String POINTSIZES = "pointsizes";
-
-        public static final String POINTOFFSET_X = "pointoffset_x";
-
-        public static final String POINTOFFSET_Y = "pointoffset_y";
-
-        public static final String POINTSHAPES = "pointshapes";
-
-        public static final String NONE = "none";
-
-        public static final String CIRCLE = "circle";
-
-        public static final String SQUARE = "square";
-
-        public static final String DIAMOND = "diamond";
-
-        public static final String HOLLOWCIRCLE = "hollowcircle";
-
-        public static final String HOLLOWSQUARE = "hollowsquare";
-
-        public static final String HOLLOWDIAMOND = "hollowdiamond";
-
-        public static final String SYMBOLCODE = "SYMBOLCODE";
-
-        public static final String SHAPELINEWIDTHS = "shapelinewidths";
-
-        public static final String SHAPELINECOLORS = "shapelinecolors";
-
-        public static final String SHAPELINEPATTERNS = "shapelinepatterns";
-
-        public static final String SHAPELINEPATTERNLEN = "shapelinepatternlen";
-
-        public static final String SHAPEFILLCOLORS = "shapefillcolors";
-
-        public static final String HASHLINEINTERVALS = "hashlineintervals";
-
-        public static final String HASHLINECOLORS = "hashlinecolors";
-
-        public static final String HASHLINEANGLES = "hashlineangles";
-
-        public static final String HASHLINELENS = "hashlinelens";
-
-        public static final String HASHLINEWIDTHS = "hashlinewidths";
-
-        public static final String TRACKLINEWIDTHS = "tracklinewidths";
-
-        public static final String TRACKLINECOLORS = "tracklinecolors";
-
-        public static final String TRACKMARKERSIZES = "trackmarkersizes";
-
-        public static final String TRACKMARKERCOLORS = "trackmarkercolors";
-
-        public static final String TRACKMARKERSHAPES = "trackmarkershapes";
-
-        public static final String TRACKHEADCOLORS = "trackheadcolors";
-
-        public static final String TRACKHEADSIZES = "trackheadsizes";
-
-        public static final String TRACKHEADSHAPES = "trackheadshapes";
-
-
-        private StyleOptions() {  }
-    }
-
-
     private List<String> tableNames;
     private List<String> worldTableNames;
     private String xColumnName;
@@ -187,8 +75,6 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
     private Map<String, List<String>> styleOptions;
     private Map<String, String> options;
     private List<Integer> cbTransparencyVec;
-
-
     public VisualizeImageClassbreakRequest() {
         tableNames = new ArrayList<>();
         worldTableNames = new ArrayList<>();
@@ -209,7 +95,6 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
         cbTransparencyVec = new ArrayList<>();
     }
-
     public VisualizeImageClassbreakRequest(List<String> tableNames, List<String> worldTableNames, String xColumnName, String yColumnName, String geometryColumnName, List<List<String>> trackIds, String cbAttr, List<String> cbVals, String cbPointcolorAttr, List<String> cbPointcolorVals, String cbPointsizeAttr, List<String> cbPointsizeVals, String cbPointshapeAttr, List<String> cbPointshapeVals, double minX, double maxX, double minY, double maxY, int width, int height, String projection, long bgColor, Map<String, List<String>> styleOptions, Map<String, String> options, List<Integer> cbTransparencyVec) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
         this.worldTableNames = (worldTableNames == null) ? new ArrayList<String>() : worldTableNames;
@@ -236,6 +121,10 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
         this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, List<String>>() : styleOptions;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
         this.cbTransparencyVec = (cbTransparencyVec == null) ? new ArrayList<Integer>() : cbTransparencyVec;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public List<String> getTableNames() {
@@ -556,103 +445,103 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.worldTableNames = (List<String>)value;
+                this.worldTableNames = (List<String>) value;
                 break;
 
             case 2:
-                this.xColumnName = (String)value;
+                this.xColumnName = (String) value;
                 break;
 
             case 3:
-                this.yColumnName = (String)value;
+                this.yColumnName = (String) value;
                 break;
 
             case 4:
-                this.geometryColumnName = (String)value;
+                this.geometryColumnName = (String) value;
                 break;
 
             case 5:
-                this.trackIds = (List<List<String>>)value;
+                this.trackIds = (List<List<String>>) value;
                 break;
 
             case 6:
-                this.cbAttr = (String)value;
+                this.cbAttr = (String) value;
                 break;
 
             case 7:
-                this.cbVals = (List<String>)value;
+                this.cbVals = (List<String>) value;
                 break;
 
             case 8:
-                this.cbPointcolorAttr = (String)value;
+                this.cbPointcolorAttr = (String) value;
                 break;
 
             case 9:
-                this.cbPointcolorVals = (List<String>)value;
+                this.cbPointcolorVals = (List<String>) value;
                 break;
 
             case 10:
-                this.cbPointsizeAttr = (String)value;
+                this.cbPointsizeAttr = (String) value;
                 break;
 
             case 11:
-                this.cbPointsizeVals = (List<String>)value;
+                this.cbPointsizeVals = (List<String>) value;
                 break;
 
             case 12:
-                this.cbPointshapeAttr = (String)value;
+                this.cbPointshapeAttr = (String) value;
                 break;
 
             case 13:
-                this.cbPointshapeVals = (List<String>)value;
+                this.cbPointshapeVals = (List<String>) value;
                 break;
 
             case 14:
-                this.minX = (Double)value;
+                this.minX = (Double) value;
                 break;
 
             case 15:
-                this.maxX = (Double)value;
+                this.maxX = (Double) value;
                 break;
 
             case 16:
-                this.minY = (Double)value;
+                this.minY = (Double) value;
                 break;
 
             case 17:
-                this.maxY = (Double)value;
+                this.maxY = (Double) value;
                 break;
 
             case 18:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 19:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 20:
-                this.projection = (String)value;
+                this.projection = (String) value;
                 break;
 
             case 21:
-                this.bgColor = (Long)value;
+                this.bgColor = (Long) value;
                 break;
 
             case 22:
-                this.styleOptions = (Map<String, List<String>>)value;
+                this.styleOptions = (Map<String, List<String>>) value;
                 break;
 
             case 23:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             case 24:
-                this.cbTransparencyVec = (List<Integer>)value;
+                this.cbTransparencyVec = (List<Integer>) value;
                 break;
 
             default:
@@ -660,156 +549,153 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
         }
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeImageClassbreakRequest that = (VisualizeImageClassbreakRequest)obj;
+        VisualizeImageClassbreakRequest that = (VisualizeImageClassbreakRequest) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.worldTableNames.equals( that.worldTableNames )
-                 && this.xColumnName.equals( that.xColumnName )
-                 && this.yColumnName.equals( that.yColumnName )
-                 && this.geometryColumnName.equals( that.geometryColumnName )
-                 && this.trackIds.equals( that.trackIds )
-                 && this.cbAttr.equals( that.cbAttr )
-                 && this.cbVals.equals( that.cbVals )
-                 && this.cbPointcolorAttr.equals( that.cbPointcolorAttr )
-                 && this.cbPointcolorVals.equals( that.cbPointcolorVals )
-                 && this.cbPointsizeAttr.equals( that.cbPointsizeAttr )
-                 && this.cbPointsizeVals.equals( that.cbPointsizeVals )
-                 && this.cbPointshapeAttr.equals( that.cbPointshapeAttr )
-                 && this.cbPointshapeVals.equals( that.cbPointshapeVals )
-                 && ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && this.projection.equals( that.projection )
-                 && ( this.bgColor == that.bgColor )
-                 && this.styleOptions.equals( that.styleOptions )
-                 && this.options.equals( that.options )
-                 && this.cbTransparencyVec.equals( that.cbTransparencyVec ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.worldTableNames.equals(that.worldTableNames)
+                && this.xColumnName.equals(that.xColumnName)
+                && this.yColumnName.equals(that.yColumnName)
+                && this.geometryColumnName.equals(that.geometryColumnName)
+                && this.trackIds.equals(that.trackIds)
+                && this.cbAttr.equals(that.cbAttr)
+                && this.cbVals.equals(that.cbVals)
+                && this.cbPointcolorAttr.equals(that.cbPointcolorAttr)
+                && this.cbPointcolorVals.equals(that.cbPointcolorVals)
+                && this.cbPointsizeAttr.equals(that.cbPointsizeAttr)
+                && this.cbPointsizeVals.equals(that.cbPointsizeVals)
+                && this.cbPointshapeAttr.equals(that.cbPointshapeAttr)
+                && this.cbPointshapeVals.equals(that.cbPointshapeVals)
+                && ((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && (this.width == that.width)
+                && (this.height == that.height)
+                && this.projection.equals(that.projection)
+                && (this.bgColor == that.bgColor)
+                && this.styleOptions.equals(that.styleOptions)
+                && this.options.equals(that.options)
+                && this.cbTransparencyVec.equals(that.cbTransparencyVec));
     }
-
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "worldTableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.worldTableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "geometryColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.geometryColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "trackIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.trackIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbAttr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbAttr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbVals" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbVals ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointcolorAttr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointcolorAttr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointcolorVals" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointcolorVals ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointsizeAttr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointsizeAttr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointsizeVals" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointsizeVals ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointshapeAttr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointshapeAttr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbPointshapeVals" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbPointshapeVals ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "projection" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.projection ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "styleOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.styleOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "cbTransparencyVec" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.cbTransparencyVec ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("worldTableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.worldTableNames));
+        builder.append(", ");
+        builder.append(gd.toString("xColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("yColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("geometryColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.geometryColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("trackIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.trackIds));
+        builder.append(", ");
+        builder.append(gd.toString("cbAttr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbAttr));
+        builder.append(", ");
+        builder.append(gd.toString("cbVals"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbVals));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointcolorAttr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointcolorAttr));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointcolorVals"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointcolorVals));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointsizeAttr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointsizeAttr));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointsizeVals"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointsizeVals));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointshapeAttr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointshapeAttr));
+        builder.append(", ");
+        builder.append(gd.toString("cbPointshapeVals"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbPointshapeVals));
+        builder.append(", ");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("projection"));
+        builder.append(": ");
+        builder.append(gd.toString(this.projection));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("styleOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.styleOptions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append(", ");
+        builder.append(gd.toString("cbTransparencyVec"));
+        builder.append(": ");
+        builder.append(gd.toString(this.cbTransparencyVec));
+        builder.append("}");
 
         return builder.toString();
     }
-
 
     @Override
     public int hashCode() {
@@ -828,18 +714,124 @@ public class VisualizeImageClassbreakRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.cbPointsizeVals.hashCode();
         hashCode = (31 * hashCode) + this.cbPointshapeAttr.hashCode();
         hashCode = (31 * hashCode) + this.cbPointshapeVals.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
         hashCode = (31 * hashCode) + this.projection.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.bgColor).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.bgColor).hashCode();
         hashCode = (31 * hashCode) + this.styleOptions.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         hashCode = (31 * hashCode) + this.cbTransparencyVec.hashCode();
         return hashCode;
+    }
+
+    public static final class Projection {
+
+        public static final String EPSG_4326 = "EPSG:4326";
+
+        public static final String PLATE_CARREE = "PLATE_CARREE";
+
+        public static final String _900913 = "900913";
+
+        public static final String EPSG_900913 = "EPSG:900913";
+
+        public static final String _102100 = "102100";
+
+        public static final String EPSG_102100 = "EPSG:102100";
+
+        public static final String _3857 = "3857";
+
+        public static final String EPSG_3857 = "EPSG:3857";
+
+        public static final String WEB_MERCATOR = "WEB_MERCATOR";
+
+
+        private Projection() {
+        }
+    }
+
+    public static final class StyleOptions {
+
+        public static final String DO_POINTS = "do_points";
+
+        public static final String TRUE = "true";
+
+        public static final String FALSE = "false";
+
+        public static final String DO_SHAPES = "do_shapes";
+
+        public static final String DO_TRACKS = "do_tracks";
+
+        public static final String DO_SYMBOLOGY = "do_symbology";
+
+        public static final String POINTCOLORS = "pointcolors";
+
+        public static final String POINTSIZES = "pointsizes";
+
+        public static final String POINTOFFSET_X = "pointoffset_x";
+
+        public static final String POINTOFFSET_Y = "pointoffset_y";
+
+        public static final String POINTSHAPES = "pointshapes";
+
+        public static final String NONE = "none";
+
+        public static final String CIRCLE = "circle";
+
+        public static final String SQUARE = "square";
+
+        public static final String DIAMOND = "diamond";
+
+        public static final String HOLLOWCIRCLE = "hollowcircle";
+
+        public static final String HOLLOWSQUARE = "hollowsquare";
+
+        public static final String HOLLOWDIAMOND = "hollowdiamond";
+
+        public static final String SYMBOLCODE = "SYMBOLCODE";
+
+        public static final String SHAPELINEWIDTHS = "shapelinewidths";
+
+        public static final String SHAPELINECOLORS = "shapelinecolors";
+
+        public static final String SHAPELINEPATTERNS = "shapelinepatterns";
+
+        public static final String SHAPELINEPATTERNLEN = "shapelinepatternlen";
+
+        public static final String SHAPEFILLCOLORS = "shapefillcolors";
+
+        public static final String HASHLINEINTERVALS = "hashlineintervals";
+
+        public static final String HASHLINECOLORS = "hashlinecolors";
+
+        public static final String HASHLINEANGLES = "hashlineangles";
+
+        public static final String HASHLINELENS = "hashlinelens";
+
+        public static final String HASHLINEWIDTHS = "hashlinewidths";
+
+        public static final String TRACKLINEWIDTHS = "tracklinewidths";
+
+        public static final String TRACKLINECOLORS = "tracklinecolors";
+
+        public static final String TRACKMARKERSIZES = "trackmarkersizes";
+
+        public static final String TRACKMARKERCOLORS = "trackmarkercolors";
+
+        public static final String TRACKMARKERSHAPES = "trackmarkershapes";
+
+        public static final String TRACKHEADCOLORS = "trackheadcolors";
+
+        public static final String TRACKHEADSIZES = "trackheadsizes";
+
+        public static final String TRACKHEADSHAPES = "trackheadshapes";
+
+
+        private StyleOptions() {
+        }
     }
 
 

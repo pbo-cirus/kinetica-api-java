@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,34 +23,19 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
             .record("InsertRecordsFromFilesResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeId").type().stringType().noDefault()
-                .name("countInserted").type().longType().noDefault()
-                .name("countSkipped").type().longType().noDefault()
-                .name("countUpdated").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("countInserted").type().longType().noDefault()
+            .name("countSkipped").type().longType().noDefault()
+            .name("countUpdated").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private String typeId;
     private long countInserted;
     private long countSkipped;
     private long countUpdated;
     private Map<String, String> info;
-
-
     /**
      * Constructs an InsertRecordsFromFilesResponse object with default
      * parameters.
@@ -58,20 +44,25 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -79,20 +70,15 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Type ID for the table.
-     * 
      */
     public String getTypeId() {
         return typeId;
     }
 
     /**
-     * 
-     * @param typeId  Type ID for the table.
-     * 
+     * @param typeId Type ID for the table.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setTypeId(String typeId) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -100,20 +86,15 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Number of records inserted.
-     * 
      */
     public long getCountInserted() {
         return countInserted;
     }
 
     /**
-     * 
-     * @param countInserted  Number of records inserted.
-     * 
+     * @param countInserted Number of records inserted.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setCountInserted(long countInserted) {
         this.countInserted = countInserted;
@@ -121,22 +102,17 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Number of records skipped when not running in {@code abort}
-     *         error handling mode.
-     * 
+     * error handling mode.
      */
     public long getCountSkipped() {
         return countSkipped;
     }
 
     /**
-     * 
-     * @param countSkipped  Number of records skipped when not running in
-     *                      {@code abort} error handling mode.
-     * 
+     * @param countSkipped Number of records skipped when not running in
+     *                     {@code abort} error handling mode.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setCountSkipped(long countSkipped) {
         this.countSkipped = countSkipped;
@@ -144,21 +120,16 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Number of records updated.  The default value is -1.
-     * 
      */
     public long getCountUpdated() {
         return countUpdated;
     }
 
     /**
-     * 
-     * @param countUpdated  Number of records updated.  The default value is
-     *                      -1.
-     * 
+     * @param countUpdated Number of records updated.  The default value is
+     *                     -1.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setCountUpdated(long countUpdated) {
         this.countUpdated = countUpdated;
@@ -166,20 +137,15 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public InsertRecordsFromFilesResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -189,9 +155,8 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -201,13 +166,10 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -238,39 +200,37 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.typeId = (String)value;
+                this.typeId = (String) value;
                 break;
 
             case 2:
-                this.countInserted = (Long)value;
+                this.countInserted = (Long) value;
                 break;
 
             case 3:
-                this.countSkipped = (Long)value;
+                this.countSkipped = (Long) value;
                 break;
 
             case 4:
-                this.countUpdated = (Long)value;
+                this.countUpdated = (Long) value;
                 break;
 
             case 5:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -280,53 +240,53 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        InsertRecordsFromFilesResponse that = (InsertRecordsFromFilesResponse)obj;
+        InsertRecordsFromFilesResponse that = (InsertRecordsFromFilesResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeId.equals( that.typeId )
-                 && ( this.countInserted == that.countInserted )
-                 && ( this.countSkipped == that.countSkipped )
-                 && ( this.countUpdated == that.countUpdated )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.typeId.equals(that.typeId)
+                && (this.countInserted == that.countInserted)
+                && (this.countSkipped == that.countSkipped)
+                && (this.countUpdated == that.countUpdated)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countInserted" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countInserted ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countSkipped" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countSkipped ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countUpdated" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countUpdated ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("countInserted"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countInserted));
+        builder.append(", ");
+        builder.append(gd.toString("countSkipped"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countSkipped));
+        builder.append(", ");
+        builder.append(gd.toString("countUpdated"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countUpdated));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -336,9 +296,9 @@ public class InsertRecordsFromFilesResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.tableName.hashCode();
         hashCode = (31 * hashCode) + this.typeId.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.countInserted).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.countSkipped).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.countUpdated).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countInserted).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countSkipped).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countUpdated).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,28 +25,13 @@ public class AdminAddRanksResponse implements IndexedRecord {
             .record("AdminAddRanksResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("addedRanks").type().array().items().intType().noDefault()
-                .name("results").type().array().items().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("addedRanks").type().array().items().intType().noDefault()
+            .name("results").type().array().items().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<Integer> addedRanks;
     private List<String> results;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AdminAddRanksResponse object with default parameters.
      */
@@ -53,24 +39,29 @@ public class AdminAddRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The number assigned to each newly added rank, in the same order
-     *         as the ranks in the {@code hosts}. Will be empty if the
-     *         operation fails.
-     * 
+     * as the ranks in the {@code hosts}. Will be empty if the
+     * operation fails.
      */
     public List<Integer> getAddedRanks() {
         return addedRanks;
     }
 
     /**
-     * 
-     * @param addedRanks  The number assigned to each newly added rank, in the
-     *                    same order as the ranks in the {@code hosts}. Will be
-     *                    empty if the operation fails.
-     * 
+     * @param addedRanks The number assigned to each newly added rank, in the
+     *                   same order as the ranks in the {@code hosts}. Will be
+     *                   empty if the operation fails.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAddRanksResponse setAddedRanks(List<Integer> addedRanks) {
         this.addedRanks = (addedRanks == null) ? new ArrayList<Integer>() : addedRanks;
@@ -78,24 +69,19 @@ public class AdminAddRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Text description of the result of each rank being added.
-     *         Indicates the reason for any errors that occur. Entries are in
-     *         the same order as the {@code hosts}.
-     * 
+     * Indicates the reason for any errors that occur. Entries are in
+     * the same order as the {@code hosts}.
      */
     public List<String> getResults() {
         return results;
     }
 
     /**
-     * 
-     * @param results  Text description of the result of each rank being added.
-     *                 Indicates the reason for any errors that occur. Entries
-     *                 are in the same order as the {@code hosts}.
-     * 
+     * @param results Text description of the result of each rank being added.
+     *                Indicates the reason for any errors that occur. Entries
+     *                are in the same order as the {@code hosts}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAddRanksResponse setResults(List<String> results) {
         this.results = (results == null) ? new ArrayList<String>() : results;
@@ -103,20 +89,15 @@ public class AdminAddRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAddRanksResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -126,9 +107,8 @@ public class AdminAddRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -138,13 +118,10 @@ public class AdminAddRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -166,27 +143,25 @@ public class AdminAddRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.addedRanks = (List<Integer>)value;
+                this.addedRanks = (List<Integer>) value;
                 break;
 
             case 1:
-                this.results = (List<String>)value;
+                this.results = (List<String>) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -196,38 +171,38 @@ public class AdminAddRanksResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminAddRanksResponse that = (AdminAddRanksResponse)obj;
+        AdminAddRanksResponse that = (AdminAddRanksResponse) obj;
 
-        return ( this.addedRanks.equals( that.addedRanks )
-                 && this.results.equals( that.results )
-                 && this.info.equals( that.info ) );
+        return (this.addedRanks.equals(that.addedRanks)
+                && this.results.equals(that.results)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "addedRanks" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.addedRanks ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "results" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.results ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("addedRanks"));
+        builder.append(": ");
+        builder.append(gd.toString(this.addedRanks));
+        builder.append(", ");
+        builder.append(gd.toString("results"));
+        builder.append(": ");
+        builder.append(gd.toString(this.results));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

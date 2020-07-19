@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class ExecuteProcResponse implements IndexedRecord {
             .record("ExecuteProcResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("runId").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("runId").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String runId;
     private Map<String, String> info;
-
-
     /**
      * Constructs an ExecuteProcResponse object with default parameters.
      */
@@ -49,29 +35,34 @@ public class ExecuteProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The run ID of the running proc instance. This may be passed to
-     *         {@link com.gpudb.GPUdb#showProcStatus(ShowProcStatusRequest)} to
-     *         obtain status information, or {@link
-     *         com.gpudb.GPUdb#killProc(KillProcRequest)} to kill the proc
-     *         instance.
-     * 
+     * {@link com.gpudb.GPUdb#showProcStatus(ShowProcStatusRequest)} to
+     * obtain status information, or {@link
+     * com.gpudb.GPUdb#killProc(KillProcRequest)} to kill the proc
+     * instance.
      */
     public String getRunId() {
         return runId;
     }
 
     /**
-     * 
-     * @param runId  The run ID of the running proc instance. This may be
-     *               passed to {@link
-     *               com.gpudb.GPUdb#showProcStatus(ShowProcStatusRequest)} to
-     *               obtain status information, or {@link
-     *               com.gpudb.GPUdb#killProc(KillProcRequest)} to kill the
-     *               proc instance.
-     * 
+     * @param runId The run ID of the running proc instance. This may be
+     *              passed to {@link
+     *              com.gpudb.GPUdb#showProcStatus(ShowProcStatusRequest)} to
+     *              obtain status information, or {@link
+     *              com.gpudb.GPUdb#killProc(KillProcRequest)} to kill the
+     *              proc instance.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ExecuteProcResponse setRunId(String runId) {
         this.runId = (runId == null) ? "" : runId;
@@ -79,20 +70,15 @@ public class ExecuteProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ExecuteProcResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -102,9 +88,8 @@ public class ExecuteProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -114,13 +99,10 @@ public class ExecuteProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -139,23 +121,21 @@ public class ExecuteProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.runId = (String)value;
+                this.runId = (String) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -165,33 +145,33 @@ public class ExecuteProcResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ExecuteProcResponse that = (ExecuteProcResponse)obj;
+        ExecuteProcResponse that = (ExecuteProcResponse) obj;
 
-        return ( this.runId.equals( that.runId )
-                 && this.info.equals( that.info ) );
+        return (this.runId.equals(that.runId)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "runId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.runId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("runId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.runId));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

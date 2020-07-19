@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,115 +25,21 @@ public class ShowProcStatusResponse implements IndexedRecord {
             .record("ShowProcStatusResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("procNames").type().map().values().stringType().noDefault()
-                .name("params").type().map().values().map().values().stringType().noDefault()
-                .name("binParams").type().map().values().map().values().bytesType().noDefault()
-                .name("inputTableNames").type().map().values().array().items().stringType().noDefault()
-                .name("inputColumnNames").type().map().values().map().values().array().items().stringType().noDefault()
-                .name("outputTableNames").type().map().values().array().items().stringType().noDefault()
-                .name("options").type().map().values().map().values().stringType().noDefault()
-                .name("overallStatuses").type().map().values().stringType().noDefault()
-                .name("statuses").type().map().values().map().values().stringType().noDefault()
-                .name("messages").type().map().values().map().values().stringType().noDefault()
-                .name("results").type().map().values().map().values().map().values().stringType().noDefault()
-                .name("binResults").type().map().values().map().values().map().values().bytesType().noDefault()
-                .name("timings").type().map().values().map().values().map().values().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("procNames").type().map().values().stringType().noDefault()
+            .name("params").type().map().values().map().values().stringType().noDefault()
+            .name("binParams").type().map().values().map().values().bytesType().noDefault()
+            .name("inputTableNames").type().map().values().array().items().stringType().noDefault()
+            .name("inputColumnNames").type().map().values().map().values().array().items().stringType().noDefault()
+            .name("outputTableNames").type().map().values().array().items().stringType().noDefault()
+            .name("options").type().map().values().map().values().stringType().noDefault()
+            .name("overallStatuses").type().map().values().stringType().noDefault()
+            .name("statuses").type().map().values().map().values().stringType().noDefault()
+            .name("messages").type().map().values().map().values().stringType().noDefault()
+            .name("results").type().map().values().map().values().map().values().stringType().noDefault()
+            .name("binResults").type().map().values().map().values().map().values().bytesType().noDefault()
+            .name("timings").type().map().values().map().values().map().values().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Overall statuses for the returned run IDs. Note that these are rollups
-     * and individual statuses may differ between data segments for the same
-     * run ID; see {@code statuses} and {@code messages} for statuses from
-     * individual data segments.
-     * Valid values are:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
-     * RUNNING}: The proc instance is currently running.
-     *         <li> {@link
-     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
-     * COMPLETE}: The proc instance completed with no errors.
-     *         <li> {@link
-     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
-     * KILLED}: The proc instance was killed before completion.
-     *         <li> {@link
-     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR ERROR}:
-     * The proc instance failed with an error.
-     * </ul>
-     * A set of string constants for the parameter {@code overallStatuses}.
-     */
-    public static final class OverallStatuses {
-
-        /**
-         * The proc instance is currently running.
-         */
-        public static final String RUNNING = "running";
-
-        /**
-         * The proc instance completed with no errors.
-         */
-        public static final String COMPLETE = "complete";
-
-        /**
-         * The proc instance was killed before completion.
-         */
-        public static final String KILLED = "killed";
-
-        /**
-         * The proc instance failed with an error.
-         */
-        public static final String ERROR = "error";
-
-        private OverallStatuses() {  }
-    }
-
-
-    /**
-     * Statuses for the returned run IDs, grouped by data segment ID.
-     * Valid values are:
-     * <ul>
-     * </ul>
-     * A set of string constants for the parameter {@code statuses}.
-     */
-    public static final class Statuses {
-
-        /**
-         * The proc instance is currently running.
-         */
-        public static final String RUNNING = "running";
-
-        /**
-         * The proc instance completed with no errors.
-         */
-        public static final String COMPLETE = "complete";
-
-        /**
-         * The proc instance was killed before completion.
-         */
-        public static final String KILLED = "killed";
-
-        /**
-         * The proc instance failed with an error.
-         */
-        public static final String ERROR = "error";
-
-        private Statuses() {  }
-    }
-
     private Map<String, String> procNames;
     private Map<String, Map<String, String>> params;
     private Map<String, Map<String, ByteBuffer>> binParams;
@@ -147,8 +54,6 @@ public class ShowProcStatusResponse implements IndexedRecord {
     private Map<String, Map<String, Map<String, ByteBuffer>>> binResults;
     private Map<String, Map<String, Map<String, Long>>> timings;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowProcStatusResponse object with default parameters.
      */
@@ -156,20 +61,25 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The proc names corresponding to the returned run IDs.
-     * 
      */
     public Map<String, String> getProcNames() {
         return procNames;
     }
 
     /**
-     * 
-     * @param procNames  The proc names corresponding to the returned run IDs.
-     * 
+     * @param procNames The proc names corresponding to the returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setProcNames(Map<String, String> procNames) {
         this.procNames = (procNames == null) ? new LinkedHashMap<String, String>() : procNames;
@@ -177,24 +87,19 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The string params passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs.
      */
     public Map<String, Map<String, String>> getParams() {
         return params;
     }
 
     /**
-     * 
-     * @param params  The string params passed to {@link
-     *                com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *                returned run IDs.
-     * 
+     * @param params The string params passed to {@link
+     *               com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     *               returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setParams(Map<String, Map<String, String>> params) {
         this.params = (params == null) ? new LinkedHashMap<String, Map<String, String>>() : params;
@@ -202,24 +107,19 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The binary params passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs.
      */
     public Map<String, Map<String, ByteBuffer>> getBinParams() {
         return binParams;
     }
 
     /**
-     * 
-     * @param binParams  The binary params passed to {@link
-     *                   com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for
-     *                   the returned run IDs.
-     * 
+     * @param binParams The binary params passed to {@link
+     *                  com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for
+     *                  the returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setBinParams(Map<String, Map<String, ByteBuffer>> binParams) {
         this.binParams = (binParams == null) ? new LinkedHashMap<String, Map<String, ByteBuffer>>() : binParams;
@@ -227,24 +127,19 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The input table names passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs.
      */
     public Map<String, List<String>> getInputTableNames() {
         return inputTableNames;
     }
 
     /**
-     * 
-     * @param inputTableNames  The input table names passed to {@link
-     *                         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
-     *                         for the returned run IDs.
-     * 
+     * @param inputTableNames The input table names passed to {@link
+     *                        com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
+     *                        for the returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setInputTableNames(Map<String, List<String>> inputTableNames) {
         this.inputTableNames = (inputTableNames == null) ? new LinkedHashMap<String, List<String>>() : inputTableNames;
@@ -252,27 +147,22 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The input column names passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs, supplemented with the column names for input
-     *         tables not included in the input column name map.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs, supplemented with the column names for input
+     * tables not included in the input column name map.
      */
     public Map<String, Map<String, List<String>>> getInputColumnNames() {
         return inputColumnNames;
     }
 
     /**
-     * 
-     * @param inputColumnNames  The input column names passed to {@link
-     *                          com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
-     *                          for the returned run IDs, supplemented with the
-     *                          column names for input tables not included in
-     *                          the input column name map.
-     * 
+     * @param inputColumnNames The input column names passed to {@link
+     *                         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
+     *                         for the returned run IDs, supplemented with the
+     *                         column names for input tables not included in
+     *                         the input column name map.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setInputColumnNames(Map<String, Map<String, List<String>>> inputColumnNames) {
         this.inputColumnNames = (inputColumnNames == null) ? new LinkedHashMap<String, Map<String, List<String>>>() : inputColumnNames;
@@ -280,24 +170,19 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The output table names passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs.
      */
     public Map<String, List<String>> getOutputTableNames() {
         return outputTableNames;
     }
 
     /**
-     * 
-     * @param outputTableNames  The output table names passed to {@link
-     *                          com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
-     *                          for the returned run IDs.
-     * 
+     * @param outputTableNames The output table names passed to {@link
+     *                         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)}
+     *                         for the returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setOutputTableNames(Map<String, List<String>> outputTableNames) {
         this.outputTableNames = (outputTableNames == null) ? new LinkedHashMap<String, List<String>>() : outputTableNames;
@@ -305,24 +190,19 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The optional parameters passed to {@link
-     *         com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *         returned run IDs.
-     * 
+     * com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     * returned run IDs.
      */
     public Map<String, Map<String, String>> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  The optional parameters passed to {@link
-     *                 com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
-     *                 returned run IDs.
-     * 
+     * @param options The optional parameters passed to {@link
+     *                com.gpudb.GPUdb#executeProc(ExecuteProcRequest)} for the
+     *                returned run IDs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setOptions(Map<String, Map<String, String>> options) {
         this.options = (options == null) ? new LinkedHashMap<String, Map<String, String>>() : options;
@@ -330,61 +210,56 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Overall statuses for the returned run IDs. Note that these are
-     *         rollups and individual statuses may differ between data segments
-     *         for the same run ID; see {@code statuses} and {@code messages}
-     *         for statuses from individual data segments.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
-     *         RUNNING}: The proc instance is currently running.
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
-     *         COMPLETE}: The proc instance completed with no errors.
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
-     *         KILLED}: The proc instance was killed before completion.
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR
-     *         ERROR}: The proc instance failed with an error.
-     *         </ul>
-     * 
+     * rollups and individual statuses may differ between data segments
+     * for the same run ID; see {@code statuses} and {@code messages}
+     * for statuses from individual data segments.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
+     * RUNNING}: The proc instance is currently running.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
+     * COMPLETE}: The proc instance completed with no errors.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
+     * KILLED}: The proc instance was killed before completion.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR
+     * ERROR}: The proc instance failed with an error.
+     * </ul>
      */
     public Map<String, String> getOverallStatuses() {
         return overallStatuses;
     }
 
     /**
-     * 
-     * @param overallStatuses  Overall statuses for the returned run IDs. Note
-     *                         that these are rollups and individual statuses
-     *                         may differ between data segments for the same
-     *                         run ID; see {@code statuses} and {@code
-     *                         messages} for statuses from individual data
-     *                         segments.
-     *                         Valid values are:
-     *                         <ul>
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
-     *                         RUNNING}: The proc instance is currently
-     *                         running.
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
-     *                         COMPLETE}: The proc instance completed with no
-     *                         errors.
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
-     *                         KILLED}: The proc instance was killed before
-     *                         completion.
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR
-     *                         ERROR}: The proc instance failed with an error.
-     *                         </ul>
-     * 
+     * @param overallStatuses Overall statuses for the returned run IDs. Note
+     *                        that these are rollups and individual statuses
+     *                        may differ between data segments for the same
+     *                        run ID; see {@code statuses} and {@code
+     *                        messages} for statuses from individual data
+     *                        segments.
+     *                        Valid values are:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
+     *                        RUNNING}: The proc instance is currently
+     *                        running.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
+     *                        COMPLETE}: The proc instance completed with no
+     *                        errors.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
+     *                        KILLED}: The proc instance was killed before
+     *                        completion.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR
+     *                        ERROR}: The proc instance failed with an error.
+     *                        </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setOverallStatuses(Map<String, String> overallStatuses) {
         this.overallStatuses = (overallStatuses == null) ? new LinkedHashMap<String, String>() : overallStatuses;
@@ -392,27 +267,22 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Statuses for the returned run IDs, grouped by data segment ID.
-     *         Valid values are:
-     *         <ul>
-     *         </ul>
-     * 
+     * Valid values are:
+     * <ul>
+     * </ul>
      */
     public Map<String, Map<String, String>> getStatuses() {
         return statuses;
     }
 
     /**
-     * 
-     * @param statuses  Statuses for the returned run IDs, grouped by data
-     *                  segment ID.
-     *                  Valid values are:
-     *                  <ul>
-     *                  </ul>
-     * 
+     * @param statuses Statuses for the returned run IDs, grouped by data
+     *                 segment ID.
+     *                 Valid values are:
+     *                 <ul>
+     *                 </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setStatuses(Map<String, Map<String, String>> statuses) {
         this.statuses = (statuses == null) ? new LinkedHashMap<String, Map<String, String>>() : statuses;
@@ -420,22 +290,17 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Messages containing additional status information for the
-     *         returned run IDs, grouped by data segment ID.
-     * 
+     * returned run IDs, grouped by data segment ID.
      */
     public Map<String, Map<String, String>> getMessages() {
         return messages;
     }
 
     /**
-     * 
-     * @param messages  Messages containing additional status information for
-     *                  the returned run IDs, grouped by data segment ID.
-     * 
+     * @param messages Messages containing additional status information for
+     *                 the returned run IDs, grouped by data segment ID.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setMessages(Map<String, Map<String, String>> messages) {
         this.messages = (messages == null) ? new LinkedHashMap<String, Map<String, String>>() : messages;
@@ -443,22 +308,17 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return String results for the returned run IDs, grouped by data segment
-     *         ID.
-     * 
+     * ID.
      */
     public Map<String, Map<String, Map<String, String>>> getResults() {
         return results;
     }
 
     /**
-     * 
-     * @param results  String results for the returned run IDs, grouped by data
-     *                 segment ID.
-     * 
+     * @param results String results for the returned run IDs, grouped by data
+     *                segment ID.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setResults(Map<String, Map<String, Map<String, String>>> results) {
         this.results = (results == null) ? new LinkedHashMap<String, Map<String, Map<String, String>>>() : results;
@@ -466,22 +326,17 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Binary results for the returned run IDs, grouped by data segment
-     *         ID.
-     * 
+     * ID.
      */
     public Map<String, Map<String, Map<String, ByteBuffer>>> getBinResults() {
         return binResults;
     }
 
     /**
-     * 
-     * @param binResults  Binary results for the returned run IDs, grouped by
-     *                    data segment ID.
-     * 
+     * @param binResults Binary results for the returned run IDs, grouped by
+     *                   data segment ID.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setBinResults(Map<String, Map<String, Map<String, ByteBuffer>>> binResults) {
         this.binResults = (binResults == null) ? new LinkedHashMap<String, Map<String, Map<String, ByteBuffer>>>() : binResults;
@@ -489,22 +344,17 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Timing information for the returned run IDs, grouped by data
-     *         segment ID.
-     * 
+     * segment ID.
      */
     public Map<String, Map<String, Map<String, Long>>> getTimings() {
         return timings;
     }
 
     /**
-     * 
-     * @param timings  Timing information for the returned run IDs, grouped by
-     *                 data segment ID.
-     * 
+     * @param timings Timing information for the returned run IDs, grouped by
+     *                data segment ID.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setTimings(Map<String, Map<String, Map<String, Long>>> timings) {
         this.timings = (timings == null) ? new LinkedHashMap<String, Map<String, Map<String, Long>>>() : timings;
@@ -512,20 +362,15 @@ public class ShowProcStatusResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowProcStatusResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -535,9 +380,8 @@ public class ShowProcStatusResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -547,13 +391,10 @@ public class ShowProcStatusResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -608,71 +449,69 @@ public class ShowProcStatusResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.procNames = (Map<String, String>)value;
+                this.procNames = (Map<String, String>) value;
                 break;
 
             case 1:
-                this.params = (Map<String, Map<String, String>>)value;
+                this.params = (Map<String, Map<String, String>>) value;
                 break;
 
             case 2:
-                this.binParams = (Map<String, Map<String, ByteBuffer>>)value;
+                this.binParams = (Map<String, Map<String, ByteBuffer>>) value;
                 break;
 
             case 3:
-                this.inputTableNames = (Map<String, List<String>>)value;
+                this.inputTableNames = (Map<String, List<String>>) value;
                 break;
 
             case 4:
-                this.inputColumnNames = (Map<String, Map<String, List<String>>>)value;
+                this.inputColumnNames = (Map<String, Map<String, List<String>>>) value;
                 break;
 
             case 5:
-                this.outputTableNames = (Map<String, List<String>>)value;
+                this.outputTableNames = (Map<String, List<String>>) value;
                 break;
 
             case 6:
-                this.options = (Map<String, Map<String, String>>)value;
+                this.options = (Map<String, Map<String, String>>) value;
                 break;
 
             case 7:
-                this.overallStatuses = (Map<String, String>)value;
+                this.overallStatuses = (Map<String, String>) value;
                 break;
 
             case 8:
-                this.statuses = (Map<String, Map<String, String>>)value;
+                this.statuses = (Map<String, Map<String, String>>) value;
                 break;
 
             case 9:
-                this.messages = (Map<String, Map<String, String>>)value;
+                this.messages = (Map<String, Map<String, String>>) value;
                 break;
 
             case 10:
-                this.results = (Map<String, Map<String, Map<String, String>>>)value;
+                this.results = (Map<String, Map<String, Map<String, String>>>) value;
                 break;
 
             case 11:
-                this.binResults = (Map<String, Map<String, Map<String, ByteBuffer>>>)value;
+                this.binResults = (Map<String, Map<String, Map<String, ByteBuffer>>>) value;
                 break;
 
             case 12:
-                this.timings = (Map<String, Map<String, Map<String, Long>>>)value;
+                this.timings = (Map<String, Map<String, Map<String, Long>>>) value;
                 break;
 
             case 13:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -682,93 +521,93 @@ public class ShowProcStatusResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowProcStatusResponse that = (ShowProcStatusResponse)obj;
+        ShowProcStatusResponse that = (ShowProcStatusResponse) obj;
 
-        return ( this.procNames.equals( that.procNames )
-                 && this.params.equals( that.params )
-                 && this.binParams.equals( that.binParams )
-                 && this.inputTableNames.equals( that.inputTableNames )
-                 && this.inputColumnNames.equals( that.inputColumnNames )
-                 && this.outputTableNames.equals( that.outputTableNames )
-                 && this.options.equals( that.options )
-                 && this.overallStatuses.equals( that.overallStatuses )
-                 && this.statuses.equals( that.statuses )
-                 && this.messages.equals( that.messages )
-                 && this.results.equals( that.results )
-                 && this.binResults.equals( that.binResults )
-                 && this.timings.equals( that.timings )
-                 && this.info.equals( that.info ) );
+        return (this.procNames.equals(that.procNames)
+                && this.params.equals(that.params)
+                && this.binParams.equals(that.binParams)
+                && this.inputTableNames.equals(that.inputTableNames)
+                && this.inputColumnNames.equals(that.inputColumnNames)
+                && this.outputTableNames.equals(that.outputTableNames)
+                && this.options.equals(that.options)
+                && this.overallStatuses.equals(that.overallStatuses)
+                && this.statuses.equals(that.statuses)
+                && this.messages.equals(that.messages)
+                && this.results.equals(that.results)
+                && this.binResults.equals(that.binResults)
+                && this.timings.equals(that.timings)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "procNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "params" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.params ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "binParams" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.binParams ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "inputTableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.inputTableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "inputColumnNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.inputColumnNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "outputTableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.outputTableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "overallStatuses" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.overallStatuses ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "statuses" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.statuses ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "messages" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.messages ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "results" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.results ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "binResults" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.binResults ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "timings" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.timings ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("procNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procNames));
+        builder.append(", ");
+        builder.append(gd.toString("params"));
+        builder.append(": ");
+        builder.append(gd.toString(this.params));
+        builder.append(", ");
+        builder.append(gd.toString("binParams"));
+        builder.append(": ");
+        builder.append(gd.toString(this.binParams));
+        builder.append(", ");
+        builder.append(gd.toString("inputTableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.inputTableNames));
+        builder.append(", ");
+        builder.append(gd.toString("inputColumnNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.inputColumnNames));
+        builder.append(", ");
+        builder.append(gd.toString("outputTableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.outputTableNames));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append(", ");
+        builder.append(gd.toString("overallStatuses"));
+        builder.append(": ");
+        builder.append(gd.toString(this.overallStatuses));
+        builder.append(", ");
+        builder.append(gd.toString("statuses"));
+        builder.append(": ");
+        builder.append(gd.toString(this.statuses));
+        builder.append(", ");
+        builder.append(gd.toString("messages"));
+        builder.append(": ");
+        builder.append(gd.toString(this.messages));
+        builder.append(", ");
+        builder.append(gd.toString("results"));
+        builder.append(": ");
+        builder.append(gd.toString(this.results));
+        builder.append(", ");
+        builder.append(gd.toString("binResults"));
+        builder.append(": ");
+        builder.append(gd.toString(this.binResults));
+        builder.append(", ");
+        builder.append(gd.toString("timings"));
+        builder.append(": ");
+        builder.append(gd.toString(this.timings));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -791,6 +630,87 @@ public class ShowProcStatusResponse implements IndexedRecord {
         hashCode = (31 * hashCode) + this.timings.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Overall statuses for the returned run IDs. Note that these are rollups
+     * and individual statuses may differ between data segments for the same
+     * run ID; see {@code statuses} and {@code messages} for statuses from
+     * individual data segments.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#RUNNING
+     * RUNNING}: The proc instance is currently running.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#COMPLETE
+     * COMPLETE}: The proc instance completed with no errors.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#KILLED
+     * KILLED}: The proc instance was killed before completion.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcStatusResponse.OverallStatuses#ERROR ERROR}:
+     * The proc instance failed with an error.
+     * </ul>
+     * A set of string constants for the parameter {@code overallStatuses}.
+     */
+    public static final class OverallStatuses {
+
+        /**
+         * The proc instance is currently running.
+         */
+        public static final String RUNNING = "running";
+
+        /**
+         * The proc instance completed with no errors.
+         */
+        public static final String COMPLETE = "complete";
+
+        /**
+         * The proc instance was killed before completion.
+         */
+        public static final String KILLED = "killed";
+
+        /**
+         * The proc instance failed with an error.
+         */
+        public static final String ERROR = "error";
+
+        private OverallStatuses() {
+        }
+    }
+
+    /**
+     * Statuses for the returned run IDs, grouped by data segment ID.
+     * Valid values are:
+     * <ul>
+     * </ul>
+     * A set of string constants for the parameter {@code statuses}.
+     */
+    public static final class Statuses {
+
+        /**
+         * The proc instance is currently running.
+         */
+        public static final String RUNNING = "running";
+
+        /**
+         * The proc instance completed with no errors.
+         */
+        public static final String COMPLETE = "complete";
+
+        /**
+         * The proc instance was killed before completion.
+         */
+        public static final String KILLED = "killed";
+
+        /**
+         * The proc instance failed with an error.
+         */
+        public static final String ERROR = "error";
+
+        private Statuses() {
+        }
     }
 
 }

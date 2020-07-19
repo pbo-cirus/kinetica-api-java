@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,30 +23,15 @@ public class RevokePermissionProcResponse implements IndexedRecord {
             .record("RevokePermissionProcResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("name").type().stringType().noDefault()
-                .name("permission").type().stringType().noDefault()
-                .name("procName").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("name").type().stringType().noDefault()
+            .name("permission").type().stringType().noDefault()
+            .name("procName").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String name;
     private String permission;
     private String procName;
     private Map<String, String> info;
-
-
     /**
      * Constructs a RevokePermissionProcResponse object with default
      * parameters.
@@ -54,20 +40,25 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code name}.
-     * 
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name  Value of {@code name}.
-     * 
+     * @param name Value of {@code name}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokePermissionProcResponse setName(String name) {
         this.name = (name == null) ? "" : name;
@@ -75,20 +66,15 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code permission}.
-     * 
      */
     public String getPermission() {
         return permission;
     }
 
     /**
-     * 
-     * @param permission  Value of {@code permission}.
-     * 
+     * @param permission Value of {@code permission}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokePermissionProcResponse setPermission(String permission) {
         this.permission = (permission == null) ? "" : permission;
@@ -96,20 +82,15 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code procName}.
-     * 
      */
     public String getProcName() {
         return procName;
     }
 
     /**
-     * 
-     * @param procName  Value of {@code procName}.
-     * 
+     * @param procName Value of {@code procName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokePermissionProcResponse setProcName(String procName) {
         this.procName = (procName == null) ? "" : procName;
@@ -117,20 +98,15 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokePermissionProcResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -140,9 +116,8 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -152,13 +127,10 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -183,31 +155,29 @@ public class RevokePermissionProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.name = (String)value;
+                this.name = (String) value;
                 break;
 
             case 1:
-                this.permission = (String)value;
+                this.permission = (String) value;
                 break;
 
             case 2:
-                this.procName = (String)value;
+                this.procName = (String) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -217,43 +187,43 @@ public class RevokePermissionProcResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        RevokePermissionProcResponse that = (RevokePermissionProcResponse)obj;
+        RevokePermissionProcResponse that = (RevokePermissionProcResponse) obj;
 
-        return ( this.name.equals( that.name )
-                 && this.permission.equals( that.permission )
-                 && this.procName.equals( that.procName )
-                 && this.info.equals( that.info ) );
+        return (this.name.equals(that.name)
+                && this.permission.equals(that.permission)
+                && this.procName.equals(that.procName)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "name" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.name ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "permission" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.permission ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "procName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("name"));
+        builder.append(": ");
+        builder.append(gd.toString(this.name));
+        builder.append(", ");
+        builder.append(gd.toString("permission"));
+        builder.append(": ");
+        builder.append(gd.toString(this.permission));
+        builder.append(", ");
+        builder.append(gd.toString("procName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procName));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

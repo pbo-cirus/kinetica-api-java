@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -46,23 +47,811 @@ public class CreateTableRequest implements IndexedRecord {
             .record("CreateTableRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeId").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String typeId;
+    private Map<String, String> options;
+    /**
+     * Constructs a CreateTableRequest object with default parameters.
+     */
+    public CreateTableRequest() {
+        tableName = "";
+        typeId = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a CreateTableRequest object with the specified parameters.
+     *
+     * @param tableName Name of the table to be created. Error for requests
+     *                  with existing table of the same name and type ID may
+     *                  be suppressed by using the {@code no_error_if_exists}
+     *                  option.  See <a
+     *                  href="../../../../../concepts/tables.html"
+     *                  target="_top">Tables</a> for naming restrictions.
+     * @param typeId    ID of a currently registered type. All objects added to
+     *                  the newly created table will be of this type.  Ignored if
+     *                  {@code is_collection} is {@code true}.
+     * @param options   Optional parameters.
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
+     *                  NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error
+     *                  from occurring if the table already exists and is of the
+     *                  given type.  If a table with the same ID but a different
+     *                  type exists, it is still an error.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
+     *                  COLLECTION_NAME}: Name of a collection which is to
+     *                  contain the newly created table. If the collection
+     *                  provided is non-existent, the collection will be
+     *                  automatically created. If empty, then the newly created
+     *                  table will be a top-level table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
+     *                  IS_COLLECTION}: Indicates whether the new table to be
+     *                  created will be a collection.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
+     *                  DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value
+     *                  will be ignored.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
+     *                  IS_REPLICATED}: For a table, affects the <a
+     *                  href="../../../../../concepts/tables.html#distribution"
+     *                  target="_top">distribution scheme</a> for the table's
+     *                  data.  If true and the given type has no explicit <a
+     *                  href="../../../../../concepts/tables.html#shard-key"
+     *                  target="_top">shard key</a> defined, the table will be
+     *                  <a
+     *                  href="../../../../../concepts/tables.html#replication"
+     *                  target="_top">replicated</a>.  If false, the table will
+     *                  be <a
+     *                  href="../../../../../concepts/tables.html#sharding"
+     *                  target="_top">sharded</a> according to the shard key
+     *                  specified in the given {@code typeId}, or <a
+     *                  href="../../../../../concepts/tables.html#random-sharding"
+     *                  target="_top">randomly sharded</a>, if no shard key is
+     *                  specified.  Note that a type containing a shard key
+     *                  cannot be used to create a replicated table.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
+     *                  FOREIGN_KEYS}: Semicolon-separated list of <a
+     *                  href="../../../../../concepts/tables.html#foreign-keys"
+     *                  target="_top">foreign keys</a>, of the format
+     *                  '(source_column_name [, ...]) references
+     *                  target_table_name(primary_key_column_name [, ...]) [as
+     *                  foreign_key_name]'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
+     *                  FOREIGN_SHARD_KEY}: Foreign shard key of the format
+     *                  'source_column references shard_by_column from
+     *                  target_table(primary_key_column)'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
+     *                  PARTITION_TYPE}: <a
+     *                  href="../../../../../concepts/tables.html#partitioning"
+     *                  target="_top">Partitioning</a> scheme to use.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#RANGE
+     *                  RANGE}: Use <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                  target="_top">range partitioning</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
+     *                  INTERVAL}: Use <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-interval"
+     *                  target="_top">interval partitioning</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#LIST
+     *                  LIST}: Use <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                  target="_top">list partitioning</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#HASH
+     *                  HASH}: Use <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-hash"
+     *                  target="_top">hash partitioning</a>.
+     *                  </ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
+     *                  PARTITION_KEYS}: Comma-separated list of partition keys,
+     *                  which are the columns or column expressions by which
+     *                  records will be assigned to partitions defined by {@code
+     *                  partition_definitions}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
+     *                  PARTITION_DEFINITIONS}: Comma-separated list of
+     *                  partition definitions, whose format depends on the
+     *                  choice of {@code partition_type}.  See <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                  target="_top">range partitioning</a>, <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-interval"
+     *                  target="_top">interval partitioning</a>, <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                  target="_top">list partitioning</a>, or <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-hash"
+     *                  target="_top">hash partitioning</a> for example formats.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
+     *                  IS_AUTOMATIC_PARTITION}: If true, a new partition will
+     *                  be created for values which don't fall into an existing
+     *                  partition.  Currently only supported for <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                  target="_top">list partitions</a>.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}:
+     *                  For a table, sets the <a
+     *                  href="../../../../../concepts/ttl.html"
+     *                  target="_top">TTL</a> of the table specified in {@code
+     *                  tableName}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
+     *                  CHUNK_SIZE}: Indicates the number of records per chunk
+     *                  to be used for this table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
+     *                  IS_RESULT_TABLE}: For a table, indicates whether the
+     *                  table is an in-memory table. A result table cannot
+     *                  contain store_only, text_search, or string columns
+     *                  (charN columns are acceptable), and it will not be
+     *                  retained if the server is restarted.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
+     *                  STRATEGY_DEFINITION}: The <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy</a> for the table and its
+     *                  columns. See <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy usage</a> for format and <a
+     *                  href="../../../../../rm/usage.html#tier-strategies"
+     *                  target="_top">tier strategy examples</a> for examples.
+     *                  </ul>
+     *                  The default value is an empty {@link Map}.
+     */
+    public CreateTableRequest(String tableName, String typeId, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.typeId = (typeId == null) ? "" : typeId;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table to be created. Error for requests with
+     * existing table of the same name and type ID may be suppressed by
+     * using the {@code no_error_if_exists} option.  See <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">Tables</a> for naming restrictions.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table to be created. Error for requests
+     *                  with existing table of the same name and type ID may
+     *                  be suppressed by using the {@code no_error_if_exists}
+     *                  option.  See <a
+     *                  href="../../../../../concepts/tables.html"
+     *                  target="_top">Tables</a> for naming restrictions.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTableRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return ID of a currently registered type. All objects added to the
+     * newly created table will be of this type.  Ignored if {@code
+     * is_collection} is {@code true}.
+     */
+    public String getTypeId() {
+        return typeId;
+    }
+
+    /**
+     * @param typeId ID of a currently registered type. All objects added to
+     *               the newly created table will be of this type.  Ignored if
+     *               {@code is_collection} is {@code true}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTableRequest setTypeId(String typeId) {
+        this.typeId = (typeId == null) ? "" : typeId;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
+     * NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error from
+     * occurring if the table already exists and is of the given type.
+     * If a table with the same ID but a different type exists, it is
+     * still an error.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created table. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created table will be a top-level table.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
+     * IS_COLLECTION}: Indicates whether the new table to be created
+     * will be a collection.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
+     * DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value will be
+     * ignored.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
+     * IS_REPLICATED}: For a table, affects the <a
+     * href="../../../../../concepts/tables.html#distribution"
+     * target="_top">distribution scheme</a> for the table's data.  If
+     * true and the given type has no explicit <a
+     * href="../../../../../concepts/tables.html#shard-key"
+     * target="_top">shard key</a> defined, the table will be <a
+     * href="../../../../../concepts/tables.html#replication"
+     * target="_top">replicated</a>.  If false, the table will be <a
+     * href="../../../../../concepts/tables.html#sharding"
+     * target="_top">sharded</a> according to the shard key specified
+     * in the given {@code typeId}, or <a
+     * href="../../../../../concepts/tables.html#random-sharding"
+     * target="_top">randomly sharded</a>, if no shard key is
+     * specified.  Note that a type containing a shard key cannot be
+     * used to create a replicated table.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
+     * FOREIGN_KEYS}: Semicolon-separated list of <a
+     * href="../../../../../concepts/tables.html#foreign-keys"
+     * target="_top">foreign keys</a>, of the format
+     * '(source_column_name [, ...]) references
+     * target_table_name(primary_key_column_name [, ...]) [as
+     * foreign_key_name]'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
+     * FOREIGN_SHARD_KEY}: Foreign shard key of the format
+     * 'source_column references shard_by_column from
+     * target_table(primary_key_column)'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
+     * PARTITION_TYPE}: <a
+     * href="../../../../../concepts/tables.html#partitioning"
+     * target="_top">Partitioning</a> scheme to use.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#RANGE RANGE}: Use
+     * <a
+     * href="../../../../../concepts/tables.html#partitioning-by-range"
+     * target="_top">range partitioning</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
+     * INTERVAL}: Use <a
+     * href="../../../../../concepts/tables.html#partitioning-by-interval"
+     * target="_top">interval partitioning</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#LIST LIST}: Use <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list"
+     * target="_top">list partitioning</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#HASH HASH}: Use <a
+     * href="../../../../../concepts/tables.html#partitioning-by-hash"
+     * target="_top">hash partitioning</a>.
+     * </ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
+     * PARTITION_KEYS}: Comma-separated list of partition keys, which
+     * are the columns or column expressions by which records will be
+     * assigned to partitions defined by {@code partition_definitions}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
+     * PARTITION_DEFINITIONS}: Comma-separated list of partition
+     * definitions, whose format depends on the choice of {@code
+     * partition_type}.  See <a
+     * href="../../../../../concepts/tables.html#partitioning-by-range"
+     * target="_top">range partitioning</a>, <a
+     * href="../../../../../concepts/tables.html#partitioning-by-interval"
+     * target="_top">interval partitioning</a>, <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list"
+     * target="_top">list partitioning</a>, or <a
+     * href="../../../../../concepts/tables.html#partitioning-by-hash"
+     * target="_top">hash partitioning</a> for example formats.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
+     * IS_AUTOMATIC_PARTITION}: If true, a new partition will be
+     * created for values which don't fall into an existing partition.
+     * Currently only supported for <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list"
+     * target="_top">list partitions</a>.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}: For a
+     * table, sets the <a href="../../../../../concepts/ttl.html"
+     * target="_top">TTL</a> of the table specified in {@code
+     * tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
+     * CHUNK_SIZE}: Indicates the number of records per chunk to be
+     * used for this table.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
+     * IS_RESULT_TABLE}: For a table, indicates whether the table is an
+     * in-memory table. A result table cannot contain store_only,
+     * text_search, or string columns (charN columns are acceptable),
+     * and it will not be retained if the server is restarted.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
+     * STRATEGY_DEFINITION}: The <a
+     * href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy</a> for the table and its columns.
+     * See <a href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy usage</a> for format and <a
+     * href="../../../../../rm/usage.html#tier-strategies"
+     * target="_top">tier strategy examples</a> for examples.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
+     *                NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error
+     *                from occurring if the table already exists and is of the
+     *                given type.  If a table with the same ID but a different
+     *                type exists, it is still an error.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created table. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                table will be a top-level table.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
+     *                IS_COLLECTION}: Indicates whether the new table to be
+     *                created will be a collection.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
+     *                DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value
+     *                will be ignored.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
+     *                IS_REPLICATED}: For a table, affects the <a
+     *                href="../../../../../concepts/tables.html#distribution"
+     *                target="_top">distribution scheme</a> for the table's
+     *                data.  If true and the given type has no explicit <a
+     *                href="../../../../../concepts/tables.html#shard-key"
+     *                target="_top">shard key</a> defined, the table will be
+     *                <a
+     *                href="../../../../../concepts/tables.html#replication"
+     *                target="_top">replicated</a>.  If false, the table will
+     *                be <a
+     *                href="../../../../../concepts/tables.html#sharding"
+     *                target="_top">sharded</a> according to the shard key
+     *                specified in the given {@code typeId}, or <a
+     *                href="../../../../../concepts/tables.html#random-sharding"
+     *                target="_top">randomly sharded</a>, if no shard key is
+     *                specified.  Note that a type containing a shard key
+     *                cannot be used to create a replicated table.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
+     *                FOREIGN_KEYS}: Semicolon-separated list of <a
+     *                href="../../../../../concepts/tables.html#foreign-keys"
+     *                target="_top">foreign keys</a>, of the format
+     *                '(source_column_name [, ...]) references
+     *                target_table_name(primary_key_column_name [, ...]) [as
+     *                foreign_key_name]'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
+     *                FOREIGN_SHARD_KEY}: Foreign shard key of the format
+     *                'source_column references shard_by_column from
+     *                target_table(primary_key_column)'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
+     *                PARTITION_TYPE}: <a
+     *                href="../../../../../concepts/tables.html#partitioning"
+     *                target="_top">Partitioning</a> scheme to use.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#RANGE
+     *                RANGE}: Use <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                target="_top">range partitioning</a>.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
+     *                INTERVAL}: Use <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-interval"
+     *                target="_top">interval partitioning</a>.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#LIST
+     *                LIST}: Use <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                target="_top">list partitioning</a>.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#HASH
+     *                HASH}: Use <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-hash"
+     *                target="_top">hash partitioning</a>.
+     *                </ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
+     *                PARTITION_KEYS}: Comma-separated list of partition keys,
+     *                which are the columns or column expressions by which
+     *                records will be assigned to partitions defined by {@code
+     *                partition_definitions}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
+     *                PARTITION_DEFINITIONS}: Comma-separated list of
+     *                partition definitions, whose format depends on the
+     *                choice of {@code partition_type}.  See <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                target="_top">range partitioning</a>, <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-interval"
+     *                target="_top">interval partitioning</a>, <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                target="_top">list partitioning</a>, or <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-hash"
+     *                target="_top">hash partitioning</a> for example formats.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
+     *                IS_AUTOMATIC_PARTITION}: If true, a new partition will
+     *                be created for values which don't fall into an existing
+     *                partition.  Currently only supported for <a
+     *                href="../../../../../concepts/tables.html#partitioning-by-list"
+     *                target="_top">list partitions</a>.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}:
+     *                For a table, sets the <a
+     *                href="../../../../../concepts/ttl.html"
+     *                target="_top">TTL</a> of the table specified in {@code
+     *                tableName}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
+     *                CHUNK_SIZE}: Indicates the number of records per chunk
+     *                to be used for this table.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
+     *                IS_RESULT_TABLE}: For a table, indicates whether the
+     *                table is an in-memory table. A result table cannot
+     *                contain store_only, text_search, or string columns
+     *                (charN columns are acceptable), and it will not be
+     *                retained if the server is restarted.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
+     *                STRATEGY_DEFINITION}: The <a
+     *                href="../../../../../rm/concepts.html#tier-strategies"
+     *                target="_top">tier strategy</a> for the table and its
+     *                columns. See <a
+     *                href="../../../../../rm/concepts.html#tier-strategies"
+     *                target="_top">tier strategy usage</a> for format and <a
+     *                href="../../../../../rm/usage.html#tier-strategies"
+     *                target="_top">tier strategy examples</a> for examples.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTableRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.typeId;
+
+            case 2:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.typeId = (String) value;
+                break;
+
+            case 2:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        CreateTableRequest that = (CreateTableRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.typeId.equals(that.typeId)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.typeId.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -470,824 +1259,8 @@ public class CreateTableRequest implements IndexedRecord {
          */
         public static final String STRATEGY_DEFINITION = "strategy_definition";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String typeId;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a CreateTableRequest object with default parameters.
-     */
-    public CreateTableRequest() {
-        tableName = "";
-        typeId = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a CreateTableRequest object with the specified parameters.
-     * 
-     * @param tableName  Name of the table to be created. Error for requests
-     *                   with existing table of the same name and type ID may
-     *                   be suppressed by using the {@code no_error_if_exists}
-     *                   option.  See <a
-     *                   href="../../../../../concepts/tables.html"
-     *                   target="_top">Tables</a> for naming restrictions.
-     * @param typeId  ID of a currently registered type. All objects added to
-     *                the newly created table will be of this type.  Ignored if
-     *                {@code is_collection} is {@code true}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
-     *                 NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error
-     *                 from occurring if the table already exists and is of the
-     *                 given type.  If a table with the same ID but a different
-     *                 type exists, it is still an error.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created table. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 table will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
-     *                 IS_COLLECTION}: Indicates whether the new table to be
-     *                 created will be a collection.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
-     *                 DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value
-     *                 will be ignored.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: For a table, affects the <a
-     *                 href="../../../../../concepts/tables.html#distribution"
-     *                 target="_top">distribution scheme</a> for the table's
-     *                 data.  If true and the given type has no explicit <a
-     *                 href="../../../../../concepts/tables.html#shard-key"
-     *                 target="_top">shard key</a> defined, the table will be
-     *                 <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a>.  If false, the table will
-     *                 be <a
-     *                 href="../../../../../concepts/tables.html#sharding"
-     *                 target="_top">sharded</a> according to the shard key
-     *                 specified in the given {@code typeId}, or <a
-     *                 href="../../../../../concepts/tables.html#random-sharding"
-     *                 target="_top">randomly sharded</a>, if no shard key is
-     *                 specified.  Note that a type containing a shard key
-     *                 cannot be used to create a replicated table.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
-     *                 FOREIGN_KEYS}: Semicolon-separated list of <a
-     *                 href="../../../../../concepts/tables.html#foreign-keys"
-     *                 target="_top">foreign keys</a>, of the format
-     *                 '(source_column_name [, ...]) references
-     *                 target_table_name(primary_key_column_name [, ...]) [as
-     *                 foreign_key_name]'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
-     *                 FOREIGN_SHARD_KEY}: Foreign shard key of the format
-     *                 'source_column references shard_by_column from
-     *                 target_table(primary_key_column)'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
-     *                 PARTITION_TYPE}: <a
-     *                 href="../../../../../concepts/tables.html#partitioning"
-     *                 target="_top">Partitioning</a> scheme to use.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#RANGE
-     *                 RANGE}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                 target="_top">range partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
-     *                 INTERVAL}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *                 target="_top">interval partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#LIST
-     *                 LIST}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#HASH
-     *                 HASH}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *                 target="_top">hash partitioning</a>.
-     *                 </ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
-     *                 PARTITION_KEYS}: Comma-separated list of partition keys,
-     *                 which are the columns or column expressions by which
-     *                 records will be assigned to partitions defined by {@code
-     *                 partition_definitions}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
-     *                 PARTITION_DEFINITIONS}: Comma-separated list of
-     *                 partition definitions, whose format depends on the
-     *                 choice of {@code partition_type}.  See <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                 target="_top">range partitioning</a>, <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *                 target="_top">interval partitioning</a>, <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitioning</a>, or <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *                 target="_top">hash partitioning</a> for example formats.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
-     *                 IS_AUTOMATIC_PARTITION}: If true, a new partition will
-     *                 be created for values which don't fall into an existing
-     *                 partition.  Currently only supported for <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitions</a>.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}:
-     *                 For a table, sets the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
-     *                 CHUNK_SIZE}: Indicates the number of records per chunk
-     *                 to be used for this table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
-     *                 IS_RESULT_TABLE}: For a table, indicates whether the
-     *                 table is an in-memory table. A result table cannot
-     *                 contain store_only, text_search, or string columns
-     *                 (charN columns are acceptable), and it will not be
-     *                 retained if the server is restarted.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
-     *                 STRATEGY_DEFINITION}: The <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy</a> for the table and its
-     *                 columns. See <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy usage</a> for format and <a
-     *                 href="../../../../../rm/usage.html#tier-strategies"
-     *                 target="_top">tier strategy examples</a> for examples.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public CreateTableRequest(String tableName, String typeId, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.typeId = (typeId == null) ? "" : typeId;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table to be created. Error for requests with
-     *         existing table of the same name and type ID may be suppressed by
-     *         using the {@code no_error_if_exists} option.  See <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">Tables</a> for naming restrictions.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table to be created. Error for requests
-     *                   with existing table of the same name and type ID may
-     *                   be suppressed by using the {@code no_error_if_exists}
-     *                   option.  See <a
-     *                   href="../../../../../concepts/tables.html"
-     *                   target="_top">Tables</a> for naming restrictions.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTableRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return ID of a currently registered type. All objects added to the
-     *         newly created table will be of this type.  Ignored if {@code
-     *         is_collection} is {@code true}.
-     * 
-     */
-    public String getTypeId() {
-        return typeId;
-    }
-
-    /**
-     * 
-     * @param typeId  ID of a currently registered type. All objects added to
-     *                the newly created table will be of this type.  Ignored if
-     *                {@code is_collection} is {@code true}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTableRequest setTypeId(String typeId) {
-        this.typeId = (typeId == null) ? "" : typeId;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
-     *         NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error from
-     *         occurring if the table already exists and is of the given type.
-     *         If a table with the same ID but a different type exists, it is
-     *         still an error.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created table. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created table will be a top-level table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
-     *         IS_COLLECTION}: Indicates whether the new table to be created
-     *         will be a collection.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
-     *         DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value will be
-     *         ignored.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
-     *         IS_REPLICATED}: For a table, affects the <a
-     *         href="../../../../../concepts/tables.html#distribution"
-     *         target="_top">distribution scheme</a> for the table's data.  If
-     *         true and the given type has no explicit <a
-     *         href="../../../../../concepts/tables.html#shard-key"
-     *         target="_top">shard key</a> defined, the table will be <a
-     *         href="../../../../../concepts/tables.html#replication"
-     *         target="_top">replicated</a>.  If false, the table will be <a
-     *         href="../../../../../concepts/tables.html#sharding"
-     *         target="_top">sharded</a> according to the shard key specified
-     *         in the given {@code typeId}, or <a
-     *         href="../../../../../concepts/tables.html#random-sharding"
-     *         target="_top">randomly sharded</a>, if no shard key is
-     *         specified.  Note that a type containing a shard key cannot be
-     *         used to create a replicated table.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
-     *         FOREIGN_KEYS}: Semicolon-separated list of <a
-     *         href="../../../../../concepts/tables.html#foreign-keys"
-     *         target="_top">foreign keys</a>, of the format
-     *         '(source_column_name [, ...]) references
-     *         target_table_name(primary_key_column_name [, ...]) [as
-     *         foreign_key_name]'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
-     *         FOREIGN_SHARD_KEY}: Foreign shard key of the format
-     *         'source_column references shard_by_column from
-     *         target_table(primary_key_column)'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
-     *         PARTITION_TYPE}: <a
-     *         href="../../../../../concepts/tables.html#partitioning"
-     *         target="_top">Partitioning</a> scheme to use.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#RANGE RANGE}: Use
-     *         <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-range"
-     *         target="_top">range partitioning</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
-     *         INTERVAL}: Use <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *         target="_top">interval partitioning</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#LIST LIST}: Use <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list"
-     *         target="_top">list partitioning</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#HASH HASH}: Use <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *         target="_top">hash partitioning</a>.
-     *         </ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
-     *         PARTITION_KEYS}: Comma-separated list of partition keys, which
-     *         are the columns or column expressions by which records will be
-     *         assigned to partitions defined by {@code partition_definitions}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
-     *         PARTITION_DEFINITIONS}: Comma-separated list of partition
-     *         definitions, whose format depends on the choice of {@code
-     *         partition_type}.  See <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-range"
-     *         target="_top">range partitioning</a>, <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *         target="_top">interval partitioning</a>, <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list"
-     *         target="_top">list partitioning</a>, or <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *         target="_top">hash partitioning</a> for example formats.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
-     *         IS_AUTOMATIC_PARTITION}: If true, a new partition will be
-     *         created for values which don't fall into an existing partition.
-     *         Currently only supported for <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list"
-     *         target="_top">list partitions</a>.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}: For a
-     *         table, sets the <a href="../../../../../concepts/ttl.html"
-     *         target="_top">TTL</a> of the table specified in {@code
-     *         tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
-     *         CHUNK_SIZE}: Indicates the number of records per chunk to be
-     *         used for this table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
-     *         IS_RESULT_TABLE}: For a table, indicates whether the table is an
-     *         in-memory table. A result table cannot contain store_only,
-     *         text_search, or string columns (charN columns are acceptable),
-     *         and it will not be retained if the server is restarted.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
-     *         STRATEGY_DEFINITION}: The <a
-     *         href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy</a> for the table and its columns.
-     *         See <a href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy usage</a> for format and <a
-     *         href="../../../../../rm/usage.html#tier-strategies"
-     *         target="_top">tier strategy examples</a> for examples.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#NO_ERROR_IF_EXISTS
-     *                 NO_ERROR_IF_EXISTS}: If {@code true}, prevents an error
-     *                 from occurring if the table already exists and is of the
-     *                 given type.  If a table with the same ID but a different
-     *                 type exists, it is still an error.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created table. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 table will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_COLLECTION
-     *                 IS_COLLECTION}: Indicates whether the new table to be
-     *                 created will be a collection.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#DISALLOW_HOMOGENEOUS_TABLES
-     *                 DISALLOW_HOMOGENEOUS_TABLES}: No longer supported; value
-     *                 will be ignored.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: For a table, affects the <a
-     *                 href="../../../../../concepts/tables.html#distribution"
-     *                 target="_top">distribution scheme</a> for the table's
-     *                 data.  If true and the given type has no explicit <a
-     *                 href="../../../../../concepts/tables.html#shard-key"
-     *                 target="_top">shard key</a> defined, the table will be
-     *                 <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a>.  If false, the table will
-     *                 be <a
-     *                 href="../../../../../concepts/tables.html#sharding"
-     *                 target="_top">sharded</a> according to the shard key
-     *                 specified in the given {@code typeId}, or <a
-     *                 href="../../../../../concepts/tables.html#random-sharding"
-     *                 target="_top">randomly sharded</a>, if no shard key is
-     *                 specified.  Note that a type containing a shard key
-     *                 cannot be used to create a replicated table.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_KEYS
-     *                 FOREIGN_KEYS}: Semicolon-separated list of <a
-     *                 href="../../../../../concepts/tables.html#foreign-keys"
-     *                 target="_top">foreign keys</a>, of the format
-     *                 '(source_column_name [, ...]) references
-     *                 target_table_name(primary_key_column_name [, ...]) [as
-     *                 foreign_key_name]'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FOREIGN_SHARD_KEY
-     *                 FOREIGN_SHARD_KEY}: Foreign shard key of the format
-     *                 'source_column references shard_by_column from
-     *                 target_table(primary_key_column)'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_TYPE
-     *                 PARTITION_TYPE}: <a
-     *                 href="../../../../../concepts/tables.html#partitioning"
-     *                 target="_top">Partitioning</a> scheme to use.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#RANGE
-     *                 RANGE}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                 target="_top">range partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#INTERVAL
-     *                 INTERVAL}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *                 target="_top">interval partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#LIST
-     *                 LIST}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitioning</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#HASH
-     *                 HASH}: Use <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *                 target="_top">hash partitioning</a>.
-     *                 </ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_KEYS
-     *                 PARTITION_KEYS}: Comma-separated list of partition keys,
-     *                 which are the columns or column expressions by which
-     *                 records will be assigned to partitions defined by {@code
-     *                 partition_definitions}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#PARTITION_DEFINITIONS
-     *                 PARTITION_DEFINITIONS}: Comma-separated list of
-     *                 partition definitions, whose format depends on the
-     *                 choice of {@code partition_type}.  See <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                 target="_top">range partitioning</a>, <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-interval"
-     *                 target="_top">interval partitioning</a>, <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitioning</a>, or <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-hash"
-     *                 target="_top">hash partitioning</a> for example formats.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_AUTOMATIC_PARTITION
-     *                 IS_AUTOMATIC_PARTITION}: If true, a new partition will
-     *                 be created for values which don't fall into an existing
-     *                 partition.  Currently only supported for <a
-     *                 href="../../../../../concepts/tables.html#partitioning-by-list"
-     *                 target="_top">list partitions</a>.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TTL TTL}:
-     *                 For a table, sets the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#CHUNK_SIZE
-     *                 CHUNK_SIZE}: Indicates the number of records per chunk
-     *                 to be used for this table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#IS_RESULT_TABLE
-     *                 IS_RESULT_TABLE}: For a table, indicates whether the
-     *                 table is an in-memory table. A result table cannot
-     *                 contain store_only, text_search, or string columns
-     *                 (charN columns are acceptable), and it will not be
-     *                 retained if the server is restarted.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateTableRequest.Options#STRATEGY_DEFINITION
-     *                 STRATEGY_DEFINITION}: The <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy</a> for the table and its
-     *                 columns. See <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy usage</a> for format and <a
-     *                 href="../../../../../rm/usage.html#tier-strategies"
-     *                 target="_top">tier strategy examples</a> for examples.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTableRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.typeId;
-
-            case 2:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.typeId = (String)value;
-                break;
-
-            case 2:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        CreateTableRequest that = (CreateTableRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeId.equals( that.typeId )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.typeId.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -30,32 +31,1027 @@ public class VisualizeImageChartRequest implements IndexedRecord {
             .record("VisualizeImageChartRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("xColumnNames").type().array().items().stringType().noDefault()
-                .name("yColumnNames").type().array().items().stringType().noDefault()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("bgColor").type().stringType().noDefault()
-                .name("styleOptions").type().map().values().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("xColumnNames").type().array().items().stringType().noDefault()
+            .name("yColumnNames").type().array().items().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("bgColor").type().stringType().noDefault()
+            .name("styleOptions").type().map().values().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private List<String> xColumnNames;
+    private List<String> yColumnNames;
+    private double minX;
+    private double maxX;
+    private double minY;
+    private double maxY;
+    private int width;
+    private int height;
+    private String bgColor;
+    private Map<String, List<String>> styleOptions;
+    private Map<String, String> options;
+    /**
+     * Constructs a VisualizeImageChartRequest object with default parameters.
+     */
+    public VisualizeImageChartRequest() {
+        tableName = "";
+        xColumnNames = new ArrayList<>();
+        yColumnNames = new ArrayList<>();
+        bgColor = "";
+        styleOptions = new LinkedHashMap<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a VisualizeImageChartRequest object with the specified
+     * parameters.
+     *
+     * @param tableName    Name of the table containing the data to be drawn as a
+     *                     chart.
+     * @param xColumnNames Names of the columns containing the data mapped to
+     *                     the x axis of a chart.
+     * @param yColumnNames Names of the columns containing the data mapped to
+     *                     the y axis of a chart.
+     * @param minX         Lower bound for the x column values. For non-numeric x
+     *                     column, each x column item is mapped to an integral value
+     *                     starting from 0.
+     * @param maxX         Upper bound for the x column values. For non-numeric x
+     *                     column, each x column item is mapped to an integral value
+     *                     starting from 0.
+     * @param minY         Lower bound for the y column values. For non-numeric y
+     *                     column, each y column item is mapped to an integral value
+     *                     starting from 0.
+     * @param maxY         Upper bound for the y column values. For non-numeric y
+     *                     column, each y column item is mapped to an integral value
+     *                     starting from 0.
+     * @param width        Width of the generated image in pixels.
+     * @param height       Height of the generated image in pixels.
+     * @param bgColor      Background color of the generated image.
+     * @param styleOptions Rendering style options for a chart.
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
+     *                     POINTCOLOR}: The color of points in the plot
+     *                     represented as a hexadecimal number.  The default
+     *                     value is '0000FF'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
+     *                     POINTSIZE}: The size of points in the plot
+     *                     represented as number of pixels.  The default value
+     *                     is '3'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
+     *                     POINTSHAPE}: The shape of points in the plot.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
+     *                     CIRCLE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     *                     SQUARE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
+     *                     DIAMOND}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
+     *                     HOLLOWCIRCLE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
+     *                     HOLLOWSQUARE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
+     *                     HOLLOWDIAMOND}
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     *                     SQUARE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
+     *                     CB_POINTCOLORS}: Point color class break
+     *                     information consisting of three entries:
+     *                     class-break attribute, class-break values/ranges,
+     *                     and point color values. This option overrides the
+     *                     pointcolor option if both are provided. Class-break
+     *                     ranges are represented in the form of "min:max".
+     *                     Class-break values/ranges and point color values
+     *                     are separated by cb_delimiter, e.g. {"price",
+     *                     "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
+     *                     CB_POINTSIZES}: Point size class break information
+     *                     consisting of three entries: class-break attribute,
+     *                     class-break values/ranges, and point size values.
+     *                     This option overrides the pointsize option if both
+     *                     are provided. Class-break ranges are represented in
+     *                     the form of "min:max". Class-break values/ranges
+     *                     and point size values are separated by
+     *                     cb_delimiter, e.g. {"states", "NY;TX;CA", "3;5;7"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
+     *                     CB_POINTSHAPES}: Point shape class break
+     *                     information consisting of three entries:
+     *                     class-break attribute, class-break values/ranges,
+     *                     and point shape names. This option overrides the
+     *                     pointshape option if both are provided. Class-break
+     *                     ranges are represented in the form of "min:max".
+     *                     Class-break values/ranges and point shape names are
+     *                     separated by cb_delimiter, e.g. {"states",
+     *                     "NY;TX;CA", "circle;square;diamond"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
+     *                     CB_DELIMITER}: A character or string which
+     *                     separates per-class values in a class-break style
+     *                     option string.  The default value is ';'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
+     *                     X_ORDER_BY}: An expression or aggregate expression
+     *                     by which non-numeric x column values are sorted,
+     *                     e.g. "avg(price) descending".
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
+     *                     Y_ORDER_BY}: An expression or aggregate expression
+     *                     by which non-numeric y column values are sorted,
+     *                     e.g. "avg(price)", which defaults to "avg(price)
+     *                     ascending".
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
+     *                     SCALE_TYPE_X}: Type of x axis scale.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}: No scale is applied to the x axis.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     *                     LOG}: A base-10 log scale is applied to the x axis.
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
+     *                     SCALE_TYPE_Y}: Type of y axis scale.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}: No scale is applied to the y axis.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     *                     LOG}: A base-10 log scale is applied to the y axis.
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
+     *                     MIN_MAX_SCALED}: If this options is set to "false",
+     *                     this endpoint expects request's min/max values are
+     *                     not yet scaled. They will be scaled according to
+     *                     scale_type_x or scale_type_y for response. If this
+     *                     options is set to "true", this endpoint expects
+     *                     request's min/max values are already scaled
+     *                     according to scale_type_x/scale_type_y. Response's
+     *                     min/max values will be equal to request's min/max
+     *                     values.  The default value is 'false'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
+     *                     JITTER_X}: Amplitude of horizontal jitter applied
+     *                     to non-numeric x column values.  The default value
+     *                     is '0.0'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
+     *                     JITTER_Y}: Amplitude of vertical jitter applied to
+     *                     non-numeric y column values.  The default value is
+     *                     '0.0'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
+     *                     PLOT_ALL}: If this options is set to "true", all
+     *                     non-numeric column values are plotted ignoring
+     *                     min_x, max_x, min_y and max_y parameters.  The
+     *                     default value is 'false'.
+     *                     </ul>
+     * @param options      Optional parameters.
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
+     *                     IMAGE_ENCODING}: Encoding to be applied to the output
+     *                     image. When using JSON serialization it is recommended
+     *                     to specify this as {@code base64}.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
+     *                     BASE64}: Apply base64 encoding to the output image.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     *                     NONE}: Do not apply any additional encoding to the
+     *                     output image.
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     *                     NONE}.
+     *                     </ul>
+     *                     The default value is an empty {@link Map}.
+     */
+    public VisualizeImageChartRequest(String tableName, List<String> xColumnNames, List<String> yColumnNames, double minX, double maxX, double minY, double maxY, int width, int height, String bgColor, Map<String, List<String>> styleOptions, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.xColumnNames = (xColumnNames == null) ? new ArrayList<String>() : xColumnNames;
+        this.yColumnNames = (yColumnNames == null) ? new ArrayList<String>() : yColumnNames;
+        this.minX = minX;
+        this.maxX = maxX;
+        this.minY = minY;
+        this.maxY = maxY;
+        this.width = width;
+        this.height = height;
+        this.bgColor = (bgColor == null) ? "" : bgColor;
+        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, List<String>>() : styleOptions;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table containing the data to be drawn as a chart.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table containing the data to be drawn as a
+     *                  chart.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return Names of the columns containing the data mapped to the x axis of
+     * a chart.
+     */
+    public List<String> getXColumnNames() {
+        return xColumnNames;
+    }
+
+    /**
+     * @param xColumnNames Names of the columns containing the data mapped to
+     *                     the x axis of a chart.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setXColumnNames(List<String> xColumnNames) {
+        this.xColumnNames = (xColumnNames == null) ? new ArrayList<String>() : xColumnNames;
+        return this;
+    }
+
+    /**
+     * @return Names of the columns containing the data mapped to the y axis of
+     * a chart.
+     */
+    public List<String> getYColumnNames() {
+        return yColumnNames;
+    }
+
+    /**
+     * @param yColumnNames Names of the columns containing the data mapped to
+     *                     the y axis of a chart.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setYColumnNames(List<String> yColumnNames) {
+        this.yColumnNames = (yColumnNames == null) ? new ArrayList<String>() : yColumnNames;
+        return this;
+    }
+
+    /**
+     * @return Lower bound for the x column values. For non-numeric x column,
+     * each x column item is mapped to an integral value starting from
+     * 0.
+     */
+    public double getMinX() {
+        return minX;
+    }
+
+    /**
+     * @param minX Lower bound for the x column values. For non-numeric x
+     *             column, each x column item is mapped to an integral value
+     *             starting from 0.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setMinX(double minX) {
+        this.minX = minX;
+        return this;
+    }
+
+    /**
+     * @return Upper bound for the x column values. For non-numeric x column,
+     * each x column item is mapped to an integral value starting from
+     * 0.
+     */
+    public double getMaxX() {
+        return maxX;
+    }
+
+    /**
+     * @param maxX Upper bound for the x column values. For non-numeric x
+     *             column, each x column item is mapped to an integral value
+     *             starting from 0.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setMaxX(double maxX) {
+        this.maxX = maxX;
+        return this;
+    }
+
+    /**
+     * @return Lower bound for the y column values. For non-numeric y column,
+     * each y column item is mapped to an integral value starting from
+     * 0.
+     */
+    public double getMinY() {
+        return minY;
+    }
+
+    /**
+     * @param minY Lower bound for the y column values. For non-numeric y
+     *             column, each y column item is mapped to an integral value
+     *             starting from 0.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setMinY(double minY) {
+        this.minY = minY;
+        return this;
+    }
+
+    /**
+     * @return Upper bound for the y column values. For non-numeric y column,
+     * each y column item is mapped to an integral value starting from
+     * 0.
+     */
+    public double getMaxY() {
+        return maxY;
+    }
+
+    /**
+     * @param maxY Upper bound for the y column values. For non-numeric y
+     *             column, each y column item is mapped to an integral value
+     *             starting from 0.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setMaxY(double maxY) {
+        this.maxY = maxY;
+        return this;
+    }
+
+    /**
+     * @return Width of the generated image in pixels.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * @param width Width of the generated image in pixels.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setWidth(int width) {
+        this.width = width;
+        return this;
+    }
+
+    /**
+     * @return Height of the generated image in pixels.
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @param height Height of the generated image in pixels.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setHeight(int height) {
+        this.height = height;
+        return this;
+    }
+
+    /**
+     * @return Background color of the generated image.
+     */
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    /**
+     * @param bgColor Background color of the generated image.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setBgColor(String bgColor) {
+        this.bgColor = (bgColor == null) ? "" : bgColor;
+        return this;
+    }
+
+    /**
+     * @return Rendering style options for a chart.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
+     * POINTCOLOR}: The color of points in the plot represented as a
+     * hexadecimal number.  The default value is '0000FF'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
+     * POINTSIZE}: The size of points in the plot represented as number
+     * of pixels.  The default value is '3'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
+     * POINTSHAPE}: The shape of points in the plot.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     * NONE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
+     * CIRCLE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     * SQUARE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
+     * DIAMOND}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
+     * HOLLOWCIRCLE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
+     * HOLLOWSQUARE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
+     * HOLLOWDIAMOND}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     * SQUARE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
+     * CB_POINTCOLORS}: Point color class break information consisting
+     * of three entries: class-break attribute, class-break
+     * values/ranges, and point color values. This option overrides the
+     * pointcolor option if both are provided. Class-break ranges are
+     * represented in the form of "min:max". Class-break values/ranges
+     * and point color values are separated by cb_delimiter, e.g.
+     * {"price", "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
+     * CB_POINTSIZES}: Point size class break information consisting of
+     * three entries: class-break attribute, class-break values/ranges,
+     * and point size values. This option overrides the pointsize
+     * option if both are provided. Class-break ranges are represented
+     * in the form of "min:max". Class-break values/ranges and point
+     * size values are separated by cb_delimiter, e.g. {"states",
+     * "NY;TX;CA", "3;5;7"}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
+     * CB_POINTSHAPES}: Point shape class break information consisting
+     * of three entries: class-break attribute, class-break
+     * values/ranges, and point shape names. This option overrides the
+     * pointshape option if both are provided. Class-break ranges are
+     * represented in the form of "min:max". Class-break values/ranges
+     * and point shape names are separated by cb_delimiter, e.g.
+     * {"states", "NY;TX;CA", "circle;square;diamond"}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
+     * CB_DELIMITER}: A character or string which separates per-class
+     * values in a class-break style option string.  The default value
+     * is ';'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
+     * X_ORDER_BY}: An expression or aggregate expression by which
+     * non-numeric x column values are sorted, e.g. "avg(price)
+     * descending".
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
+     * Y_ORDER_BY}: An expression or aggregate expression by which
+     * non-numeric y column values are sorted, e.g. "avg(price)", which
+     * defaults to "avg(price) ascending".
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
+     * SCALE_TYPE_X}: Type of x axis scale.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     * NONE}: No scale is applied to the x axis.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     * LOG}: A base-10 log scale is applied to the x axis.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     * NONE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
+     * SCALE_TYPE_Y}: Type of y axis scale.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     * NONE}: No scale is applied to the y axis.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     * LOG}: A base-10 log scale is applied to the y axis.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     * NONE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
+     * MIN_MAX_SCALED}: If this options is set to "false", this
+     * endpoint expects request's min/max values are not yet scaled.
+     * They will be scaled according to scale_type_x or scale_type_y
+     * for response. If this options is set to "true", this endpoint
+     * expects request's min/max values are already scaled according to
+     * scale_type_x/scale_type_y. Response's min/max values will be
+     * equal to request's min/max values.  The default value is
+     * 'false'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
+     * JITTER_X}: Amplitude of horizontal jitter applied to non-numeric
+     * x column values.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
+     * JITTER_Y}: Amplitude of vertical jitter applied to non-numeric y
+     * column values.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
+     * PLOT_ALL}: If this options is set to "true", all non-numeric
+     * column values are plotted ignoring min_x, max_x, min_y and max_y
+     * parameters.  The default value is 'false'.
+     * </ul>
+     */
+    public Map<String, List<String>> getStyleOptions() {
+        return styleOptions;
+    }
+
+    /**
+     * @param styleOptions Rendering style options for a chart.
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
+     *                     POINTCOLOR}: The color of points in the plot
+     *                     represented as a hexadecimal number.  The default
+     *                     value is '0000FF'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
+     *                     POINTSIZE}: The size of points in the plot
+     *                     represented as number of pixels.  The default value
+     *                     is '3'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
+     *                     POINTSHAPE}: The shape of points in the plot.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
+     *                     CIRCLE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     *                     SQUARE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
+     *                     DIAMOND}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
+     *                     HOLLOWCIRCLE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
+     *                     HOLLOWSQUARE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
+     *                     HOLLOWDIAMOND}
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
+     *                     SQUARE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
+     *                     CB_POINTCOLORS}: Point color class break
+     *                     information consisting of three entries:
+     *                     class-break attribute, class-break values/ranges,
+     *                     and point color values. This option overrides the
+     *                     pointcolor option if both are provided. Class-break
+     *                     ranges are represented in the form of "min:max".
+     *                     Class-break values/ranges and point color values
+     *                     are separated by cb_delimiter, e.g. {"price",
+     *                     "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
+     *                     CB_POINTSIZES}: Point size class break information
+     *                     consisting of three entries: class-break attribute,
+     *                     class-break values/ranges, and point size values.
+     *                     This option overrides the pointsize option if both
+     *                     are provided. Class-break ranges are represented in
+     *                     the form of "min:max". Class-break values/ranges
+     *                     and point size values are separated by
+     *                     cb_delimiter, e.g. {"states", "NY;TX;CA", "3;5;7"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
+     *                     CB_POINTSHAPES}: Point shape class break
+     *                     information consisting of three entries:
+     *                     class-break attribute, class-break values/ranges,
+     *                     and point shape names. This option overrides the
+     *                     pointshape option if both are provided. Class-break
+     *                     ranges are represented in the form of "min:max".
+     *                     Class-break values/ranges and point shape names are
+     *                     separated by cb_delimiter, e.g. {"states",
+     *                     "NY;TX;CA", "circle;square;diamond"}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
+     *                     CB_DELIMITER}: A character or string which
+     *                     separates per-class values in a class-break style
+     *                     option string.  The default value is ';'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
+     *                     X_ORDER_BY}: An expression or aggregate expression
+     *                     by which non-numeric x column values are sorted,
+     *                     e.g. "avg(price) descending".
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
+     *                     Y_ORDER_BY}: An expression or aggregate expression
+     *                     by which non-numeric y column values are sorted,
+     *                     e.g. "avg(price)", which defaults to "avg(price)
+     *                     ascending".
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
+     *                     SCALE_TYPE_X}: Type of x axis scale.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}: No scale is applied to the x axis.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     *                     LOG}: A base-10 log scale is applied to the x axis.
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
+     *                     SCALE_TYPE_Y}: Type of y axis scale.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}: No scale is applied to the y axis.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
+     *                     LOG}: A base-10 log scale is applied to the y axis.
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
+     *                     NONE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
+     *                     MIN_MAX_SCALED}: If this options is set to "false",
+     *                     this endpoint expects request's min/max values are
+     *                     not yet scaled. They will be scaled according to
+     *                     scale_type_x or scale_type_y for response. If this
+     *                     options is set to "true", this endpoint expects
+     *                     request's min/max values are already scaled
+     *                     according to scale_type_x/scale_type_y. Response's
+     *                     min/max values will be equal to request's min/max
+     *                     values.  The default value is 'false'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
+     *                     JITTER_X}: Amplitude of horizontal jitter applied
+     *                     to non-numeric x column values.  The default value
+     *                     is '0.0'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
+     *                     JITTER_Y}: Amplitude of vertical jitter applied to
+     *                     non-numeric y column values.  The default value is
+     *                     '0.0'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
+     *                     PLOT_ALL}: If this options is set to "true", all
+     *                     non-numeric column values are plotted ignoring
+     *                     min_x, max_x, min_y and max_y parameters.  The
+     *                     default value is 'false'.
+     *                     </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setStyleOptions(Map<String, List<String>> styleOptions) {
+        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, List<String>>() : styleOptions;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
+     * IMAGE_ENCODING}: Encoding to be applied to the output image.
+     * When using JSON serialization it is recommended to specify this
+     * as {@code base64}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
+     * BASE64}: Apply base64 encoding to the output image.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     * NONE}: Do not apply any additional encoding to the output image.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     * NONE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
+     *                IMAGE_ENCODING}: Encoding to be applied to the output
+     *                image. When using JSON serialization it is recommended
+     *                to specify this as {@code base64}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
+     *                BASE64}: Apply base64 encoding to the output image.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     *                NONE}: Do not apply any additional encoding to the
+     *                output image.
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
+     *                NONE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeImageChartRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.xColumnNames;
+
+            case 2:
+                return this.yColumnNames;
+
+            case 3:
+                return this.minX;
+
+            case 4:
+                return this.maxX;
+
+            case 5:
+                return this.minY;
+
+            case 6:
+                return this.maxY;
+
+            case 7:
+                return this.width;
+
+            case 8:
+                return this.height;
+
+            case 9:
+                return this.bgColor;
+
+            case 10:
+                return this.styleOptions;
+
+            case 11:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.xColumnNames = (List<String>) value;
+                break;
+
+            case 2:
+                this.yColumnNames = (List<String>) value;
+                break;
+
+            case 3:
+                this.minX = (Double) value;
+                break;
+
+            case 4:
+                this.maxX = (Double) value;
+                break;
+
+            case 5:
+                this.minY = (Double) value;
+                break;
+
+            case 6:
+                this.maxY = (Double) value;
+                break;
+
+            case 7:
+                this.width = (Integer) value;
+                break;
+
+            case 8:
+                this.height = (Integer) value;
+                break;
+
+            case 9:
+                this.bgColor = (String) value;
+                break;
+
+            case 10:
+                this.styleOptions = (Map<String, List<String>>) value;
+                break;
+
+            case 11:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        VisualizeImageChartRequest that = (VisualizeImageChartRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.xColumnNames.equals(that.xColumnNames)
+                && this.yColumnNames.equals(that.yColumnNames)
+                && ((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && (this.width == that.width)
+                && (this.height == that.height)
+                && this.bgColor.equals(that.bgColor)
+                && this.styleOptions.equals(that.styleOptions)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("xColumnNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xColumnNames));
+        builder.append(", ");
+        builder.append(gd.toString("yColumnNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yColumnNames));
+        builder.append(", ");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("styleOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.styleOptions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.xColumnNames.hashCode();
+        hashCode = (31 * hashCode) + this.yColumnNames.hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
+        hashCode = (31 * hashCode) + this.width;
+        hashCode = (31 * hashCode) + this.height;
+        hashCode = (31 * hashCode) + this.bgColor.hashCode();
+        hashCode = (31 * hashCode) + this.styleOptions.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Rendering style options for a chart.
@@ -365,9 +1361,9 @@ public class VisualizeImageChartRequest implements IndexedRecord {
          */
         public static final String PLOT_ALL = "plot_all";
 
-        private StyleOptions() {  }
+        private StyleOptions() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -420,1076 +1416,8 @@ public class VisualizeImageChartRequest implements IndexedRecord {
          */
         public static final String NONE = "none";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private List<String> xColumnNames;
-    private List<String> yColumnNames;
-    private double minX;
-    private double maxX;
-    private double minY;
-    private double maxY;
-    private int width;
-    private int height;
-    private String bgColor;
-    private Map<String, List<String>> styleOptions;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a VisualizeImageChartRequest object with default parameters.
-     */
-    public VisualizeImageChartRequest() {
-        tableName = "";
-        xColumnNames = new ArrayList<>();
-        yColumnNames = new ArrayList<>();
-        bgColor = "";
-        styleOptions = new LinkedHashMap<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a VisualizeImageChartRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Name of the table containing the data to be drawn as a
-     *                   chart.
-     * @param xColumnNames  Names of the columns containing the data mapped to
-     *                      the x axis of a chart.
-     * @param yColumnNames  Names of the columns containing the data mapped to
-     *                      the y axis of a chart.
-     * @param minX  Lower bound for the x column values. For non-numeric x
-     *              column, each x column item is mapped to an integral value
-     *              starting from 0.
-     * @param maxX  Upper bound for the x column values. For non-numeric x
-     *              column, each x column item is mapped to an integral value
-     *              starting from 0.
-     * @param minY  Lower bound for the y column values. For non-numeric y
-     *              column, each y column item is mapped to an integral value
-     *              starting from 0.
-     * @param maxY  Upper bound for the y column values. For non-numeric y
-     *              column, each y column item is mapped to an integral value
-     *              starting from 0.
-     * @param width  Width of the generated image in pixels.
-     * @param height  Height of the generated image in pixels.
-     * @param bgColor  Background color of the generated image.
-     * @param styleOptions  Rendering style options for a chart.
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
-     *                      POINTCOLOR}: The color of points in the plot
-     *                      represented as a hexadecimal number.  The default
-     *                      value is '0000FF'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
-     *                      POINTSIZE}: The size of points in the plot
-     *                      represented as number of pixels.  The default value
-     *                      is '3'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
-     *                      POINTSHAPE}: The shape of points in the plot.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
-     *                      CIRCLE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *                      SQUARE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
-     *                      DIAMOND}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
-     *                      HOLLOWCIRCLE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
-     *                      HOLLOWSQUARE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
-     *                      HOLLOWDIAMOND}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *                      SQUARE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
-     *                      CB_POINTCOLORS}: Point color class break
-     *                      information consisting of three entries:
-     *                      class-break attribute, class-break values/ranges,
-     *                      and point color values. This option overrides the
-     *                      pointcolor option if both are provided. Class-break
-     *                      ranges are represented in the form of "min:max".
-     *                      Class-break values/ranges and point color values
-     *                      are separated by cb_delimiter, e.g. {"price",
-     *                      "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
-     *                      CB_POINTSIZES}: Point size class break information
-     *                      consisting of three entries: class-break attribute,
-     *                      class-break values/ranges, and point size values.
-     *                      This option overrides the pointsize option if both
-     *                      are provided. Class-break ranges are represented in
-     *                      the form of "min:max". Class-break values/ranges
-     *                      and point size values are separated by
-     *                      cb_delimiter, e.g. {"states", "NY;TX;CA", "3;5;7"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
-     *                      CB_POINTSHAPES}: Point shape class break
-     *                      information consisting of three entries:
-     *                      class-break attribute, class-break values/ranges,
-     *                      and point shape names. This option overrides the
-     *                      pointshape option if both are provided. Class-break
-     *                      ranges are represented in the form of "min:max".
-     *                      Class-break values/ranges and point shape names are
-     *                      separated by cb_delimiter, e.g. {"states",
-     *                      "NY;TX;CA", "circle;square;diamond"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
-     *                      CB_DELIMITER}: A character or string which
-     *                      separates per-class values in a class-break style
-     *                      option string.  The default value is ';'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
-     *                      X_ORDER_BY}: An expression or aggregate expression
-     *                      by which non-numeric x column values are sorted,
-     *                      e.g. "avg(price) descending".
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
-     *                      Y_ORDER_BY}: An expression or aggregate expression
-     *                      by which non-numeric y column values are sorted,
-     *                      e.g. "avg(price)", which defaults to "avg(price)
-     *                      ascending".
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
-     *                      SCALE_TYPE_X}: Type of x axis scale.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}: No scale is applied to the x axis.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *                      LOG}: A base-10 log scale is applied to the x axis.
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
-     *                      SCALE_TYPE_Y}: Type of y axis scale.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}: No scale is applied to the y axis.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *                      LOG}: A base-10 log scale is applied to the y axis.
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
-     *                      MIN_MAX_SCALED}: If this options is set to "false",
-     *                      this endpoint expects request's min/max values are
-     *                      not yet scaled. They will be scaled according to
-     *                      scale_type_x or scale_type_y for response. If this
-     *                      options is set to "true", this endpoint expects
-     *                      request's min/max values are already scaled
-     *                      according to scale_type_x/scale_type_y. Response's
-     *                      min/max values will be equal to request's min/max
-     *                      values.  The default value is 'false'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
-     *                      JITTER_X}: Amplitude of horizontal jitter applied
-     *                      to non-numeric x column values.  The default value
-     *                      is '0.0'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
-     *                      JITTER_Y}: Amplitude of vertical jitter applied to
-     *                      non-numeric y column values.  The default value is
-     *                      '0.0'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
-     *                      PLOT_ALL}: If this options is set to "true", all
-     *                      non-numeric column values are plotted ignoring
-     *                      min_x, max_x, min_y and max_y parameters.  The
-     *                      default value is 'false'.
-     *                      </ul>
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
-     *                 IMAGE_ENCODING}: Encoding to be applied to the output
-     *                 image. When using JSON serialization it is recommended
-     *                 to specify this as {@code base64}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
-     *                 BASE64}: Apply base64 encoding to the output image.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *                 NONE}: Do not apply any additional encoding to the
-     *                 output image.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *                 NONE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public VisualizeImageChartRequest(String tableName, List<String> xColumnNames, List<String> yColumnNames, double minX, double maxX, double minY, double maxY, int width, int height, String bgColor, Map<String, List<String>> styleOptions, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.xColumnNames = (xColumnNames == null) ? new ArrayList<String>() : xColumnNames;
-        this.yColumnNames = (yColumnNames == null) ? new ArrayList<String>() : yColumnNames;
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
-        this.maxY = maxY;
-        this.width = width;
-        this.height = height;
-        this.bgColor = (bgColor == null) ? "" : bgColor;
-        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, List<String>>() : styleOptions;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table containing the data to be drawn as a chart.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table containing the data to be drawn as a
-     *                   chart.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Names of the columns containing the data mapped to the x axis of
-     *         a chart.
-     * 
-     */
-    public List<String> getXColumnNames() {
-        return xColumnNames;
-    }
-
-    /**
-     * 
-     * @param xColumnNames  Names of the columns containing the data mapped to
-     *                      the x axis of a chart.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setXColumnNames(List<String> xColumnNames) {
-        this.xColumnNames = (xColumnNames == null) ? new ArrayList<String>() : xColumnNames;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Names of the columns containing the data mapped to the y axis of
-     *         a chart.
-     * 
-     */
-    public List<String> getYColumnNames() {
-        return yColumnNames;
-    }
-
-    /**
-     * 
-     * @param yColumnNames  Names of the columns containing the data mapped to
-     *                      the y axis of a chart.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setYColumnNames(List<String> yColumnNames) {
-        this.yColumnNames = (yColumnNames == null) ? new ArrayList<String>() : yColumnNames;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Lower bound for the x column values. For non-numeric x column,
-     *         each x column item is mapped to an integral value starting from
-     *         0.
-     * 
-     */
-    public double getMinX() {
-        return minX;
-    }
-
-    /**
-     * 
-     * @param minX  Lower bound for the x column values. For non-numeric x
-     *              column, each x column item is mapped to an integral value
-     *              starting from 0.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setMinX(double minX) {
-        this.minX = minX;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Upper bound for the x column values. For non-numeric x column,
-     *         each x column item is mapped to an integral value starting from
-     *         0.
-     * 
-     */
-    public double getMaxX() {
-        return maxX;
-    }
-
-    /**
-     * 
-     * @param maxX  Upper bound for the x column values. For non-numeric x
-     *              column, each x column item is mapped to an integral value
-     *              starting from 0.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setMaxX(double maxX) {
-        this.maxX = maxX;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Lower bound for the y column values. For non-numeric y column,
-     *         each y column item is mapped to an integral value starting from
-     *         0.
-     * 
-     */
-    public double getMinY() {
-        return minY;
-    }
-
-    /**
-     * 
-     * @param minY  Lower bound for the y column values. For non-numeric y
-     *              column, each y column item is mapped to an integral value
-     *              starting from 0.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setMinY(double minY) {
-        this.minY = minY;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Upper bound for the y column values. For non-numeric y column,
-     *         each y column item is mapped to an integral value starting from
-     *         0.
-     * 
-     */
-    public double getMaxY() {
-        return maxY;
-    }
-
-    /**
-     * 
-     * @param maxY  Upper bound for the y column values. For non-numeric y
-     *              column, each y column item is mapped to an integral value
-     *              starting from 0.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setMaxY(double maxY) {
-        this.maxY = maxY;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Width of the generated image in pixels.
-     * 
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * 
-     * @param width  Width of the generated image in pixels.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setWidth(int width) {
-        this.width = width;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Height of the generated image in pixels.
-     * 
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * 
-     * @param height  Height of the generated image in pixels.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setHeight(int height) {
-        this.height = height;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Background color of the generated image.
-     * 
-     */
-    public String getBgColor() {
-        return bgColor;
-    }
-
-    /**
-     * 
-     * @param bgColor  Background color of the generated image.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setBgColor(String bgColor) {
-        this.bgColor = (bgColor == null) ? "" : bgColor;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Rendering style options for a chart.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
-     *         POINTCOLOR}: The color of points in the plot represented as a
-     *         hexadecimal number.  The default value is '0000FF'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
-     *         POINTSIZE}: The size of points in the plot represented as number
-     *         of pixels.  The default value is '3'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
-     *         POINTSHAPE}: The shape of points in the plot.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *         NONE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
-     *         CIRCLE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *         SQUARE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
-     *         DIAMOND}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
-     *         HOLLOWCIRCLE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
-     *         HOLLOWSQUARE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
-     *         HOLLOWDIAMOND}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *         SQUARE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
-     *         CB_POINTCOLORS}: Point color class break information consisting
-     *         of three entries: class-break attribute, class-break
-     *         values/ranges, and point color values. This option overrides the
-     *         pointcolor option if both are provided. Class-break ranges are
-     *         represented in the form of "min:max". Class-break values/ranges
-     *         and point color values are separated by cb_delimiter, e.g.
-     *         {"price", "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
-     *         CB_POINTSIZES}: Point size class break information consisting of
-     *         three entries: class-break attribute, class-break values/ranges,
-     *         and point size values. This option overrides the pointsize
-     *         option if both are provided. Class-break ranges are represented
-     *         in the form of "min:max". Class-break values/ranges and point
-     *         size values are separated by cb_delimiter, e.g. {"states",
-     *         "NY;TX;CA", "3;5;7"}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
-     *         CB_POINTSHAPES}: Point shape class break information consisting
-     *         of three entries: class-break attribute, class-break
-     *         values/ranges, and point shape names. This option overrides the
-     *         pointshape option if both are provided. Class-break ranges are
-     *         represented in the form of "min:max". Class-break values/ranges
-     *         and point shape names are separated by cb_delimiter, e.g.
-     *         {"states", "NY;TX;CA", "circle;square;diamond"}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
-     *         CB_DELIMITER}: A character or string which separates per-class
-     *         values in a class-break style option string.  The default value
-     *         is ';'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
-     *         X_ORDER_BY}: An expression or aggregate expression by which
-     *         non-numeric x column values are sorted, e.g. "avg(price)
-     *         descending".
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
-     *         Y_ORDER_BY}: An expression or aggregate expression by which
-     *         non-numeric y column values are sorted, e.g. "avg(price)", which
-     *         defaults to "avg(price) ascending".
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
-     *         SCALE_TYPE_X}: Type of x axis scale.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *         NONE}: No scale is applied to the x axis.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *         LOG}: A base-10 log scale is applied to the x axis.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *         NONE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
-     *         SCALE_TYPE_Y}: Type of y axis scale.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *         NONE}: No scale is applied to the y axis.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *         LOG}: A base-10 log scale is applied to the y axis.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *         NONE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
-     *         MIN_MAX_SCALED}: If this options is set to "false", this
-     *         endpoint expects request's min/max values are not yet scaled.
-     *         They will be scaled according to scale_type_x or scale_type_y
-     *         for response. If this options is set to "true", this endpoint
-     *         expects request's min/max values are already scaled according to
-     *         scale_type_x/scale_type_y. Response's min/max values will be
-     *         equal to request's min/max values.  The default value is
-     *         'false'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
-     *         JITTER_X}: Amplitude of horizontal jitter applied to non-numeric
-     *         x column values.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
-     *         JITTER_Y}: Amplitude of vertical jitter applied to non-numeric y
-     *         column values.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
-     *         PLOT_ALL}: If this options is set to "true", all non-numeric
-     *         column values are plotted ignoring min_x, max_x, min_y and max_y
-     *         parameters.  The default value is 'false'.
-     *         </ul>
-     * 
-     */
-    public Map<String, List<String>> getStyleOptions() {
-        return styleOptions;
-    }
-
-    /**
-     * 
-     * @param styleOptions  Rendering style options for a chart.
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTCOLOR
-     *                      POINTCOLOR}: The color of points in the plot
-     *                      represented as a hexadecimal number.  The default
-     *                      value is '0000FF'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSIZE
-     *                      POINTSIZE}: The size of points in the plot
-     *                      represented as number of pixels.  The default value
-     *                      is '3'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#POINTSHAPE
-     *                      POINTSHAPE}: The shape of points in the plot.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CIRCLE
-     *                      CIRCLE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *                      SQUARE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#DIAMOND
-     *                      DIAMOND}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWCIRCLE
-     *                      HOLLOWCIRCLE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWSQUARE
-     *                      HOLLOWSQUARE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#HOLLOWDIAMOND
-     *                      HOLLOWDIAMOND}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SQUARE
-     *                      SQUARE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTCOLORS
-     *                      CB_POINTCOLORS}: Point color class break
-     *                      information consisting of three entries:
-     *                      class-break attribute, class-break values/ranges,
-     *                      and point color values. This option overrides the
-     *                      pointcolor option if both are provided. Class-break
-     *                      ranges are represented in the form of "min:max".
-     *                      Class-break values/ranges and point color values
-     *                      are separated by cb_delimiter, e.g. {"price",
-     *                      "20:30;30:40;40:50", "0xFF0000;0x00FF00;0x0000FF"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSIZES
-     *                      CB_POINTSIZES}: Point size class break information
-     *                      consisting of three entries: class-break attribute,
-     *                      class-break values/ranges, and point size values.
-     *                      This option overrides the pointsize option if both
-     *                      are provided. Class-break ranges are represented in
-     *                      the form of "min:max". Class-break values/ranges
-     *                      and point size values are separated by
-     *                      cb_delimiter, e.g. {"states", "NY;TX;CA", "3;5;7"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_POINTSHAPES
-     *                      CB_POINTSHAPES}: Point shape class break
-     *                      information consisting of three entries:
-     *                      class-break attribute, class-break values/ranges,
-     *                      and point shape names. This option overrides the
-     *                      pointshape option if both are provided. Class-break
-     *                      ranges are represented in the form of "min:max".
-     *                      Class-break values/ranges and point shape names are
-     *                      separated by cb_delimiter, e.g. {"states",
-     *                      "NY;TX;CA", "circle;square;diamond"}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#CB_DELIMITER
-     *                      CB_DELIMITER}: A character or string which
-     *                      separates per-class values in a class-break style
-     *                      option string.  The default value is ';'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#X_ORDER_BY
-     *                      X_ORDER_BY}: An expression or aggregate expression
-     *                      by which non-numeric x column values are sorted,
-     *                      e.g. "avg(price) descending".
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#Y_ORDER_BY
-     *                      Y_ORDER_BY}: An expression or aggregate expression
-     *                      by which non-numeric y column values are sorted,
-     *                      e.g. "avg(price)", which defaults to "avg(price)
-     *                      ascending".
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_X
-     *                      SCALE_TYPE_X}: Type of x axis scale.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}: No scale is applied to the x axis.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *                      LOG}: A base-10 log scale is applied to the x axis.
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#SCALE_TYPE_Y
-     *                      SCALE_TYPE_Y}: Type of y axis scale.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}: No scale is applied to the y axis.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#LOG
-     *                      LOG}: A base-10 log scale is applied to the y axis.
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#NONE
-     *                      NONE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#MIN_MAX_SCALED
-     *                      MIN_MAX_SCALED}: If this options is set to "false",
-     *                      this endpoint expects request's min/max values are
-     *                      not yet scaled. They will be scaled according to
-     *                      scale_type_x or scale_type_y for response. If this
-     *                      options is set to "true", this endpoint expects
-     *                      request's min/max values are already scaled
-     *                      according to scale_type_x/scale_type_y. Response's
-     *                      min/max values will be equal to request's min/max
-     *                      values.  The default value is 'false'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_X
-     *                      JITTER_X}: Amplitude of horizontal jitter applied
-     *                      to non-numeric x column values.  The default value
-     *                      is '0.0'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#JITTER_Y
-     *                      JITTER_Y}: Amplitude of vertical jitter applied to
-     *                      non-numeric y column values.  The default value is
-     *                      '0.0'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeImageChartRequest.StyleOptions#PLOT_ALL
-     *                      PLOT_ALL}: If this options is set to "true", all
-     *                      non-numeric column values are plotted ignoring
-     *                      min_x, max_x, min_y and max_y parameters.  The
-     *                      default value is 'false'.
-     *                      </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setStyleOptions(Map<String, List<String>> styleOptions) {
-        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, List<String>>() : styleOptions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
-     *         IMAGE_ENCODING}: Encoding to be applied to the output image.
-     *         When using JSON serialization it is recommended to specify this
-     *         as {@code base64}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
-     *         BASE64}: Apply base64 encoding to the output image.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *         NONE}: Do not apply any additional encoding to the output image.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *         NONE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#IMAGE_ENCODING
-     *                 IMAGE_ENCODING}: Encoding to be applied to the output
-     *                 image. When using JSON serialization it is recommended
-     *                 to specify this as {@code base64}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#BASE64
-     *                 BASE64}: Apply base64 encoding to the output image.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *                 NONE}: Do not apply any additional encoding to the
-     *                 output image.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeImageChartRequest.Options#NONE
-     *                 NONE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeImageChartRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.xColumnNames;
-
-            case 2:
-                return this.yColumnNames;
-
-            case 3:
-                return this.minX;
-
-            case 4:
-                return this.maxX;
-
-            case 5:
-                return this.minY;
-
-            case 6:
-                return this.maxY;
-
-            case 7:
-                return this.width;
-
-            case 8:
-                return this.height;
-
-            case 9:
-                return this.bgColor;
-
-            case 10:
-                return this.styleOptions;
-
-            case 11:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.xColumnNames = (List<String>)value;
-                break;
-
-            case 2:
-                this.yColumnNames = (List<String>)value;
-                break;
-
-            case 3:
-                this.minX = (Double)value;
-                break;
-
-            case 4:
-                this.maxX = (Double)value;
-                break;
-
-            case 5:
-                this.minY = (Double)value;
-                break;
-
-            case 6:
-                this.maxY = (Double)value;
-                break;
-
-            case 7:
-                this.width = (Integer)value;
-                break;
-
-            case 8:
-                this.height = (Integer)value;
-                break;
-
-            case 9:
-                this.bgColor = (String)value;
-                break;
-
-            case 10:
-                this.styleOptions = (Map<String, List<String>>)value;
-                break;
-
-            case 11:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        VisualizeImageChartRequest that = (VisualizeImageChartRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.xColumnNames.equals( that.xColumnNames )
-                 && this.yColumnNames.equals( that.yColumnNames )
-                 && ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && this.bgColor.equals( that.bgColor )
-                 && this.styleOptions.equals( that.styleOptions )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xColumnNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xColumnNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yColumnNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yColumnNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "styleOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.styleOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.xColumnNames.hashCode();
-        hashCode = (31 * hashCode) + this.yColumnNames.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
-        hashCode = (31 * hashCode) + this.width;
-        hashCode = (31 * hashCode) + this.height;
-        hashCode = (31 * hashCode) + this.bgColor.hashCode();
-        hashCode = (31 * hashCode) + this.styleOptions.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

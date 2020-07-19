@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,24 +25,241 @@ public class InsertRecordsResponse implements IndexedRecord {
             .record("InsertRecordsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("recordIds").type().array().items().stringType().noDefault()
-                .name("countInserted").type().intType().noDefault()
-                .name("countUpdated").type().intType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("recordIds").type().array().items().stringType().noDefault()
+            .name("countInserted").type().intType().noDefault()
+            .name("countUpdated").type().intType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private List<String> recordIds;
+    private int countInserted;
+    private int countUpdated;
+    private Map<String, String> info;
+    /**
+     * Constructs an InsertRecordsResponse object with default parameters.
+     */
+    public InsertRecordsResponse() {
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return An array containing the IDs with which the added records are
+     * identified internally.
+     */
+    public List<String> getRecordIds() {
+        return recordIds;
+    }
+
+    /**
+     * @param recordIds An array containing the IDs with which the added
+     *                  records are identified internally.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public InsertRecordsResponse setRecordIds(List<String> recordIds) {
+        this.recordIds = (recordIds == null) ? new ArrayList<String>() : recordIds;
+        return this;
+    }
+
+    /**
+     * @return The number of records inserted.
+     */
+    public int getCountInserted() {
+        return countInserted;
+    }
+
+    /**
+     * @param countInserted The number of records inserted.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public InsertRecordsResponse setCountInserted(int countInserted) {
+        this.countInserted = countInserted;
+        return this;
+    }
+
+    /**
+     * @return The number of records updated.
+     */
+    public int getCountUpdated() {
+        return countUpdated;
+    }
+
+    /**
+     * @param countUpdated The number of records updated.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public InsertRecordsResponse setCountUpdated(int countUpdated) {
+        this.countUpdated = countUpdated;
+        return this;
+    }
+
+    /**
+     * @return Additional information.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.InsertRecordsResponse.Info#BAD_RECORD_INDICES
+     * BAD_RECORD_INDICES}: If return_individual_errors option is
+     * specified or implied, returns a comma-separated list of invalid
+     * indices (0-based)
+     *         <li> {@link
+     * com.gpudb.protocol.InsertRecordsResponse.Info#ERROR_N ERROR_N}:
+     * Error message for record at index N (0-based)
+     * </ul>
+     */
+    public Map<String, String> getInfo() {
+        return info;
+    }
+
+    /**
+     * @param info Additional information.
+     *             <ul>
+     *                     <li> {@link
+     *             com.gpudb.protocol.InsertRecordsResponse.Info#BAD_RECORD_INDICES
+     *             BAD_RECORD_INDICES}: If return_individual_errors option is
+     *             specified or implied, returns a comma-separated list of
+     *             invalid indices (0-based)
+     *                     <li> {@link
+     *             com.gpudb.protocol.InsertRecordsResponse.Info#ERROR_N
+     *             ERROR_N}: Error message for record at index N (0-based)
+     *             </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public InsertRecordsResponse setInfo(Map<String, String> info) {
+        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.recordIds;
+
+            case 1:
+                return this.countInserted;
+
+            case 2:
+                return this.countUpdated;
+
+            case 3:
+                return this.info;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.recordIds = (List<String>) value;
+                break;
+
+            case 1:
+                this.countInserted = (Integer) value;
+                break;
+
+            case 2:
+                this.countUpdated = (Integer) value;
+                break;
+
+            case 3:
+                this.info = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        InsertRecordsResponse that = (InsertRecordsResponse) obj;
+
+        return (this.recordIds.equals(that.recordIds)
+                && (this.countInserted == that.countInserted)
+                && (this.countUpdated == that.countUpdated)
+                && this.info.equals(that.info));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("recordIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordIds));
+        builder.append(", ");
+        builder.append(gd.toString("countInserted"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countInserted));
+        builder.append(", ");
+        builder.append(gd.toString("countUpdated"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countUpdated));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.recordIds.hashCode();
+        hashCode = (31 * hashCode) + this.countInserted;
+        hashCode = (31 * hashCode) + this.countUpdated;
+        hashCode = (31 * hashCode) + this.info.hashCode();
+        return hashCode;
+    }
 
     /**
      * Additional information.
@@ -69,256 +287,8 @@ public class InsertRecordsResponse implements IndexedRecord {
          */
         public static final String ERROR_N = "error_N";
 
-        private Info() {  }
-    }
-
-    private List<String> recordIds;
-    private int countInserted;
-    private int countUpdated;
-    private Map<String, String> info;
-
-
-    /**
-     * Constructs an InsertRecordsResponse object with default parameters.
-     */
-    public InsertRecordsResponse() {
-    }
-
-    /**
-     * 
-     * @return An array containing the IDs with which the added records are
-     *         identified internally.
-     * 
-     */
-    public List<String> getRecordIds() {
-        return recordIds;
-    }
-
-    /**
-     * 
-     * @param recordIds  An array containing the IDs with which the added
-     *                   records are identified internally.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public InsertRecordsResponse setRecordIds(List<String> recordIds) {
-        this.recordIds = (recordIds == null) ? new ArrayList<String>() : recordIds;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The number of records inserted.
-     * 
-     */
-    public int getCountInserted() {
-        return countInserted;
-    }
-
-    /**
-     * 
-     * @param countInserted  The number of records inserted.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public InsertRecordsResponse setCountInserted(int countInserted) {
-        this.countInserted = countInserted;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The number of records updated.
-     * 
-     */
-    public int getCountUpdated() {
-        return countUpdated;
-    }
-
-    /**
-     * 
-     * @param countUpdated  The number of records updated.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public InsertRecordsResponse setCountUpdated(int countUpdated) {
-        this.countUpdated = countUpdated;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional information.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.InsertRecordsResponse.Info#BAD_RECORD_INDICES
-     *         BAD_RECORD_INDICES}: If return_individual_errors option is
-     *         specified or implied, returns a comma-separated list of invalid
-     *         indices (0-based)
-     *                 <li> {@link
-     *         com.gpudb.protocol.InsertRecordsResponse.Info#ERROR_N ERROR_N}:
-     *         Error message for record at index N (0-based)
-     *         </ul>
-     * 
-     */
-    public Map<String, String> getInfo() {
-        return info;
-    }
-
-    /**
-     * 
-     * @param info  Additional information.
-     *              <ul>
-     *                      <li> {@link
-     *              com.gpudb.protocol.InsertRecordsResponse.Info#BAD_RECORD_INDICES
-     *              BAD_RECORD_INDICES}: If return_individual_errors option is
-     *              specified or implied, returns a comma-separated list of
-     *              invalid indices (0-based)
-     *                      <li> {@link
-     *              com.gpudb.protocol.InsertRecordsResponse.Info#ERROR_N
-     *              ERROR_N}: Error message for record at index N (0-based)
-     *              </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public InsertRecordsResponse setInfo(Map<String, String> info) {
-        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.recordIds;
-
-            case 1:
-                return this.countInserted;
-
-            case 2:
-                return this.countUpdated;
-
-            case 3:
-                return this.info;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Info() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.recordIds = (List<String>)value;
-                break;
-
-            case 1:
-                this.countInserted = (Integer)value;
-                break;
-
-            case 2:
-                this.countUpdated = (Integer)value;
-                break;
-
-            case 3:
-                this.info = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        InsertRecordsResponse that = (InsertRecordsResponse)obj;
-
-        return ( this.recordIds.equals( that.recordIds )
-                 && ( this.countInserted == that.countInserted )
-                 && ( this.countUpdated == that.countUpdated )
-                 && this.info.equals( that.info ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "recordIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countInserted" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countInserted ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countUpdated" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countUpdated ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.recordIds.hashCode();
-        hashCode = (31 * hashCode) + this.countInserted;
-        hashCode = (31 * hashCode) + this.countUpdated;
-        hashCode = (31 * hashCode) + this.info.hashCode();
-        return hashCode;
     }
 
 }

@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,42 +23,35 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
             .record("UpdateRecordsBySeriesResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("count").type().intType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("count").type().intType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private int count;
     private Map<String, String> info;
-
-
     /**
      * Constructs an UpdateRecordsBySeriesResponse object with default
      * parameters.
      */
     public UpdateRecordsBySeriesResponse() {
     }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
     public int getCount() {
         return count;
     }
 
     /**
-     * 
      * @param count
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsBySeriesResponse setCount(int count) {
         this.count = count;
@@ -65,20 +59,15 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsBySeriesResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -88,9 +77,8 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -100,13 +88,10 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -125,23 +110,21 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.count = (Integer)value;
+                this.count = (Integer) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -151,33 +134,33 @@ public class UpdateRecordsBySeriesResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        UpdateRecordsBySeriesResponse that = (UpdateRecordsBySeriesResponse)obj;
+        UpdateRecordsBySeriesResponse that = (UpdateRecordsBySeriesResponse) obj;
 
-        return ( ( this.count == that.count )
-                 && this.info.equals( that.info ) );
+        return ((this.count == that.count)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "count" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.count ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("count"));
+        builder.append(": ");
+        builder.append(gd.toString(this.count));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

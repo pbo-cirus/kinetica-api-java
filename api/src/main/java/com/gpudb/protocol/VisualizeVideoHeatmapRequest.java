@@ -7,14 +7,15 @@
 package com.gpudb.protocol;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class VisualizeVideoHeatmapRequest implements IndexedRecord {
@@ -23,91 +24,22 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
             .record("VisualizeVideoHeatmapRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("xColumnName").type().stringType().noDefault()
-                .name("yColumnName").type().stringType().noDefault()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("timeIntervals").type().array().items().array().items().doubleType().noDefault()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("projection").type().stringType().noDefault()
-                .name("videoStyle").type().stringType().noDefault()
-                .name("sessionKey").type().stringType().noDefault()
-                .name("styleOptions").type().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("xColumnName").type().stringType().noDefault()
+            .name("yColumnName").type().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("timeIntervals").type().array().items().array().items().doubleType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("projection").type().stringType().noDefault()
+            .name("videoStyle").type().stringType().noDefault()
+            .name("sessionKey").type().stringType().noDefault()
+            .name("styleOptions").type().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    public static final class Projection {
-
-        public static final String EPSG_4326 = "EPSG:4326";
-
-        public static final String PLATE_CARREE = "PLATE_CARREE";
-
-        public static final String _900913 = "900913";
-
-        public static final String EPSG_900913 = "EPSG:900913";
-
-        public static final String _102100 = "102100";
-
-        public static final String EPSG_102100 = "EPSG:102100";
-
-        public static final String _3857 = "3857";
-
-        public static final String EPSG_3857 = "EPSG:3857";
-
-        public static final String WEB_MERCATOR = "WEB_MERCATOR";
-
-
-        private Projection() {  }
-    }
-
-
-    public static final class StyleOptions {
-
-        public static final String COLORMAP = "colormap";
-
-        public static final String JET = "jet";
-
-        public static final String HOT = "hot";
-
-        public static final String HSV = "hsv";
-
-        public static final String GRAY = "gray";
-
-        public static final String BLUES = "blues";
-
-        public static final String GREENS = "greens";
-
-        public static final String GREYS = "greys";
-
-        public static final String ORANGES = "oranges";
-
-        public static final String PURPLES = "purples";
-
-        public static final String REDS = "reds";
-
-        public static final String BLUR_RADIUS = "blur_radius";
-
-        public static final String BG_COLOR = "bg_color";
-
-        public static final String GRADIENT_START_COLOR = "gradient_start_color";
-
-        public static final String GRADIENT_END_COLOR = "gradient_end_color";
-
-
-        private StyleOptions() {  }
-    }
-
-
     private List<String> tableNames;
     private String xColumnName;
     private String yColumnName;
@@ -123,8 +55,6 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
     private String sessionKey;
     private Map<String, String> styleOptions;
     private Map<String, String> options;
-
-
     public VisualizeVideoHeatmapRequest() {
         tableNames = new ArrayList<>();
         xColumnName = "";
@@ -136,7 +66,6 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
         styleOptions = new LinkedHashMap<>();
         options = new LinkedHashMap<>();
     }
-
     public VisualizeVideoHeatmapRequest(List<String> tableNames, String xColumnName, String yColumnName, double minX, double maxX, double minY, double maxY, List<List<Double>> timeIntervals, int width, int height, String projection, String videoStyle, String sessionKey, Map<String, String> styleOptions, Map<String, String> options) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
         this.xColumnName = (xColumnName == null) ? "" : xColumnName;
@@ -153,6 +82,10 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
         this.sessionKey = (sessionKey == null) ? "" : sessionKey;
         this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, String>() : styleOptions;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public List<String> getTableNames() {
@@ -353,63 +286,63 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.xColumnName = (String)value;
+                this.xColumnName = (String) value;
                 break;
 
             case 2:
-                this.yColumnName = (String)value;
+                this.yColumnName = (String) value;
                 break;
 
             case 3:
-                this.minX = (Double)value;
+                this.minX = (Double) value;
                 break;
 
             case 4:
-                this.maxX = (Double)value;
+                this.maxX = (Double) value;
                 break;
 
             case 5:
-                this.minY = (Double)value;
+                this.minY = (Double) value;
                 break;
 
             case 6:
-                this.maxY = (Double)value;
+                this.maxY = (Double) value;
                 break;
 
             case 7:
-                this.timeIntervals = (List<List<Double>>)value;
+                this.timeIntervals = (List<List<Double>>) value;
                 break;
 
             case 8:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 9:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 10:
-                this.projection = (String)value;
+                this.projection = (String) value;
                 break;
 
             case 11:
-                this.videoStyle = (String)value;
+                this.videoStyle = (String) value;
                 break;
 
             case 12:
-                this.sessionKey = (String)value;
+                this.sessionKey = (String) value;
                 break;
 
             case 13:
-                this.styleOptions = (Map<String, String>)value;
+                this.styleOptions = (Map<String, String>) value;
                 break;
 
             case 14:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -417,106 +350,103 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
         }
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeVideoHeatmapRequest that = (VisualizeVideoHeatmapRequest)obj;
+        VisualizeVideoHeatmapRequest that = (VisualizeVideoHeatmapRequest) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.xColumnName.equals( that.xColumnName )
-                 && this.yColumnName.equals( that.yColumnName )
-                 && ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && this.timeIntervals.equals( that.timeIntervals )
-                 && ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && this.projection.equals( that.projection )
-                 && this.videoStyle.equals( that.videoStyle )
-                 && this.sessionKey.equals( that.sessionKey )
-                 && this.styleOptions.equals( that.styleOptions )
-                 && this.options.equals( that.options ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.xColumnName.equals(that.xColumnName)
+                && this.yColumnName.equals(that.yColumnName)
+                && ((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && this.timeIntervals.equals(that.timeIntervals)
+                && (this.width == that.width)
+                && (this.height == that.height)
+                && this.projection.equals(that.projection)
+                && this.videoStyle.equals(that.videoStyle)
+                && this.sessionKey.equals(that.sessionKey)
+                && this.styleOptions.equals(that.styleOptions)
+                && this.options.equals(that.options));
     }
-
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "timeIntervals" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.timeIntervals ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "projection" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.projection ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "videoStyle" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.videoStyle ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sessionKey" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sessionKey ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "styleOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.styleOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("xColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("yColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("timeIntervals"));
+        builder.append(": ");
+        builder.append(gd.toString(this.timeIntervals));
+        builder.append(", ");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("projection"));
+        builder.append(": ");
+        builder.append(gd.toString(this.projection));
+        builder.append(", ");
+        builder.append(gd.toString("videoStyle"));
+        builder.append(": ");
+        builder.append(gd.toString(this.videoStyle));
+        builder.append(", ");
+        builder.append(gd.toString("sessionKey"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sessionKey));
+        builder.append(", ");
+        builder.append(gd.toString("styleOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.styleOptions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
-
 
     @Override
     public int hashCode() {
@@ -524,10 +454,10 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.tableNames.hashCode();
         hashCode = (31 * hashCode) + this.xColumnName.hashCode();
         hashCode = (31 * hashCode) + this.yColumnName.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
         hashCode = (31 * hashCode) + this.timeIntervals.hashCode();
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
@@ -537,6 +467,68 @@ public class VisualizeVideoHeatmapRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.styleOptions.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    public static final class Projection {
+
+        public static final String EPSG_4326 = "EPSG:4326";
+
+        public static final String PLATE_CARREE = "PLATE_CARREE";
+
+        public static final String _900913 = "900913";
+
+        public static final String EPSG_900913 = "EPSG:900913";
+
+        public static final String _102100 = "102100";
+
+        public static final String EPSG_102100 = "EPSG:102100";
+
+        public static final String _3857 = "3857";
+
+        public static final String EPSG_3857 = "EPSG:3857";
+
+        public static final String WEB_MERCATOR = "WEB_MERCATOR";
+
+
+        private Projection() {
+        }
+    }
+
+    public static final class StyleOptions {
+
+        public static final String COLORMAP = "colormap";
+
+        public static final String JET = "jet";
+
+        public static final String HOT = "hot";
+
+        public static final String HSV = "hsv";
+
+        public static final String GRAY = "gray";
+
+        public static final String BLUES = "blues";
+
+        public static final String GREENS = "greens";
+
+        public static final String GREYS = "greys";
+
+        public static final String ORANGES = "oranges";
+
+        public static final String PURPLES = "purples";
+
+        public static final String REDS = "reds";
+
+        public static final String BLUR_RADIUS = "blur_radius";
+
+        public static final String BG_COLOR = "bg_color";
+
+        public static final String GRADIENT_START_COLOR = "gradient_start_color";
+
+        public static final String GRADIENT_END_COLOR = "gradient_end_color";
+
+
+        private StyleOptions() {
+        }
     }
 
 

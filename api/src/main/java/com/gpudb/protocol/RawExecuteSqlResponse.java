@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,67 +24,15 @@ public class RawExecuteSqlResponse implements IndexedRecord {
             .record("RawExecuteSqlResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("countAffected").type().longType().noDefault()
-                .name("responseSchemaStr").type().stringType().noDefault()
-                .name("binaryEncodedResponse").type().bytesType().noDefault()
-                .name("jsonEncodedResponse").type().stringType().noDefault()
-                .name("totalNumberOfRecords").type().longType().noDefault()
-                .name("hasMoreRecords").type().booleanType().noDefault()
-                .name("pagingTable").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("countAffected").type().longType().noDefault()
+            .name("responseSchemaStr").type().stringType().noDefault()
+            .name("binaryEncodedResponse").type().bytesType().noDefault()
+            .name("jsonEncodedResponse").type().stringType().noDefault()
+            .name("totalNumberOfRecords").type().longType().noDefault()
+            .name("hasMoreRecords").type().booleanType().noDefault()
+            .name("pagingTable").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Too many records. Returned a partial set.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code hasMoreRecords}.
-     */
-    public static final class HasMoreRecords {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private HasMoreRecords() {  }
-    }
-
-
-    /**
-     * Additional information.
-     * <ul>
-     *         <li> {@link com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT
-     * COUNT}: Number of records in the final table
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code info}.
-     */
-    public static final class Info {
-
-        /**
-         * Number of records in the final table
-         */
-        public static final String COUNT = "count";
-
-        private Info() {  }
-    }
-
     private long countAffected;
     private String responseSchemaStr;
     private ByteBuffer binaryEncodedResponse;
@@ -92,8 +41,6 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     private boolean hasMoreRecords;
     private String pagingTable;
     private Map<String, String> info;
-
-
     /**
      * Constructs a RawExecuteSqlResponse object with default parameters.
      */
@@ -101,20 +48,25 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The number of objects/records affected.
-     * 
      */
     public long getCountAffected() {
         return countAffected;
     }
 
     /**
-     * 
-     * @param countAffected  The number of objects/records affected.
-     * 
+     * @param countAffected The number of objects/records affected.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setCountAffected(long countAffected) {
         this.countAffected = countAffected;
@@ -122,22 +74,17 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Avro schema of {@code binaryEncodedResponse} or {@code
-     *         jsonEncodedResponse}.
-     * 
+     * jsonEncodedResponse}.
      */
     public String getResponseSchemaStr() {
         return responseSchemaStr;
     }
 
     /**
-     * 
-     * @param responseSchemaStr  Avro schema of {@code binaryEncodedResponse}
-     *                           or {@code jsonEncodedResponse}.
-     * 
+     * @param responseSchemaStr Avro schema of {@code binaryEncodedResponse}
+     *                          or {@code jsonEncodedResponse}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setResponseSchemaStr(String responseSchemaStr) {
         this.responseSchemaStr = (responseSchemaStr == null) ? "" : responseSchemaStr;
@@ -145,41 +92,31 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Avro binary encoded response.
-     * 
      */
     public ByteBuffer getBinaryEncodedResponse() {
         return binaryEncodedResponse;
     }
 
     /**
-     * 
-     * @param binaryEncodedResponse  Avro binary encoded response.
-     * 
+     * @param binaryEncodedResponse Avro binary encoded response.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setBinaryEncodedResponse(ByteBuffer binaryEncodedResponse) {
-        this.binaryEncodedResponse = (binaryEncodedResponse == null) ? ByteBuffer.wrap( new byte[0] ) : binaryEncodedResponse;
+        this.binaryEncodedResponse = (binaryEncodedResponse == null) ? ByteBuffer.wrap(new byte[0]) : binaryEncodedResponse;
         return this;
     }
 
     /**
-     * 
      * @return Avro JSON encoded response.
-     * 
      */
     public String getJsonEncodedResponse() {
         return jsonEncodedResponse;
     }
 
     /**
-     * 
-     * @param jsonEncodedResponse  Avro JSON encoded response.
-     * 
+     * @param jsonEncodedResponse Avro JSON encoded response.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setJsonEncodedResponse(String jsonEncodedResponse) {
         this.jsonEncodedResponse = (jsonEncodedResponse == null) ? "" : jsonEncodedResponse;
@@ -187,20 +124,15 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total/Filtered number of records.
-     * 
      */
     public long getTotalNumberOfRecords() {
         return totalNumberOfRecords;
     }
 
     /**
-     * 
-     * @param totalNumberOfRecords  Total/Filtered number of records.
-     * 
+     * @param totalNumberOfRecords Total/Filtered number of records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setTotalNumberOfRecords(long totalNumberOfRecords) {
         this.totalNumberOfRecords = totalNumberOfRecords;
@@ -208,38 +140,33 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Too many records. Returned a partial set.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getHasMoreRecords() {
         return hasMoreRecords;
     }
 
     /**
-     * 
-     * @param hasMoreRecords  Too many records. Returned a partial set.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE
-     *                        TRUE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE
-     *                        FALSE}
-     *                        </ul>
-     * 
+     * @param hasMoreRecords Too many records. Returned a partial set.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE
+     *                       TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE
+     *                       FALSE}
+     *                       </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setHasMoreRecords(boolean hasMoreRecords) {
         this.hasMoreRecords = hasMoreRecords;
@@ -247,24 +174,19 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of the table that has the result records of the query.
-     *         Valid, when {@code hasMoreRecords} is {@code true} (Subject to
-     *         config.paging_tables_enabled)
-     * 
+     * Valid, when {@code hasMoreRecords} is {@code true} (Subject to
+     * config.paging_tables_enabled)
      */
     public String getPagingTable() {
         return pagingTable;
     }
 
     /**
-     * 
-     * @param pagingTable  Name of the table that has the result records of the
-     *                     query. Valid, when {@code hasMoreRecords} is {@code
-     *                     true} (Subject to config.paging_tables_enabled)
-     * 
+     * @param pagingTable Name of the table that has the result records of the
+     *                    query. Valid, when {@code hasMoreRecords} is {@code
+     *                    true} (Subject to config.paging_tables_enabled)
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setPagingTable(String pagingTable) {
         this.pagingTable = (pagingTable == null) ? "" : pagingTable;
@@ -272,32 +194,27 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT COUNT}:
-     *         Number of records in the final table
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT COUNT}:
+     * Number of records in the final table
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     *              <ul>
-     *                      <li> {@link
-     *              com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT COUNT}:
-     *              Number of records in the final table
-     *              </ul>
-     *              The default value is an empty {@link Map}.
-     * 
+     * @param info Additional information.
+     *             <ul>
+     *                     <li> {@link
+     *             com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT COUNT}:
+     *             Number of records in the final table
+     *             </ul>
+     *             The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawExecuteSqlResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -307,9 +224,8 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -319,13 +235,10 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -362,47 +275,45 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.countAffected = (Long)value;
+                this.countAffected = (Long) value;
                 break;
 
             case 1:
-                this.responseSchemaStr = (String)value;
+                this.responseSchemaStr = (String) value;
                 break;
 
             case 2:
-                this.binaryEncodedResponse = (ByteBuffer)value;
+                this.binaryEncodedResponse = (ByteBuffer) value;
                 break;
 
             case 3:
-                this.jsonEncodedResponse = (String)value;
+                this.jsonEncodedResponse = (String) value;
                 break;
 
             case 4:
-                this.totalNumberOfRecords = (Long)value;
+                this.totalNumberOfRecords = (Long) value;
                 break;
 
             case 5:
-                this.hasMoreRecords = (Boolean)value;
+                this.hasMoreRecords = (Boolean) value;
                 break;
 
             case 6:
-                this.pagingTable = (String)value;
+                this.pagingTable = (String) value;
                 break;
 
             case 7:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -412,63 +323,63 @@ public class RawExecuteSqlResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        RawExecuteSqlResponse that = (RawExecuteSqlResponse)obj;
+        RawExecuteSqlResponse that = (RawExecuteSqlResponse) obj;
 
-        return ( ( this.countAffected == that.countAffected )
-                 && this.responseSchemaStr.equals( that.responseSchemaStr )
-                 && this.binaryEncodedResponse.equals( that.binaryEncodedResponse )
-                 && this.jsonEncodedResponse.equals( that.jsonEncodedResponse )
-                 && ( this.totalNumberOfRecords == that.totalNumberOfRecords )
-                 && ( this.hasMoreRecords == that.hasMoreRecords )
-                 && this.pagingTable.equals( that.pagingTable )
-                 && this.info.equals( that.info ) );
+        return ((this.countAffected == that.countAffected)
+                && this.responseSchemaStr.equals(that.responseSchemaStr)
+                && this.binaryEncodedResponse.equals(that.binaryEncodedResponse)
+                && this.jsonEncodedResponse.equals(that.jsonEncodedResponse)
+                && (this.totalNumberOfRecords == that.totalNumberOfRecords)
+                && (this.hasMoreRecords == that.hasMoreRecords)
+                && this.pagingTable.equals(that.pagingTable)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "countAffected" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countAffected ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "responseSchemaStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.responseSchemaStr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "binaryEncodedResponse" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.binaryEncodedResponse ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "jsonEncodedResponse" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jsonEncodedResponse ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "totalNumberOfRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.totalNumberOfRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "hasMoreRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.hasMoreRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "pagingTable" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.pagingTable ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("countAffected"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countAffected));
+        builder.append(", ");
+        builder.append(gd.toString("responseSchemaStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.responseSchemaStr));
+        builder.append(", ");
+        builder.append(gd.toString("binaryEncodedResponse"));
+        builder.append(": ");
+        builder.append(gd.toString(this.binaryEncodedResponse));
+        builder.append(", ");
+        builder.append(gd.toString("jsonEncodedResponse"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jsonEncodedResponse));
+        builder.append(", ");
+        builder.append(gd.toString("totalNumberOfRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.totalNumberOfRecords));
+        builder.append(", ");
+        builder.append(gd.toString("hasMoreRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.hasMoreRecords));
+        builder.append(", ");
+        builder.append(gd.toString("pagingTable"));
+        builder.append(": ");
+        builder.append(gd.toString(this.pagingTable));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -476,15 +387,54 @@ public class RawExecuteSqlResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.countAffected).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countAffected).hashCode();
         hashCode = (31 * hashCode) + this.responseSchemaStr.hashCode();
         hashCode = (31 * hashCode) + this.binaryEncodedResponse.hashCode();
         hashCode = (31 * hashCode) + this.jsonEncodedResponse.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.totalNumberOfRecords).hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.hasMoreRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.totalNumberOfRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.hasMoreRecords).hashCode();
         hashCode = (31 * hashCode) + this.pagingTable.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Too many records. Returned a partial set.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawExecuteSqlResponse.HasMoreRecords#FALSE FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code hasMoreRecords}.
+     */
+    public static final class HasMoreRecords {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private HasMoreRecords() {
+        }
+    }
+
+    /**
+     * Additional information.
+     * <ul>
+     *         <li> {@link com.gpudb.protocol.RawExecuteSqlResponse.Info#COUNT
+     * COUNT}: Number of records in the final table
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code info}.
+     */
+    public static final class Info {
+
+        /**
+         * Number of records in the final table
+         */
+        public static final String COUNT = "count";
+
+        private Info() {
+        }
     }
 
 }

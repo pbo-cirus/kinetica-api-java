@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -25,50 +26,13 @@ public class CreateUserInternalRequest implements IndexedRecord {
             .record("CreateUserInternalRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("name").type().stringType().noDefault()
-                .name("password").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("name").type().stringType().noDefault()
+            .name("password").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Optional parameters.
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
-     * RESOURCE_GROUP}: Name of an existing resource group to associate with
-     * this user
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code options}.
-     */
-    public static final class Options {
-
-        /**
-         * Name of an existing resource group to associate with this user
-         */
-        public static final String RESOURCE_GROUP = "resource_group";
-
-        private Options() {  }
-    }
-
     private String name;
     private String password;
     private Map<String, String> options;
-
-
     /**
      * Constructs a CreateUserInternalRequest object with default parameters.
      */
@@ -77,17 +41,16 @@ public class CreateUserInternalRequest implements IndexedRecord {
         password = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a CreateUserInternalRequest object with the specified
      * parameters.
-     * 
-     * @param name  Name of the user to be created. Must contain only lowercase
-     *              letters, digits, and underscores, and cannot begin with a
-     *              digit. Must not be the same name as an existing user or
-     *              role.
-     * @param password  Initial password of the user to be created. May be an
-     *                  empty string for no password.
+     *
+     * @param name     Name of the user to be created. Must contain only lowercase
+     *                 letters, digits, and underscores, and cannot begin with a
+     *                 digit. Must not be the same name as an existing user or
+     *                 role.
+     * @param password Initial password of the user to be created. May be an
+     *                 empty string for no password.
      * @param options  Optional parameters.
      *                 <ul>
      *                         <li> {@link
@@ -96,7 +59,6 @@ public class CreateUserInternalRequest implements IndexedRecord {
      *                 associate with this user
      *                 </ul>
      *                 The default value is an empty {@link Map}.
-     * 
      */
     public CreateUserInternalRequest(String name, String password, Map<String, String> options) {
         this.name = (name == null) ? "" : name;
@@ -105,25 +67,30 @@ public class CreateUserInternalRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the user to be created. Must contain only lowercase
-     *         letters, digits, and underscores, and cannot begin with a digit.
-     *         Must not be the same name as an existing user or role.
-     * 
+     * letters, digits, and underscores, and cannot begin with a digit.
+     * Must not be the same name as an existing user or role.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name  Name of the user to be created. Must contain only lowercase
-     *              letters, digits, and underscores, and cannot begin with a
-     *              digit. Must not be the same name as an existing user or
-     *              role.
-     * 
+     * @param name Name of the user to be created. Must contain only lowercase
+     *             letters, digits, and underscores, and cannot begin with a
+     *             digit. Must not be the same name as an existing user or
+     *             role.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateUserInternalRequest setName(String name) {
         this.name = (name == null) ? "" : name;
@@ -131,22 +98,17 @@ public class CreateUserInternalRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Initial password of the user to be created. May be an empty
-     *         string for no password.
-     * 
+     * string for no password.
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * 
-     * @param password  Initial password of the user to be created. May be an
-     *                  empty string for no password.
-     * 
+     * @param password Initial password of the user to be created. May be an
+     *                 empty string for no password.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateUserInternalRequest setPassword(String password) {
         this.password = (password == null) ? "" : password;
@@ -154,34 +116,29 @@ public class CreateUserInternalRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
-     *         RESOURCE_GROUP}: Name of an existing resource group to associate
-     *         with this user
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
+     * RESOURCE_GROUP}: Name of an existing resource group to associate
+     * with this user
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
-     *                 RESOURCE_GROUP}: Name of an existing resource group to
-     *                 associate with this user
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
+     *                RESOURCE_GROUP}: Name of an existing resource group to
+     *                associate with this user
+     *                </ul>
+     *                The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateUserInternalRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -191,9 +148,8 @@ public class CreateUserInternalRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -203,13 +159,10 @@ public class CreateUserInternalRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -231,27 +184,25 @@ public class CreateUserInternalRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.name = (String)value;
+                this.name = (String) value;
                 break;
 
             case 1:
-                this.password = (String)value;
+                this.password = (String) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -261,38 +212,38 @@ public class CreateUserInternalRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateUserInternalRequest that = (CreateUserInternalRequest)obj;
+        CreateUserInternalRequest that = (CreateUserInternalRequest) obj;
 
-        return ( this.name.equals( that.name )
-                 && this.password.equals( that.password )
-                 && this.options.equals( that.options ) );
+        return (this.name.equals(that.name)
+                && this.password.equals(that.password)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "name" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.name ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "password" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.password ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("name"));
+        builder.append(": ");
+        builder.append(gd.toString(this.name));
+        builder.append(", ");
+        builder.append(gd.toString("password"));
+        builder.append(": ");
+        builder.append(gd.toString(this.password));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -304,6 +255,28 @@ public class CreateUserInternalRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.password.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateUserInternalRequest.Options#RESOURCE_GROUP
+     * RESOURCE_GROUP}: Name of an existing resource group to associate with
+     * this user
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code options}.
+     */
+    public static final class Options {
+
+        /**
+         * Name of an existing resource group to associate with this user
+         */
+        public static final String RESOURCE_GROUP = "resource_group";
+
+        private Options() {
+        }
     }
 
 }

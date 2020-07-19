@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,32 +23,17 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
             .record("AggregateMinMaxGeometryResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private double minX;
     private double maxX;
     private double minY;
     private double maxY;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AggregateMinMaxGeometryResponse object with default
      * parameters.
@@ -56,20 +42,25 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Minimum x-coordinate value of the {@code columnName}.
-     * 
      */
     public double getMinX() {
         return minX;
     }
 
     /**
-     * 
-     * @param minX  Minimum x-coordinate value of the {@code columnName}.
-     * 
+     * @param minX Minimum x-coordinate value of the {@code columnName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateMinMaxGeometryResponse setMinX(double minX) {
         this.minX = minX;
@@ -77,20 +68,15 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Maximum x-coordinate value of the {@code columnName}.
-     * 
      */
     public double getMaxX() {
         return maxX;
     }
 
     /**
-     * 
-     * @param maxX  Maximum x-coordinate value of the {@code columnName}.
-     * 
+     * @param maxX Maximum x-coordinate value of the {@code columnName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateMinMaxGeometryResponse setMaxX(double maxX) {
         this.maxX = maxX;
@@ -98,20 +84,15 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Minimum y-coordinate value of the {@code columnName}.
-     * 
      */
     public double getMinY() {
         return minY;
     }
 
     /**
-     * 
-     * @param minY  Minimum y-coordinate value of the {@code columnName}.
-     * 
+     * @param minY Minimum y-coordinate value of the {@code columnName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateMinMaxGeometryResponse setMinY(double minY) {
         this.minY = minY;
@@ -119,20 +100,15 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Maximum y-coordinate value of the {@code columnName}.
-     * 
      */
     public double getMaxY() {
         return maxY;
     }
 
     /**
-     * 
-     * @param maxY  Maximum y-coordinate value of the {@code columnName}.
-     * 
+     * @param maxY Maximum y-coordinate value of the {@code columnName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateMinMaxGeometryResponse setMaxY(double maxY) {
         this.maxY = maxY;
@@ -140,20 +116,15 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateMinMaxGeometryResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -163,9 +134,8 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -175,13 +145,10 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -209,35 +176,33 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.minX = (Double)value;
+                this.minX = (Double) value;
                 break;
 
             case 1:
-                this.maxX = (Double)value;
+                this.maxX = (Double) value;
                 break;
 
             case 2:
-                this.minY = (Double)value;
+                this.minY = (Double) value;
                 break;
 
             case 3:
-                this.maxY = (Double)value;
+                this.maxY = (Double) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -247,48 +212,48 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AggregateMinMaxGeometryResponse that = (AggregateMinMaxGeometryResponse)obj;
+        AggregateMinMaxGeometryResponse that = (AggregateMinMaxGeometryResponse) obj;
 
-        return ( ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && this.info.equals( that.info ) );
+        return (((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -296,10 +261,10 @@ public class AggregateMinMaxGeometryResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

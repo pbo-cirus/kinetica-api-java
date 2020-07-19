@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class FilterByListResponse implements IndexedRecord {
             .record("FilterByListResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("count").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("count").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private long count;
     private Map<String, String> info;
-
-
     /**
      * Constructs a FilterByListResponse object with default parameters.
      */
@@ -49,20 +35,25 @@ public class FilterByListResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The number of records passing the list filter.
-     * 
      */
     public long getCount() {
         return count;
     }
 
     /**
-     * 
-     * @param count  The number of records passing the list filter.
-     * 
+     * @param count The number of records passing the list filter.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByListResponse setCount(long count) {
         this.count = count;
@@ -70,20 +61,15 @@ public class FilterByListResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByListResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -93,9 +79,8 @@ public class FilterByListResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -105,13 +90,10 @@ public class FilterByListResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -130,23 +112,21 @@ public class FilterByListResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.count = (Long)value;
+                this.count = (Long) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -156,33 +136,33 @@ public class FilterByListResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByListResponse that = (FilterByListResponse)obj;
+        FilterByListResponse that = (FilterByListResponse) obj;
 
-        return ( ( this.count == that.count )
-                 && this.info.equals( that.info ) );
+        return ((this.count == that.count)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "count" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.count ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("count"));
+        builder.append(": ");
+        builder.append(gd.toString(this.count));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -190,7 +170,7 @@ public class FilterByListResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.count).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.count).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

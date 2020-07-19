@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,26 +28,11 @@ public class ShowTriggersRequest implements IndexedRecord {
             .record("ShowTriggersRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("triggerIds").type().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("triggerIds").type().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> triggerIds;
     private Map<String, String> options;
-
-
     /**
      * Constructs a ShowTriggersRequest object with default parameters.
      */
@@ -55,15 +41,15 @@ public class ShowTriggersRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a ShowTriggersRequest object with the specified parameters.
-     * 
-     * @param triggerIds  List of IDs of the triggers whose information is to
-     *                    be retrieved. An empty list means information will be
-     *                    retrieved on all active triggers.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param triggerIds List of IDs of the triggers whose information is to
+     *                   be retrieved. An empty list means information will be
+     *                   retrieved on all active triggers.
+     * @param options    Optional parameters.  The default value is an empty
+     *                   {@link Map}.
      */
     public ShowTriggersRequest(List<String> triggerIds, Map<String, String> options) {
         this.triggerIds = (triggerIds == null) ? new ArrayList<String>() : triggerIds;
@@ -71,24 +57,29 @@ public class ShowTriggersRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return List of IDs of the triggers whose information is to be
-     *         retrieved. An empty list means information will be retrieved on
-     *         all active triggers.
-     * 
+     * retrieved. An empty list means information will be retrieved on
+     * all active triggers.
      */
     public List<String> getTriggerIds() {
         return triggerIds;
     }
 
     /**
-     * 
-     * @param triggerIds  List of IDs of the triggers whose information is to
-     *                    be retrieved. An empty list means information will be
-     *                    retrieved on all active triggers.
-     * 
+     * @param triggerIds List of IDs of the triggers whose information is to
+     *                   be retrieved. An empty list means information will be
+     *                   retrieved on all active triggers.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTriggersRequest setTriggerIds(List<String> triggerIds) {
         this.triggerIds = (triggerIds == null) ? new ArrayList<String>() : triggerIds;
@@ -96,21 +87,16 @@ public class ShowTriggersRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTriggersRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -120,9 +106,8 @@ public class ShowTriggersRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -132,13 +117,10 @@ public class ShowTriggersRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -157,23 +139,21 @@ public class ShowTriggersRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.triggerIds = (List<String>)value;
+                this.triggerIds = (List<String>) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -183,33 +163,33 @@ public class ShowTriggersRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowTriggersRequest that = (ShowTriggersRequest)obj;
+        ShowTriggersRequest that = (ShowTriggersRequest) obj;
 
-        return ( this.triggerIds.equals( that.triggerIds )
-                 && this.options.equals( that.options ) );
+        return (this.triggerIds.equals(that.triggerIds)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "triggerIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.triggerIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("triggerIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.triggerIds));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

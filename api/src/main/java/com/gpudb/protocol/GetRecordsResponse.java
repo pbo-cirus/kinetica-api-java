@@ -5,19 +5,19 @@
  */
 package com.gpudb.protocol;
 
+import org.apache.avro.generic.GenericData;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.avro.generic.GenericData;
 
 
 /**
  * A set of results returned by {@link com.gpudb.GPUdb#getRecords(Object,
  * GetRecordsRequest)}.
- * 
- * @param <T>  The type of object being processed.
- * 
+ *
+ * @param <T> The type of object being processed.
  */
 public class GetRecordsResponse<T> {
     private String tableName;
@@ -36,35 +36,28 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
         return this;
     }
+
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * 
      * @param typeName
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setTypeName(String typeName) {
         this.typeName = (typeName == null) ? "" : typeName;
@@ -72,21 +65,16 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return Avro schema of {@code recordsBinary} or {@code recordsJson}
-     * 
      */
     public String getTypeSchema() {
         return typeSchema;
     }
 
     /**
-     * 
-     * @param typeSchema  Avro schema of {@code recordsBinary} or {@code
-     *                    recordsJson}
-     * 
+     * @param typeSchema Avro schema of {@code recordsBinary} or {@code
+     *                   recordsJson}
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setTypeSchema(String typeSchema) {
         this.typeSchema = (typeSchema == null) ? "" : typeSchema;
@@ -94,24 +82,19 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return If the {@code encoding} was 'binary', then this list contains
-     *         the binary encoded records retrieved from the table, otherwise
-     *         not populated.
-     * 
+     * the binary encoded records retrieved from the table, otherwise
+     * not populated.
      */
     public List<T> getData() {
         return data;
     }
 
     /**
-     * 
-     * @param data  If the {@code encoding} was 'binary', then this list
-     *              contains the binary encoded records retrieved from the
-     *              table, otherwise not populated.
-     * 
+     * @param data If the {@code encoding} was 'binary', then this list
+     *             contains the binary encoded records retrieved from the
+     *             table, otherwise not populated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setData(List<T> data) {
         this.data = (data == null) ? new ArrayList<T>() : data;
@@ -119,20 +102,15 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return Total/Filtered number of records.
-     * 
      */
     public long getTotalNumberOfRecords() {
         return totalNumberOfRecords;
     }
 
     /**
-     * 
-     * @param totalNumberOfRecords  Total/Filtered number of records.
-     * 
+     * @param totalNumberOfRecords Total/Filtered number of records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setTotalNumberOfRecords(long totalNumberOfRecords) {
         this.totalNumberOfRecords = totalNumberOfRecords;
@@ -140,20 +118,15 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return Too many records. Returned a partial set.
-     * 
      */
     public boolean getHasMoreRecords() {
         return hasMoreRecords;
     }
 
     /**
-     * 
-     * @param hasMoreRecords  Too many records. Returned a partial set.
-     * 
+     * @param hasMoreRecords Too many records. Returned a partial set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setHasMoreRecords(boolean hasMoreRecords) {
         this.hasMoreRecords = hasMoreRecords;
@@ -161,79 +134,75 @@ public class GetRecordsResponse<T> {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GetRecordsResponse<T> setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
         return this;
     }
+
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        GetRecordsResponse that = (GetRecordsResponse)obj;
+        GetRecordsResponse that = (GetRecordsResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeName.equals( that.typeName )
-                 && this.typeSchema.equals( that.typeSchema )
-                 && this.data.equals( that.data )
-                 && ( this.totalNumberOfRecords == that.totalNumberOfRecords )
-                 && ( this.hasMoreRecords == that.hasMoreRecords )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.typeName.equals(that.typeName)
+                && this.typeSchema.equals(that.typeSchema)
+                && this.data.equals(that.data)
+                && (this.totalNumberOfRecords == that.totalNumberOfRecords)
+                && (this.hasMoreRecords == that.hasMoreRecords)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeSchema" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeSchema ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "data" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.data ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "totalNumberOfRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.totalNumberOfRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "hasMoreRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.hasMoreRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeName));
+        builder.append(", ");
+        builder.append(gd.toString("typeSchema"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeSchema));
+        builder.append(", ");
+        builder.append(gd.toString("data"));
+        builder.append(": ");
+        builder.append(gd.toString(this.data));
+        builder.append(", ");
+        builder.append(gd.toString("totalNumberOfRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.totalNumberOfRecords));
+        builder.append(", ");
+        builder.append(gd.toString("hasMoreRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.hasMoreRecords));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -245,8 +214,8 @@ public class GetRecordsResponse<T> {
         hashCode = (31 * hashCode) + this.typeName.hashCode();
         hashCode = (31 * hashCode) + this.typeSchema.hashCode();
         hashCode = (31 * hashCode) + this.data.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.totalNumberOfRecords).hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.hasMoreRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.totalNumberOfRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.hasMoreRecords).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,30 +25,15 @@ public class ModifyGraphResponse implements IndexedRecord {
             .record("ModifyGraphResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("numNodes").type().longType().noDefault()
-                .name("numEdges").type().longType().noDefault()
-                .name("edgesIds").type().array().items().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("numNodes").type().longType().noDefault()
+            .name("numEdges").type().longType().noDefault()
+            .name("edgesIds").type().array().items().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private long numNodes;
     private long numEdges;
     private List<Long> edgesIds;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ModifyGraphResponse object with default parameters.
      */
@@ -55,20 +41,25 @@ public class ModifyGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Total number of nodes in the graph.
-     * 
      */
     public long getNumNodes() {
         return numNodes;
     }
 
     /**
-     * 
-     * @param numNodes  Total number of nodes in the graph.
-     * 
+     * @param numNodes Total number of nodes in the graph.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ModifyGraphResponse setNumNodes(long numNodes) {
         this.numNodes = numNodes;
@@ -76,20 +67,15 @@ public class ModifyGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total number of edges in the graph.
-     * 
      */
     public long getNumEdges() {
         return numEdges;
     }
 
     /**
-     * 
-     * @param numEdges  Total number of edges in the graph.
-     * 
+     * @param numEdges Total number of edges in the graph.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ModifyGraphResponse setNumEdges(long numEdges) {
         this.numEdges = numEdges;
@@ -97,22 +83,17 @@ public class ModifyGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Edges given as pairs of node indices. Only populated if {@code
-     *         export_create_results} is set to {@code true}.
-     * 
+     * export_create_results} is set to {@code true}.
      */
     public List<Long> getEdgesIds() {
         return edgesIds;
     }
 
     /**
-     * 
-     * @param edgesIds  Edges given as pairs of node indices. Only populated if
-     *                  {@code export_create_results} is set to {@code true}.
-     * 
+     * @param edgesIds Edges given as pairs of node indices. Only populated if
+     *                 {@code export_create_results} is set to {@code true}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ModifyGraphResponse setEdgesIds(List<Long> edgesIds) {
         this.edgesIds = (edgesIds == null) ? new ArrayList<Long>() : edgesIds;
@@ -120,20 +101,15 @@ public class ModifyGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ModifyGraphResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -143,9 +119,8 @@ public class ModifyGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -155,13 +130,10 @@ public class ModifyGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -186,31 +158,29 @@ public class ModifyGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.numNodes = (Long)value;
+                this.numNodes = (Long) value;
                 break;
 
             case 1:
-                this.numEdges = (Long)value;
+                this.numEdges = (Long) value;
                 break;
 
             case 2:
-                this.edgesIds = (List<Long>)value;
+                this.edgesIds = (List<Long>) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -220,43 +190,43 @@ public class ModifyGraphResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ModifyGraphResponse that = (ModifyGraphResponse)obj;
+        ModifyGraphResponse that = (ModifyGraphResponse) obj;
 
-        return ( ( this.numNodes == that.numNodes )
-                 && ( this.numEdges == that.numEdges )
-                 && this.edgesIds.equals( that.edgesIds )
-                 && this.info.equals( that.info ) );
+        return ((this.numNodes == that.numNodes)
+                && (this.numEdges == that.numEdges)
+                && this.edgesIds.equals(that.edgesIds)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "numNodes" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numNodes ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "numEdges" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numEdges ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "edgesIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.edgesIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("numNodes"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numNodes));
+        builder.append(", ");
+        builder.append(gd.toString("numEdges"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numEdges));
+        builder.append(", ");
+        builder.append(gd.toString("edgesIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.edgesIds));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -264,8 +234,8 @@ public class ModifyGraphResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.numNodes).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.numEdges).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.numNodes).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.numEdges).hashCode();
         hashCode = (31 * hashCode) + this.edgesIds.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;

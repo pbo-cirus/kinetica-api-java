@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,28 +43,13 @@ public class AlterTableColumnsRequest implements IndexedRecord {
             .record("AlterTableColumnsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("columnAlterations").type().array().items().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("columnAlterations").type().array().items().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private List<Map<String, String>> columnAlterations;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AlterTableColumnsRequest object with default parameters.
      */
@@ -73,26 +59,26 @@ public class AlterTableColumnsRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs an AlterTableColumnsRequest object with the specified
      * parameters.
-     * 
-     * @param tableName  Table on which the operation will be performed. Must
-     *                   be an existing table or view.
-     * @param columnAlterations  list of alter table add/delete/change column
-     *                           requests - all for the same table.
-     *                                           each request is a map that
-     *                           includes 'column_name', 'action' and the
-     *                           options specific for the action,
-     *                                           note that the same options as
-     *                           in alter table requests but in the same map as
-     *                           the column name and the action. For example:
-     *                           [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
-     *                           {'column_name':'col_1','action':'add_column',
-     *                           'type':'int','default_value':'1'}
-     *                                           ]
-     * @param options  Optional parameters.
-     * 
+     *
+     * @param tableName         Table on which the operation will be performed. Must
+     *                          be an existing table or view.
+     * @param columnAlterations list of alter table add/delete/change column
+     *                          requests - all for the same table.
+     *                          each request is a map that
+     *                          includes 'column_name', 'action' and the
+     *                          options specific for the action,
+     *                          note that the same options as
+     *                          in alter table requests but in the same map as
+     *                          the column name and the action. For example:
+     *                          [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
+     *                          {'column_name':'col_1','action':'add_column',
+     *                          'type':'int','default_value':'1'}
+     *                          ]
+     * @param options           Optional parameters.
      */
     public AlterTableColumnsRequest(String tableName, List<Map<String, String>> columnAlterations, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -101,22 +87,27 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Table on which the operation will be performed. Must be an
-     *         existing table or view.
-     * 
+     * existing table or view.
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Table on which the operation will be performed. Must
-     *                   be an existing table or view.
-     * 
+     * @param tableName Table on which the operation will be performed. Must
+     *                  be an existing table or view.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsRequest setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -124,41 +115,36 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return list of alter table add/delete/change column requests - all for
-     *         the same table.
-     *                         each request is a map that includes
-     *         'column_name', 'action' and the options specific for the action,
-     *                         note that the same options as in alter table
-     *         requests but in the same map as the column name and the action.
-     *         For example:
-     *         [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
-     *                         {'column_name':'col_1','action':'add_column',
-     *         'type':'int','default_value':'1'}
-     *                         ]
-     * 
+     * the same table.
+     * each request is a map that includes
+     * 'column_name', 'action' and the options specific for the action,
+     * note that the same options as in alter table
+     * requests but in the same map as the column name and the action.
+     * For example:
+     * [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
+     * {'column_name':'col_1','action':'add_column',
+     * 'type':'int','default_value':'1'}
+     * ]
      */
     public List<Map<String, String>> getColumnAlterations() {
         return columnAlterations;
     }
 
     /**
-     * 
-     * @param columnAlterations  list of alter table add/delete/change column
-     *                           requests - all for the same table.
-     *                                           each request is a map that
-     *                           includes 'column_name', 'action' and the
-     *                           options specific for the action,
-     *                                           note that the same options as
-     *                           in alter table requests but in the same map as
-     *                           the column name and the action. For example:
-     *                           [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
-     *                           {'column_name':'col_1','action':'add_column',
-     *                           'type':'int','default_value':'1'}
-     *                                           ]
-     * 
+     * @param columnAlterations list of alter table add/delete/change column
+     *                          requests - all for the same table.
+     *                          each request is a map that
+     *                          includes 'column_name', 'action' and the
+     *                          options specific for the action,
+     *                          note that the same options as
+     *                          in alter table requests but in the same map as
+     *                          the column name and the action. For example:
+     *                          [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
+     *                          {'column_name':'col_1','action':'add_column',
+     *                          'type':'int','default_value':'1'}
+     *                          ]
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsRequest setColumnAlterations(List<Map<String, String>> columnAlterations) {
         this.columnAlterations = (columnAlterations == null) ? new ArrayList<Map<String, String>>() : columnAlterations;
@@ -166,20 +152,15 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     * 
+     * @param options Optional parameters.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -189,9 +170,8 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -201,13 +181,10 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -229,27 +206,25 @@ public class AlterTableColumnsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.columnAlterations = (List<Map<String, String>>)value;
+                this.columnAlterations = (List<Map<String, String>>) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -259,38 +234,38 @@ public class AlterTableColumnsRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AlterTableColumnsRequest that = (AlterTableColumnsRequest)obj;
+        AlterTableColumnsRequest that = (AlterTableColumnsRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.columnAlterations.equals( that.columnAlterations )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.columnAlterations.equals(that.columnAlterations)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnAlterations" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnAlterations ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("columnAlterations"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnAlterations));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

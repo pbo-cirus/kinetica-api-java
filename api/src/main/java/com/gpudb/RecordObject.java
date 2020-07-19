@@ -1,18 +1,15 @@
 package com.gpudb;
 
+import org.apache.avro.Schema;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.avro.Schema;
 
 /**
  * Abstract base class for objects that contain {@link Record} data with a
@@ -23,6 +20,93 @@ import org.apache.avro.Schema;
  * information about the type.
  */
 public abstract class RecordObject extends RecordBase {
+    private static final Map<Class<?>, Index> INDEXES = new ConcurrentHashMap<>(16, 0.75f, 1);
+    private final Index index;
+
+    /**
+     * Creates a new record object instance.
+     */
+    protected RecordObject() {
+        index = getIndex(getClass());
+    }
+
+    private static Index getIndex(Class<? extends RecordObject> type) {
+        Index index = INDEXES.get(type);
+
+        if (index != null) {
+            return index;
+        }
+
+        index = new Index(type);
+        INDEXES.put(type, index);
+        return index;
+    }
+
+    /**
+     * Gets the {@link Type} object corresponding to the metadata in the
+     * specified {@link RecordObject} class.
+     *
+     * @param type the {@link RecordObject} class from which to obtain metadata
+     * @return the corresponding {@link Type} object
+     */
+    public static com.gpudb.Type getType(Class<? extends RecordObject> type) {
+        return getIndex(type).type;
+    }
+
+    /**
+     * Gets the Avro record schema corresponding to the metadata in the
+     * specified {@link RecordObject} class.
+     *
+     * @param type the {@link RecordObject} class from which to obtain metadata
+     * @return the corresponding Avro record schema
+     */
+    public static Schema getSchema(Class<? extends RecordObject> type) {
+        return getIndex(type).type.getSchema();
+    }
+
+    /**
+     * Creates a type in GPUdb based on the metadata in the specified
+     * {@link RecordObject} class and returns the type ID for reference. If an
+     * identical type already exists in GPUdb, the type ID of the existing type
+     * will be returned and no new type will be created. The specified class
+     * will also automatically be added as a {@link GPUdbBase#addKnownType(
+     *String, Object) known type} in the specified {@link GPUdb} instance.
+     *
+     * @param type  the {@link RecordObject} class from which to obtain
+     *              metadata
+     * @param gpudb the {@link GPUdb} instance in which to create the type
+     * @return the type ID of the type in GPUdb
+     * @throws GPUdbException if an error occurs while creating the type
+     */
+    public static String createType(Class<? extends RecordObject> type, GPUdb gpudb) throws GPUdbException {
+        String typeId = getIndex(type).type.create(gpudb);
+        gpudb.addKnownType(typeId, type);
+        return typeId;
+    }
+
+    @Override
+    public com.gpudb.Type getType() {
+        return index.type;
+    }
+
+    @Override
+    public Object get(int index) {
+        try {
+            return this.index.fields[index].get(this);
+        } catch (IllegalAccessException ex) {
+            throw new GPUdbRuntimeException("Could not get field value for " + this.index.fields[index].getName() + ".", ex);
+        }
+    }
+
+    @Override
+    public void put(int index, Object value) {
+        try {
+            this.index.fields[index].set(this, value);
+        } catch (IllegalAccessException ex) {
+            throw new GPUdbRuntimeException("Could not set field value for " + this.index.fields[index].getName() + ".", ex);
+        }
+    }
+
     /**
      * Indicates that a public field is a GPUdb type column.
      */
@@ -161,95 +245,6 @@ public abstract class RecordObject extends RecordBase {
 
             fields = new Field[fieldList.size()];
             fieldList.toArray(fields);
-        }
-    }
-
-    private static final Map<Class<?>, Index> INDEXES = new ConcurrentHashMap<>(16, 0.75f, 1);
-
-    private static Index getIndex(Class<? extends RecordObject> type) {
-        Index index = INDEXES.get(type);
-
-        if (index != null) {
-            return index;
-        }
-
-        index = new Index(type);
-        INDEXES.put(type, index);
-        return index;
-    }
-
-    /**
-     * Gets the {@link Type} object corresponding to the metadata in the
-     * specified {@link RecordObject} class.
-     *
-     * @param type  the {@link RecordObject} class from which to obtain metadata
-     * @return      the corresponding {@link Type} object
-     */
-    public static com.gpudb.Type getType(Class<? extends RecordObject> type) {
-        return getIndex(type).type;
-    }
-
-    /**
-     * Gets the Avro record schema corresponding to the metadata in the
-     * specified {@link RecordObject} class.
-     *
-     * @param type  the {@link RecordObject} class from which to obtain metadata
-     * @return      the corresponding Avro record schema
-     */
-    public static Schema getSchema(Class<? extends RecordObject> type) {
-        return getIndex(type).type.getSchema();
-    }
-
-    /**
-     * Creates a type in GPUdb based on the metadata in the specified
-     * {@link RecordObject} class and returns the type ID for reference. If an
-     * identical type already exists in GPUdb, the type ID of the existing type
-     * will be returned and no new type will be created. The specified class
-     * will also automatically be added as a {@link GPUdbBase#addKnownType(
-     * String, Object) known type} in the specified {@link GPUdb} instance.
-     *
-     * @param type   the {@link RecordObject} class from which to obtain
-     *               metadata
-     * @param gpudb  the {@link GPUdb} instance in which to create the type
-     * @return       the type ID of the type in GPUdb
-     *
-     * @throws GPUdbException if an error occurs while creating the type
-     */
-    public static String createType(Class<? extends RecordObject> type, GPUdb gpudb) throws GPUdbException {
-        String typeId = getIndex(type).type.create(gpudb);
-        gpudb.addKnownType(typeId, type);
-        return typeId;
-    }
-
-    private final Index index;
-
-    /**
-     * Creates a new record object instance.
-     */
-    protected RecordObject() {
-        index = getIndex(getClass());
-    }
-
-    @Override
-    public com.gpudb.Type getType() {
-        return index.type;
-    }
-
-    @Override
-    public Object get(int index) {
-        try {
-            return this.index.fields[index].get(this);
-        } catch (IllegalAccessException ex) {
-            throw new GPUdbRuntimeException("Could not get field value for " + this.index.fields[index].getName() + ".", ex);
-        }
-    }
-
-    @Override
-    public void put(int index, Object value) {
-        try {
-            this.index.fields[index].set(this, value);
-        } catch (IllegalAccessException ex) {
-            throw new GPUdbRuntimeException("Could not set field value for " + this.index.fields[index].getName() + ".", ex);
         }
     }
 }

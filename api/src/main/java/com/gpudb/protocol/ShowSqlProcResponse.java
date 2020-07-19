@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,56 +25,15 @@ public class ShowSqlProcResponse implements IndexedRecord {
             .record("ShowSqlProcResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("procedureNames").type().array().items().stringType().noDefault()
-                .name("procedureDefinitions").type().array().items().stringType().noDefault()
-                .name("additionalInfo").type().array().items().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("procedureNames").type().array().items().stringType().noDefault()
+            .name("procedureDefinitions").type().array().items().stringType().noDefault()
+            .name("additionalInfo").type().array().items().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Additional information about the respective tables in the requested
-     * procedures.
-     * Supported values:
-     * <ul>
-     * </ul>
-     * A set of string constants for the parameter {@code additionalInfo}.
-     */
-    public static final class AdditionalInfo {
-
-        /**
-         * The initial date/time that periodic execution began.  The default
-         * value is ''.
-         */
-        public static final String EXECUTE_START_TIME = "execute_start_time";
-
-        /**
-         * The periodic execution interval in seconds.  The default value is
-         * ''.
-         */
-        public static final String EXECUTE_INTERVAL = "execute_interval";
-
-        private AdditionalInfo() {  }
-    }
-
     private List<String> procedureNames;
     private List<String> procedureDefinitions;
     private List<Map<String, String>> additionalInfo;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowSqlProcResponse object with default parameters.
      */
@@ -81,20 +41,25 @@ public class ShowSqlProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return A list of the names of the requested procedures.
-     * 
      */
     public List<String> getProcedureNames() {
         return procedureNames;
     }
 
     /**
-     * 
-     * @param procedureNames  A list of the names of the requested procedures.
-     * 
+     * @param procedureNames A list of the names of the requested procedures.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSqlProcResponse setProcedureNames(List<String> procedureNames) {
         this.procedureNames = (procedureNames == null) ? new ArrayList<String>() : procedureNames;
@@ -102,21 +67,16 @@ public class ShowSqlProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return A list of the definitions for the requested procedures.
-     * 
      */
     public List<String> getProcedureDefinitions() {
         return procedureDefinitions;
     }
 
     /**
-     * 
-     * @param procedureDefinitions  A list of the definitions for the requested
-     *                              procedures.
-     * 
+     * @param procedureDefinitions A list of the definitions for the requested
+     *                             procedures.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSqlProcResponse setProcedureDefinitions(List<String> procedureDefinitions) {
         this.procedureDefinitions = (procedureDefinitions == null) ? new ArrayList<String>() : procedureDefinitions;
@@ -124,28 +84,23 @@ public class ShowSqlProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information about the respective tables in the
-     *         requested procedures.
-     *         Supported values:
-     *         <ul>
-     *         </ul>
-     * 
+     * requested procedures.
+     * Supported values:
+     * <ul>
+     * </ul>
      */
     public List<Map<String, String>> getAdditionalInfo() {
         return additionalInfo;
     }
 
     /**
-     * 
-     * @param additionalInfo  Additional information about the respective
-     *                        tables in the requested procedures.
-     *                        Supported values:
-     *                        <ul>
-     *                        </ul>
-     * 
+     * @param additionalInfo Additional information about the respective
+     *                       tables in the requested procedures.
+     *                       Supported values:
+     *                       <ul>
+     *                       </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSqlProcResponse setAdditionalInfo(List<Map<String, String>> additionalInfo) {
         this.additionalInfo = (additionalInfo == null) ? new ArrayList<Map<String, String>>() : additionalInfo;
@@ -153,20 +108,15 @@ public class ShowSqlProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSqlProcResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -176,9 +126,8 @@ public class ShowSqlProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -188,13 +137,10 @@ public class ShowSqlProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -219,31 +165,29 @@ public class ShowSqlProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.procedureNames = (List<String>)value;
+                this.procedureNames = (List<String>) value;
                 break;
 
             case 1:
-                this.procedureDefinitions = (List<String>)value;
+                this.procedureDefinitions = (List<String>) value;
                 break;
 
             case 2:
-                this.additionalInfo = (List<Map<String, String>>)value;
+                this.additionalInfo = (List<Map<String, String>>) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -253,43 +197,43 @@ public class ShowSqlProcResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowSqlProcResponse that = (ShowSqlProcResponse)obj;
+        ShowSqlProcResponse that = (ShowSqlProcResponse) obj;
 
-        return ( this.procedureNames.equals( that.procedureNames )
-                 && this.procedureDefinitions.equals( that.procedureDefinitions )
-                 && this.additionalInfo.equals( that.additionalInfo )
-                 && this.info.equals( that.info ) );
+        return (this.procedureNames.equals(that.procedureNames)
+                && this.procedureDefinitions.equals(that.procedureDefinitions)
+                && this.additionalInfo.equals(that.additionalInfo)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "procedureNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procedureNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "procedureDefinitions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procedureDefinitions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "additionalInfo" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.additionalInfo ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("procedureNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procedureNames));
+        builder.append(", ");
+        builder.append(gd.toString("procedureDefinitions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procedureDefinitions));
+        builder.append(", ");
+        builder.append(gd.toString("additionalInfo"));
+        builder.append(": ");
+        builder.append(gd.toString(this.additionalInfo));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -302,6 +246,32 @@ public class ShowSqlProcResponse implements IndexedRecord {
         hashCode = (31 * hashCode) + this.additionalInfo.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Additional information about the respective tables in the requested
+     * procedures.
+     * Supported values:
+     * <ul>
+     * </ul>
+     * A set of string constants for the parameter {@code additionalInfo}.
+     */
+    public static final class AdditionalInfo {
+
+        /**
+         * The initial date/time that periodic execution began.  The default
+         * value is ''.
+         */
+        public static final String EXECUTE_START_TIME = "execute_start_time";
+
+        /**
+         * The periodic execution interval in seconds.  The default value is
+         * ''.
+         */
+        public static final String EXECUTE_INTERVAL = "execute_interval";
+
+        private AdditionalInfo() {
+        }
     }
 
 }

@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
             .record("ShowResourceStatisticsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("statisticsMap").type().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("statisticsMap").type().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private Map<String, String> statisticsMap;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowResourceStatisticsResponse object with default
      * parameters.
@@ -50,20 +36,25 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Map of resource statistics
-     * 
      */
     public Map<String, String> getStatisticsMap() {
         return statisticsMap;
     }
 
     /**
-     * 
-     * @param statisticsMap  Map of resource statistics
-     * 
+     * @param statisticsMap Map of resource statistics
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowResourceStatisticsResponse setStatisticsMap(Map<String, String> statisticsMap) {
         this.statisticsMap = (statisticsMap == null) ? new LinkedHashMap<String, String>() : statisticsMap;
@@ -71,20 +62,15 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowResourceStatisticsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -94,9 +80,8 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -106,13 +91,10 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -131,23 +113,21 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.statisticsMap = (Map<String, String>)value;
+                this.statisticsMap = (Map<String, String>) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -157,33 +137,33 @@ public class ShowResourceStatisticsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowResourceStatisticsResponse that = (ShowResourceStatisticsResponse)obj;
+        ShowResourceStatisticsResponse that = (ShowResourceStatisticsResponse) obj;
 
-        return ( this.statisticsMap.equals( that.statisticsMap )
-                 && this.info.equals( that.info ) );
+        return (this.statisticsMap.equals(that.statisticsMap)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "statisticsMap" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.statisticsMap ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("statisticsMap"));
+        builder.append(": ");
+        builder.append(gd.toString(this.statisticsMap));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

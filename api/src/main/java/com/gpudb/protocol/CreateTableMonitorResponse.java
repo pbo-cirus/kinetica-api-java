@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,30 +23,15 @@ public class CreateTableMonitorResponse implements IndexedRecord {
             .record("CreateTableMonitorResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("topicId").type().stringType().noDefault()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeSchema").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("topicId").type().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeSchema").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String topicId;
     private String tableName;
     private String typeSchema;
     private Map<String, String> info;
-
-
     /**
      * Constructs a CreateTableMonitorResponse object with default parameters.
      */
@@ -53,20 +39,25 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The ZMQ topic ID to subscribe to for inserted records.
-     * 
      */
     public String getTopicId() {
         return topicId;
     }
 
     /**
-     * 
-     * @param topicId  The ZMQ topic ID to subscribe to for inserted records.
-     * 
+     * @param topicId The ZMQ topic ID to subscribe to for inserted records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableMonitorResponse setTopicId(String topicId) {
         this.topicId = (topicId == null) ? "" : topicId;
@@ -74,20 +65,15 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableMonitorResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -95,22 +81,17 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return JSON Avro schema of the table, for use in decoding published
-     *         records.
-     * 
+     * records.
      */
     public String getTypeSchema() {
         return typeSchema;
     }
 
     /**
-     * 
-     * @param typeSchema  JSON Avro schema of the table, for use in decoding
-     *                    published records.
-     * 
+     * @param typeSchema JSON Avro schema of the table, for use in decoding
+     *                   published records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableMonitorResponse setTypeSchema(String typeSchema) {
         this.typeSchema = (typeSchema == null) ? "" : typeSchema;
@@ -118,20 +99,15 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableMonitorResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -141,9 +117,8 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -153,13 +128,10 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -184,31 +156,29 @@ public class CreateTableMonitorResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.topicId = (String)value;
+                this.topicId = (String) value;
                 break;
 
             case 1:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 2:
-                this.typeSchema = (String)value;
+                this.typeSchema = (String) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -218,43 +188,43 @@ public class CreateTableMonitorResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateTableMonitorResponse that = (CreateTableMonitorResponse)obj;
+        CreateTableMonitorResponse that = (CreateTableMonitorResponse) obj;
 
-        return ( this.topicId.equals( that.topicId )
-                 && this.tableName.equals( that.tableName )
-                 && this.typeSchema.equals( that.typeSchema )
-                 && this.info.equals( that.info ) );
+        return (this.topicId.equals(that.topicId)
+                && this.tableName.equals(that.tableName)
+                && this.typeSchema.equals(that.typeSchema)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "topicId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.topicId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeSchema" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeSchema ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("topicId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.topicId));
+        builder.append(", ");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeSchema"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeSchema));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

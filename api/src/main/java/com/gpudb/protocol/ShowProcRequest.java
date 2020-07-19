@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,22 +24,230 @@ public class ShowProcRequest implements IndexedRecord {
             .record("ShowProcRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("procName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("procName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
+    private String procName;
+    private Map<String, String> options;
 
+    /**
+     * Constructs a ShowProcRequest object with default parameters.
+     */
+    public ShowProcRequest() {
+        procName = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a ShowProcRequest object with the specified parameters.
+     *
+     * @param procName Name of the proc to show information about. If
+     *                 specified, must be the name of a currently existing
+     *                 proc. If not specified, information about all procs
+     *                 will be returned.  The default value is ''.
+     * @param options  Optional parameters.
+     *                 <ul>
+     *                         <li> {@link
+     *                 com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
+     *                 INCLUDE_FILES}: If set to {@code true}, the files that
+     *                 make up the proc will be returned. If set to {@code
+     *                 false}, the files will not be returned.
+     *                 Supported values:
+     *                 <ul>
+     *                         <li> {@link
+     *                 com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
+     *                         <li> {@link
+     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
+     *                 </ul>
+     *                 The default value is {@link
+     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
+     *                 </ul>
+     *                 The default value is an empty {@link Map}.
+     */
+    public ShowProcRequest(String procName, Map<String, String> options) {
+        this.procName = (procName == null) ? "" : procName;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the proc to show information about. If specified, must
+     * be the name of a currently existing proc. If not specified,
+     * information about all procs will be returned.  The default value
+     * is ''.
+     */
+    public String getProcName() {
+        return procName;
+    }
+
+    /**
+     * @param procName Name of the proc to show information about. If
+     *                 specified, must be the name of a currently existing
+     *                 proc. If not specified, information about all procs
+     *                 will be returned.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowProcRequest setProcName(String procName) {
+        this.procName = (procName == null) ? "" : procName;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
+     * INCLUDE_FILES}: If set to {@code true}, the files that make up
+     * the proc will be returned. If set to {@code false}, the files
+     * will not be returned.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
+     *                INCLUDE_FILES}: If set to {@code true}, the files that
+     *                make up the proc will be returned. If set to {@code
+     *                false}, the files will not be returned.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowProcRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.procName;
+
+            case 1:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.procName = (String) value;
+                break;
+
+            case 1:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        ShowProcRequest that = (ShowProcRequest) obj;
+
+        return (this.procName.equals(that.procName)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("procName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.procName.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -79,238 +288,8 @@ public class ShowProcRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private Options() {  }
-    }
-
-    private String procName;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a ShowProcRequest object with default parameters.
-     */
-    public ShowProcRequest() {
-        procName = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a ShowProcRequest object with the specified parameters.
-     * 
-     * @param procName  Name of the proc to show information about. If
-     *                  specified, must be the name of a currently existing
-     *                  proc. If not specified, information about all procs
-     *                  will be returned.  The default value is ''.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
-     *                 INCLUDE_FILES}: If set to {@code true}, the files that
-     *                 make up the proc will be returned. If set to {@code
-     *                 false}, the files will not be returned.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public ShowProcRequest(String procName, Map<String, String> options) {
-        this.procName = (procName == null) ? "" : procName;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the proc to show information about. If specified, must
-     *         be the name of a currently existing proc. If not specified,
-     *         information about all procs will be returned.  The default value
-     *         is ''.
-     * 
-     */
-    public String getProcName() {
-        return procName;
-    }
-
-    /**
-     * 
-     * @param procName  Name of the proc to show information about. If
-     *                  specified, must be the name of a currently existing
-     *                  proc. If not specified, information about all procs
-     *                  will be returned.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowProcRequest setProcName(String procName) {
-        this.procName = (procName == null) ? "" : procName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
-     *         INCLUDE_FILES}: If set to {@code true}, the files that make up
-     *         the proc will be returned. If set to {@code false}, the files
-     *         will not be returned.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#INCLUDE_FILES
-     *                 INCLUDE_FILES}: If set to {@code true}, the files that
-     *                 make up the proc will be returned. If set to {@code
-     *                 false}, the files will not be returned.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.ShowProcRequest.Options#FALSE FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowProcRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.procName;
-
-            case 1:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.procName = (String)value;
-                break;
-
-            case 1:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        ShowProcRequest that = (ShowProcRequest)obj;
-
-        return ( this.procName.equals( that.procName )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "procName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.procName.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

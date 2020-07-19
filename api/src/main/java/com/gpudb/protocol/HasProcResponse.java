@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,47 +23,13 @@ public class HasProcResponse implements IndexedRecord {
             .record("HasProcResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("procName").type().stringType().noDefault()
-                .name("procExists").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("procName").type().stringType().noDefault()
+            .name("procExists").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Indicates whether the proc exists or not.
-     * Supported values:
-     * <ul>
-     *         <li> {@link com.gpudb.protocol.HasProcResponse.ProcExists#TRUE
-     * TRUE}
-     *         <li> {@link com.gpudb.protocol.HasProcResponse.ProcExists#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code procExists}.
-     */
-    public static final class ProcExists {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private ProcExists() {  }
-    }
-
     private String procName;
     private boolean procExists;
     private Map<String, String> info;
-
-
     /**
      * Constructs a HasProcResponse object with default parameters.
      */
@@ -70,20 +37,25 @@ public class HasProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code procName}
-     * 
      */
     public String getProcName() {
         return procName;
     }
 
     /**
-     * 
-     * @param procName  Value of {@code procName}
-     * 
+     * @param procName Value of {@code procName}
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasProcResponse setProcName(String procName) {
         this.procName = (procName == null) ? "" : procName;
@@ -91,36 +63,31 @@ public class HasProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Indicates whether the proc exists or not.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.HasProcResponse.ProcExists#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.HasProcResponse.ProcExists#FALSE FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.HasProcResponse.ProcExists#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.HasProcResponse.ProcExists#FALSE FALSE}
+     * </ul>
      */
     public boolean getProcExists() {
         return procExists;
     }
 
     /**
-     * 
-     * @param procExists  Indicates whether the proc exists or not.
-     *                    Supported values:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.HasProcResponse.ProcExists#TRUE
-     *                    TRUE}
-     *                            <li> {@link
-     *                    com.gpudb.protocol.HasProcResponse.ProcExists#FALSE
-     *                    FALSE}
-     *                    </ul>
-     * 
+     * @param procExists Indicates whether the proc exists or not.
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.HasProcResponse.ProcExists#TRUE
+     *                   TRUE}
+     *                           <li> {@link
+     *                   com.gpudb.protocol.HasProcResponse.ProcExists#FALSE
+     *                   FALSE}
+     *                   </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasProcResponse setProcExists(boolean procExists) {
         this.procExists = procExists;
@@ -128,20 +95,15 @@ public class HasProcResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasProcResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -151,9 +113,8 @@ public class HasProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -163,13 +124,10 @@ public class HasProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -191,27 +149,25 @@ public class HasProcResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.procName = (String)value;
+                this.procName = (String) value;
                 break;
 
             case 1:
-                this.procExists = (Boolean)value;
+                this.procExists = (Boolean) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -221,38 +177,38 @@ public class HasProcResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        HasProcResponse that = (HasProcResponse)obj;
+        HasProcResponse that = (HasProcResponse) obj;
 
-        return ( this.procName.equals( that.procName )
-                 && ( this.procExists == that.procExists )
-                 && this.info.equals( that.info ) );
+        return (this.procName.equals(that.procName)
+                && (this.procExists == that.procExists)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "procName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "procExists" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procExists ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("procName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procName));
+        builder.append(", ");
+        builder.append(gd.toString("procExists"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procExists));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -261,9 +217,28 @@ public class HasProcResponse implements IndexedRecord {
     public int hashCode() {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.procName.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.procExists).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.procExists).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Indicates whether the proc exists or not.
+     * Supported values:
+     * <ul>
+     *         <li> {@link com.gpudb.protocol.HasProcResponse.ProcExists#TRUE
+     * TRUE}
+     *         <li> {@link com.gpudb.protocol.HasProcResponse.ProcExists#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code procExists}.
+     */
+    public static final class ProcExists {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private ProcExists() {
+        }
     }
 
 }

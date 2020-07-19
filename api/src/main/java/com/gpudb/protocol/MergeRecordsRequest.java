@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,7 +29,7 @@ import org.apache.avro.generic.IndexedRecord;
  * Records</a>.  For limitations, see <a
  * href="../../../../../concepts/merge_records.html#limitations-and-cautions"
  * target="_top">Merge Records Limitations and Cautions</a>.
-
+ * <p>
  * The field map (specified by {@code fieldMaps}) holds the user-specified maps
  * of target table column names to source table columns. The array of {@code
  * fieldMaps} must match one-to-one with the {@code sourceTableNames}, e.g.,
@@ -40,24 +41,465 @@ public class MergeRecordsRequest implements IndexedRecord {
             .record("MergeRecordsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("sourceTableNames").type().array().items().stringType().noDefault()
-                .name("fieldMaps").type().array().items().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("sourceTableNames").type().array().items().stringType().noDefault()
+            .name("fieldMaps").type().array().items().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private List<String> sourceTableNames;
+    private List<Map<String, String>> fieldMaps;
+    private Map<String, String> options;
+    /**
+     * Constructs a MergeRecordsRequest object with default parameters.
+     */
+    public MergeRecordsRequest() {
+        tableName = "";
+        sourceTableNames = new ArrayList<>();
+        fieldMaps = new ArrayList<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a MergeRecordsRequest object with the specified parameters.
+     *
+     * @param tableName        The new result table name for the records to be
+     *                         merged.  Must NOT be an existing table.
+     * @param sourceTableNames The list of source table names to get the
+     *                         records from. Must be existing table names.
+     * @param fieldMaps        Contains a list of source/target column mappings, one
+     *                         mapping for each source table listed in {@code
+     *                         sourceTableNames} being merged into the target table
+     *                         specified by {@code tableName}.  Each mapping contains
+     *                         the target column names (as keys) that the data in the
+     *                         mapped source columns or column <a
+     *                         href="../../../../../concepts/expressions.html"
+     *                         target="_top">expressions</a> (as values) will be
+     *                         merged into.  All of the source columns being merged
+     *                         into a given target column must match in type, as that
+     *                         type will determine the type of the new target column.
+     * @param options          Optional parameters.
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
+     *                         COLLECTION_NAME}: Name of a collection which is to
+     *                         contain the newly created merged table specified by
+     *                         {@code tableName}. If the collection provided is
+     *                         non-existent, the collection will be automatically
+     *                         created. If empty, then the newly created merged table
+     *                         will be a top-level table.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
+     *                         IS_REPLICATED}: Indicates the <a
+     *                         href="../../../../../concepts/tables.html#distribution"
+     *                         target="_top">distribution scheme</a> for the data of
+     *                         the merged table specified in {@code tableName}.  If
+     *                         true, the table will be <a
+     *                         href="../../../../../concepts/tables.html#replication"
+     *                         target="_top">replicated</a>.  If false, the table will
+     *                         be <a
+     *                         href="../../../../../concepts/tables.html#random-sharding"
+     *                         target="_top">randomly sharded</a>.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                         TRUE}
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                         FALSE}
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                         FALSE}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}:
+     *                         Sets the <a href="../../../../../concepts/ttl.html"
+     *                         target="_top">TTL</a> of the merged table specified in
+     *                         {@code tableName}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST
+     *                         PERSIST}: If {@code true}, then the table specified in
+     *                         {@code tableName} will be persisted and will not expire
+     *                         unless a {@code ttl} is specified.   If {@code false},
+     *                         then the table will be an in-memory table and will
+     *                         expire unless a {@code ttl} is specified otherwise.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                         TRUE}
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                         FALSE}
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                         TRUE}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
+     *                         CHUNK_SIZE}: Indicates the number of records per chunk
+     *                         to be used for the merged table specified in {@code
+     *                         tableName}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID
+     *                         VIEW_ID}: view this result table is part of.  The
+     *                         default value is ''.
+     *                         </ul>
+     *                         The default value is an empty {@link Map}.
+     */
+    public MergeRecordsRequest(String tableName, List<String> sourceTableNames, List<Map<String, String>> fieldMaps, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.sourceTableNames = (sourceTableNames == null) ? new ArrayList<String>() : sourceTableNames;
+        this.fieldMaps = (fieldMaps == null) ? new ArrayList<Map<String, String>>() : fieldMaps;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return The new result table name for the records to be merged.  Must
+     * NOT be an existing table.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName The new result table name for the records to be
+     *                  merged.  Must NOT be an existing table.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MergeRecordsRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return The list of source table names to get the records from. Must be
+     * existing table names.
+     */
+    public List<String> getSourceTableNames() {
+        return sourceTableNames;
+    }
+
+    /**
+     * @param sourceTableNames The list of source table names to get the
+     *                         records from. Must be existing table names.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MergeRecordsRequest setSourceTableNames(List<String> sourceTableNames) {
+        this.sourceTableNames = (sourceTableNames == null) ? new ArrayList<String>() : sourceTableNames;
+        return this;
+    }
+
+    /**
+     * @return Contains a list of source/target column mappings, one mapping
+     * for each source table listed in {@code sourceTableNames} being
+     * merged into the target table specified by {@code tableName}.
+     * Each mapping contains the target column names (as keys) that the
+     * data in the mapped source columns or column <a
+     * href="../../../../../concepts/expressions.html"
+     * target="_top">expressions</a> (as values) will be merged into.
+     * All of the source columns being merged into a given target
+     * column must match in type, as that type will determine the type
+     * of the new target column.
+     */
+    public List<Map<String, String>> getFieldMaps() {
+        return fieldMaps;
+    }
+
+    /**
+     * @param fieldMaps Contains a list of source/target column mappings, one
+     *                  mapping for each source table listed in {@code
+     *                  sourceTableNames} being merged into the target table
+     *                  specified by {@code tableName}.  Each mapping contains
+     *                  the target column names (as keys) that the data in the
+     *                  mapped source columns or column <a
+     *                  href="../../../../../concepts/expressions.html"
+     *                  target="_top">expressions</a> (as values) will be
+     *                  merged into.  All of the source columns being merged
+     *                  into a given target column must match in type, as that
+     *                  type will determine the type of the new target column.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MergeRecordsRequest setFieldMaps(List<Map<String, String>> fieldMaps) {
+        this.fieldMaps = (fieldMaps == null) ? new ArrayList<Map<String, String>>() : fieldMaps;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created merged table specified by {@code tableName}. If
+     * the collection provided is non-existent, the collection will be
+     * automatically created. If empty, then the newly created merged
+     * table will be a top-level table.
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
+     * IS_REPLICATED}: Indicates the <a
+     * href="../../../../../concepts/tables.html#distribution"
+     * target="_top">distribution scheme</a> for the data of the merged
+     * table specified in {@code tableName}.  If true, the table will
+     * be <a href="../../../../../concepts/tables.html#replication"
+     * target="_top">replicated</a>.  If false, the table will be <a
+     * href="../../../../../concepts/tables.html#random-sharding"
+     * target="_top">randomly sharded</a>.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}: Sets
+     * the <a href="../../../../../concepts/ttl.html"
+     * target="_top">TTL</a> of the merged table specified in {@code
+     * tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST PERSIST}:
+     * If {@code true}, then the table specified in {@code tableName}
+     * will be persisted and will not expire unless a {@code ttl} is
+     * specified.   If {@code false}, then the table will be an
+     * in-memory table and will expire unless a {@code ttl} is
+     * specified otherwise.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
+     * CHUNK_SIZE}: Indicates the number of records per chunk to be
+     * used for the merged table specified in {@code tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID VIEW_ID}:
+     * view this result table is part of.  The default value is ''.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created merged table specified by
+     *                {@code tableName}. If the collection provided is
+     *                non-existent, the collection will be automatically
+     *                created. If empty, then the newly created merged table
+     *                will be a top-level table.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
+     *                IS_REPLICATED}: Indicates the <a
+     *                href="../../../../../concepts/tables.html#distribution"
+     *                target="_top">distribution scheme</a> for the data of
+     *                the merged table specified in {@code tableName}.  If
+     *                true, the table will be <a
+     *                href="../../../../../concepts/tables.html#replication"
+     *                target="_top">replicated</a>.  If false, the table will
+     *                be <a
+     *                href="../../../../../concepts/tables.html#random-sharding"
+     *                target="_top">randomly sharded</a>.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}:
+     *                Sets the <a href="../../../../../concepts/ttl.html"
+     *                target="_top">TTL</a> of the merged table specified in
+     *                {@code tableName}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST
+     *                PERSIST}: If {@code true}, then the table specified in
+     *                {@code tableName} will be persisted and will not expire
+     *                unless a {@code ttl} is specified.   If {@code false},
+     *                then the table will be an in-memory table and will
+     *                expire unless a {@code ttl} is specified otherwise.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
+     *                CHUNK_SIZE}: Indicates the number of records per chunk
+     *                to be used for the merged table specified in {@code
+     *                tableName}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID
+     *                VIEW_ID}: view this result table is part of.  The
+     *                default value is ''.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MergeRecordsRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.sourceTableNames;
+
+            case 2:
+                return this.fieldMaps;
+
+            case 3:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.sourceTableNames = (List<String>) value;
+                break;
+
+            case 2:
+                this.fieldMaps = (List<Map<String, String>>) value;
+                break;
+
+            case 3:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        MergeRecordsRequest that = (MergeRecordsRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.sourceTableNames.equals(that.sourceTableNames)
+                && this.fieldMaps.equals(that.fieldMaps)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("sourceTableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sourceTableNames));
+        builder.append(", ");
+        builder.append(gd.toString("fieldMaps"));
+        builder.append(": ");
+        builder.append(gd.toString(this.fieldMaps));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.sourceTableNames.hashCode();
+        hashCode = (31 * hashCode) + this.fieldMaps.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -186,482 +628,8 @@ public class MergeRecordsRequest implements IndexedRecord {
          */
         public static final String VIEW_ID = "view_id";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private List<String> sourceTableNames;
-    private List<Map<String, String>> fieldMaps;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a MergeRecordsRequest object with default parameters.
-     */
-    public MergeRecordsRequest() {
-        tableName = "";
-        sourceTableNames = new ArrayList<>();
-        fieldMaps = new ArrayList<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a MergeRecordsRequest object with the specified parameters.
-     * 
-     * @param tableName  The new result table name for the records to be
-     *                   merged.  Must NOT be an existing table.
-     * @param sourceTableNames  The list of source table names to get the
-     *                          records from. Must be existing table names.
-     * @param fieldMaps  Contains a list of source/target column mappings, one
-     *                   mapping for each source table listed in {@code
-     *                   sourceTableNames} being merged into the target table
-     *                   specified by {@code tableName}.  Each mapping contains
-     *                   the target column names (as keys) that the data in the
-     *                   mapped source columns or column <a
-     *                   href="../../../../../concepts/expressions.html"
-     *                   target="_top">expressions</a> (as values) will be
-     *                   merged into.  All of the source columns being merged
-     *                   into a given target column must match in type, as that
-     *                   type will determine the type of the new target column.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created merged table specified by
-     *                 {@code tableName}. If the collection provided is
-     *                 non-existent, the collection will be automatically
-     *                 created. If empty, then the newly created merged table
-     *                 will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: Indicates the <a
-     *                 href="../../../../../concepts/tables.html#distribution"
-     *                 target="_top">distribution scheme</a> for the data of
-     *                 the merged table specified in {@code tableName}.  If
-     *                 true, the table will be <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a>.  If false, the table will
-     *                 be <a
-     *                 href="../../../../../concepts/tables.html#random-sharding"
-     *                 target="_top">randomly sharded</a>.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}:
-     *                 Sets the <a href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the merged table specified in
-     *                 {@code tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST
-     *                 PERSIST}: If {@code true}, then the table specified in
-     *                 {@code tableName} will be persisted and will not expire
-     *                 unless a {@code ttl} is specified.   If {@code false},
-     *                 then the table will be an in-memory table and will
-     *                 expire unless a {@code ttl} is specified otherwise.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
-     *                 CHUNK_SIZE}: Indicates the number of records per chunk
-     *                 to be used for the merged table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID
-     *                 VIEW_ID}: view this result table is part of.  The
-     *                 default value is ''.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public MergeRecordsRequest(String tableName, List<String> sourceTableNames, List<Map<String, String>> fieldMaps, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.sourceTableNames = (sourceTableNames == null) ? new ArrayList<String>() : sourceTableNames;
-        this.fieldMaps = (fieldMaps == null) ? new ArrayList<Map<String, String>>() : fieldMaps;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return The new result table name for the records to be merged.  Must
-     *         NOT be an existing table.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  The new result table name for the records to be
-     *                   merged.  Must NOT be an existing table.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MergeRecordsRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The list of source table names to get the records from. Must be
-     *         existing table names.
-     * 
-     */
-    public List<String> getSourceTableNames() {
-        return sourceTableNames;
-    }
-
-    /**
-     * 
-     * @param sourceTableNames  The list of source table names to get the
-     *                          records from. Must be existing table names.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MergeRecordsRequest setSourceTableNames(List<String> sourceTableNames) {
-        this.sourceTableNames = (sourceTableNames == null) ? new ArrayList<String>() : sourceTableNames;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Contains a list of source/target column mappings, one mapping
-     *         for each source table listed in {@code sourceTableNames} being
-     *         merged into the target table specified by {@code tableName}.
-     *         Each mapping contains the target column names (as keys) that the
-     *         data in the mapped source columns or column <a
-     *         href="../../../../../concepts/expressions.html"
-     *         target="_top">expressions</a> (as values) will be merged into.
-     *         All of the source columns being merged into a given target
-     *         column must match in type, as that type will determine the type
-     *         of the new target column.
-     * 
-     */
-    public List<Map<String, String>> getFieldMaps() {
-        return fieldMaps;
-    }
-
-    /**
-     * 
-     * @param fieldMaps  Contains a list of source/target column mappings, one
-     *                   mapping for each source table listed in {@code
-     *                   sourceTableNames} being merged into the target table
-     *                   specified by {@code tableName}.  Each mapping contains
-     *                   the target column names (as keys) that the data in the
-     *                   mapped source columns or column <a
-     *                   href="../../../../../concepts/expressions.html"
-     *                   target="_top">expressions</a> (as values) will be
-     *                   merged into.  All of the source columns being merged
-     *                   into a given target column must match in type, as that
-     *                   type will determine the type of the new target column.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MergeRecordsRequest setFieldMaps(List<Map<String, String>> fieldMaps) {
-        this.fieldMaps = (fieldMaps == null) ? new ArrayList<Map<String, String>>() : fieldMaps;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created merged table specified by {@code tableName}. If
-     *         the collection provided is non-existent, the collection will be
-     *         automatically created. If empty, then the newly created merged
-     *         table will be a top-level table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
-     *         IS_REPLICATED}: Indicates the <a
-     *         href="../../../../../concepts/tables.html#distribution"
-     *         target="_top">distribution scheme</a> for the data of the merged
-     *         table specified in {@code tableName}.  If true, the table will
-     *         be <a href="../../../../../concepts/tables.html#replication"
-     *         target="_top">replicated</a>.  If false, the table will be <a
-     *         href="../../../../../concepts/tables.html#random-sharding"
-     *         target="_top">randomly sharded</a>.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}: Sets
-     *         the <a href="../../../../../concepts/ttl.html"
-     *         target="_top">TTL</a> of the merged table specified in {@code
-     *         tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST PERSIST}:
-     *         If {@code true}, then the table specified in {@code tableName}
-     *         will be persisted and will not expire unless a {@code ttl} is
-     *         specified.   If {@code false}, then the table will be an
-     *         in-memory table and will expire unless a {@code ttl} is
-     *         specified otherwise.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
-     *         CHUNK_SIZE}: Indicates the number of records per chunk to be
-     *         used for the merged table specified in {@code tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID VIEW_ID}:
-     *         view this result table is part of.  The default value is ''.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created merged table specified by
-     *                 {@code tableName}. If the collection provided is
-     *                 non-existent, the collection will be automatically
-     *                 created. If empty, then the newly created merged table
-     *                 will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: Indicates the <a
-     *                 href="../../../../../concepts/tables.html#distribution"
-     *                 target="_top">distribution scheme</a> for the data of
-     *                 the merged table specified in {@code tableName}.  If
-     *                 true, the table will be <a
-     *                 href="../../../../../concepts/tables.html#replication"
-     *                 target="_top">replicated</a>.  If false, the table will
-     *                 be <a
-     *                 href="../../../../../concepts/tables.html#random-sharding"
-     *                 target="_top">randomly sharded</a>.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TTL TTL}:
-     *                 Sets the <a href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the merged table specified in
-     *                 {@code tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#PERSIST
-     *                 PERSIST}: If {@code true}, then the table specified in
-     *                 {@code tableName} will be persisted and will not expire
-     *                 unless a {@code ttl} is specified.   If {@code false},
-     *                 then the table will be an in-memory table and will
-     *                 expire unless a {@code ttl} is specified otherwise.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#CHUNK_SIZE
-     *                 CHUNK_SIZE}: Indicates the number of records per chunk
-     *                 to be used for the merged table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MergeRecordsRequest.Options#VIEW_ID
-     *                 VIEW_ID}: view this result table is part of.  The
-     *                 default value is ''.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MergeRecordsRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.sourceTableNames;
-
-            case 2:
-                return this.fieldMaps;
-
-            case 3:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.sourceTableNames = (List<String>)value;
-                break;
-
-            case 2:
-                this.fieldMaps = (List<Map<String, String>>)value;
-                break;
-
-            case 3:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        MergeRecordsRequest that = (MergeRecordsRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.sourceTableNames.equals( that.sourceTableNames )
-                 && this.fieldMaps.equals( that.fieldMaps )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sourceTableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sourceTableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "fieldMaps" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.fieldMaps ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.sourceTableNames.hashCode();
-        hashCode = (31 * hashCode) + this.fieldMaps.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

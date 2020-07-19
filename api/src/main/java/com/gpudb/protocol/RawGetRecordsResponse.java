@@ -5,15 +5,16 @@
  */
 package com.gpudb.protocol;
 
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.IndexedRecord;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.IndexedRecord;
 
 
 /**
@@ -25,28 +26,15 @@ public class RawGetRecordsResponse implements IndexedRecord {
             .record("RawGetRecordsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeName").type().stringType().noDefault()
-                .name("typeSchema").type().stringType().noDefault()
-                .name("recordsBinary").type().array().items().bytesType().noDefault()
-                .name("recordsJson").type().array().items().stringType().noDefault()
-                .name("totalNumberOfRecords").type().longType().noDefault()
-                .name("hasMoreRecords").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeName").type().stringType().noDefault()
+            .name("typeSchema").type().stringType().noDefault()
+            .name("recordsBinary").type().array().items().bytesType().noDefault()
+            .name("recordsJson").type().array().items().stringType().noDefault()
+            .name("totalNumberOfRecords").type().longType().noDefault()
+            .name("hasMoreRecords").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private String typeName;
     private String typeSchema;
@@ -55,8 +43,6 @@ public class RawGetRecordsResponse implements IndexedRecord {
     private long totalNumberOfRecords;
     private boolean hasMoreRecords;
     private Map<String, String> info;
-
-
     /**
      * Constructs a RawGetRecordsResponse object with default parameters.
      */
@@ -64,35 +50,38 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
         return this;
     }
+
     public String getTypeName() {
         return typeName;
     }
 
     /**
-     * 
      * @param typeName
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setTypeName(String typeName) {
         this.typeName = (typeName == null) ? "" : typeName;
@@ -100,21 +89,16 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Avro schema of {@code recordsBinary} or {@code recordsJson}
-     * 
      */
     public String getTypeSchema() {
         return typeSchema;
     }
 
     /**
-     * 
-     * @param typeSchema  Avro schema of {@code recordsBinary} or {@code
-     *                    recordsJson}
-     * 
+     * @param typeSchema Avro schema of {@code recordsBinary} or {@code
+     *                   recordsJson}
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setTypeSchema(String typeSchema) {
         this.typeSchema = (typeSchema == null) ? "" : typeSchema;
@@ -122,24 +106,19 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If the {@code encoding} was 'binary', then this list contains
-     *         the binary encoded records retrieved from the table, otherwise
-     *         not populated.
-     * 
+     * the binary encoded records retrieved from the table, otherwise
+     * not populated.
      */
     public List<ByteBuffer> getRecordsBinary() {
         return recordsBinary;
     }
 
     /**
-     * 
-     * @param recordsBinary  If the {@code encoding} was 'binary', then this
-     *                       list contains the binary encoded records retrieved
-     *                       from the table, otherwise not populated.
-     * 
+     * @param recordsBinary If the {@code encoding} was 'binary', then this
+     *                      list contains the binary encoded records retrieved
+     *                      from the table, otherwise not populated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setRecordsBinary(List<ByteBuffer> recordsBinary) {
         this.recordsBinary = (recordsBinary == null) ? new ArrayList<ByteBuffer>() : recordsBinary;
@@ -147,29 +126,24 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If the {@code encoding} was 'json', then this list contains the
-     *         JSON encoded records retrieved from the table. If the {@code
-     *         encoding} was 'geojson' this list contains a single entry
-     *         consisting of a GeoJSON FeatureCollection containing a feature
-     *         per record. Otherwise not populated.
-     * 
+     * JSON encoded records retrieved from the table. If the {@code
+     * encoding} was 'geojson' this list contains a single entry
+     * consisting of a GeoJSON FeatureCollection containing a feature
+     * per record. Otherwise not populated.
      */
     public List<String> getRecordsJson() {
         return recordsJson;
     }
 
     /**
-     * 
-     * @param recordsJson  If the {@code encoding} was 'json', then this list
-     *                     contains the JSON encoded records retrieved from the
-     *                     table. If the {@code encoding} was 'geojson' this
-     *                     list contains a single entry consisting of a GeoJSON
-     *                     FeatureCollection containing a feature per record.
-     *                     Otherwise not populated.
-     * 
+     * @param recordsJson If the {@code encoding} was 'json', then this list
+     *                    contains the JSON encoded records retrieved from the
+     *                    table. If the {@code encoding} was 'geojson' this
+     *                    list contains a single entry consisting of a GeoJSON
+     *                    FeatureCollection containing a feature per record.
+     *                    Otherwise not populated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setRecordsJson(List<String> recordsJson) {
         this.recordsJson = (recordsJson == null) ? new ArrayList<String>() : recordsJson;
@@ -177,20 +151,15 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total/Filtered number of records.
-     * 
      */
     public long getTotalNumberOfRecords() {
         return totalNumberOfRecords;
     }
 
     /**
-     * 
-     * @param totalNumberOfRecords  Total/Filtered number of records.
-     * 
+     * @param totalNumberOfRecords Total/Filtered number of records.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setTotalNumberOfRecords(long totalNumberOfRecords) {
         this.totalNumberOfRecords = totalNumberOfRecords;
@@ -198,20 +167,15 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Too many records. Returned a partial set.
-     * 
      */
     public boolean getHasMoreRecords() {
         return hasMoreRecords;
     }
 
     /**
-     * 
-     * @param hasMoreRecords  Too many records. Returned a partial set.
-     * 
+     * @param hasMoreRecords Too many records. Returned a partial set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setHasMoreRecords(boolean hasMoreRecords) {
         this.hasMoreRecords = hasMoreRecords;
@@ -219,20 +183,15 @@ public class RawGetRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGetRecordsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -242,9 +201,8 @@ public class RawGetRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -254,13 +212,10 @@ public class RawGetRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -297,47 +252,45 @@ public class RawGetRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.typeName = (String)value;
+                this.typeName = (String) value;
                 break;
 
             case 2:
-                this.typeSchema = (String)value;
+                this.typeSchema = (String) value;
                 break;
 
             case 3:
-                this.recordsBinary = (List<ByteBuffer>)value;
+                this.recordsBinary = (List<ByteBuffer>) value;
                 break;
 
             case 4:
-                this.recordsJson = (List<String>)value;
+                this.recordsJson = (List<String>) value;
                 break;
 
             case 5:
-                this.totalNumberOfRecords = (Long)value;
+                this.totalNumberOfRecords = (Long) value;
                 break;
 
             case 6:
-                this.hasMoreRecords = (Boolean)value;
+                this.hasMoreRecords = (Boolean) value;
                 break;
 
             case 7:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -347,63 +300,63 @@ public class RawGetRecordsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        RawGetRecordsResponse that = (RawGetRecordsResponse)obj;
+        RawGetRecordsResponse that = (RawGetRecordsResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeName.equals( that.typeName )
-                 && this.typeSchema.equals( that.typeSchema )
-                 && this.recordsBinary.equals( that.recordsBinary )
-                 && this.recordsJson.equals( that.recordsJson )
-                 && ( this.totalNumberOfRecords == that.totalNumberOfRecords )
-                 && ( this.hasMoreRecords == that.hasMoreRecords )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.typeName.equals(that.typeName)
+                && this.typeSchema.equals(that.typeSchema)
+                && this.recordsBinary.equals(that.recordsBinary)
+                && this.recordsJson.equals(that.recordsJson)
+                && (this.totalNumberOfRecords == that.totalNumberOfRecords)
+                && (this.hasMoreRecords == that.hasMoreRecords)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeSchema" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeSchema ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "recordsBinary" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordsBinary ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "recordsJson" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordsJson ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "totalNumberOfRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.totalNumberOfRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "hasMoreRecords" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.hasMoreRecords ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeName));
+        builder.append(", ");
+        builder.append(gd.toString("typeSchema"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeSchema));
+        builder.append(", ");
+        builder.append(gd.toString("recordsBinary"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordsBinary));
+        builder.append(", ");
+        builder.append(gd.toString("recordsJson"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordsJson));
+        builder.append(", ");
+        builder.append(gd.toString("totalNumberOfRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.totalNumberOfRecords));
+        builder.append(", ");
+        builder.append(gd.toString("hasMoreRecords"));
+        builder.append(": ");
+        builder.append(gd.toString(this.hasMoreRecords));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -416,8 +369,8 @@ public class RawGetRecordsResponse implements IndexedRecord {
         hashCode = (31 * hashCode) + this.typeSchema.hashCode();
         hashCode = (31 * hashCode) + this.recordsBinary.hashCode();
         hashCode = (31 * hashCode) + this.recordsJson.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.totalNumberOfRecords).hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.hasMoreRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.totalNumberOfRecords).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.hasMoreRecords).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -33,61 +34,19 @@ public class FilterByRangeRequest implements IndexedRecord {
             .record("FilterByRangeRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("lowerBound").type().doubleType().noDefault()
-                .name("upperBound").type().doubleType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("lowerBound").type().doubleType().noDefault()
+            .name("upperBound").type().doubleType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Optional parameters.
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
-     * COLLECTION_NAME}: Name of a collection which is to contain the newly
-     * created view. If the collection provided is non-existent, the collection
-     * will be automatically created. If empty, then the newly created view
-     * will be top-level.
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code options}.
-     */
-    public static final class Options {
-
-        /**
-         * Name of a collection which is to contain the newly created view. If
-         * the collection provided is non-existent, the collection will be
-         * automatically created. If empty, then the newly created view will be
-         * top-level.
-         */
-        public static final String COLLECTION_NAME = "collection_name";
-
-        private Options() {  }
-    }
-
     private String tableName;
     private String viewName;
     private String columnName;
     private double lowerBound;
     private double upperBound;
     private Map<String, String> options;
-
-
     /**
      * Constructs a FilterByRangeRequest object with default parameters.
      */
@@ -97,34 +56,32 @@ public class FilterByRangeRequest implements IndexedRecord {
         columnName = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a FilterByRangeRequest object with the specified parameters.
-     * 
+     *
      * @param tableName  Name of the table on which the filter by range
      *                   operation will be performed.  Must be an existing
      *                   table.
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * @param columnName  Name of a column on which the operation would be
-     *                    applied.
-     * @param lowerBound  Value of the lower bound (inclusive).
-     * @param upperBound  Value of the upper bound (inclusive).
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param viewName   If provided, then this will be the name of the view
+     *                   containing the results. Has the same naming
+     *                   restrictions as <a
+     *                   href="../../../../../concepts/tables.html"
+     *                   target="_top">tables</a>.  The default value is ''.
+     * @param columnName Name of a column on which the operation would be
+     *                   applied.
+     * @param lowerBound Value of the lower bound (inclusive).
+     * @param upperBound Value of the upper bound (inclusive).
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
+     *                   COLLECTION_NAME}: Name of a collection which is to
+     *                   contain the newly created view. If the collection
+     *                   provided is non-existent, the collection will be
+     *                   automatically created. If empty, then the newly created
+     *                   view will be top-level.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
      */
     public FilterByRangeRequest(String tableName, String viewName, String columnName, double lowerBound, double upperBound, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -136,23 +93,28 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the table on which the filter by range operation will be
-     *         performed.  Must be an existing table.
-     * 
+     * performed.  Must be an existing table.
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Name of the table on which the filter by range
-     *                   operation will be performed.  Must be an existing
-     *                   table.
-     * 
+     * @param tableName Name of the table on which the filter by range
+     *                  operation will be performed.  Must be an existing
+     *                  table.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -160,27 +122,22 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If provided, then this will be the name of the view containing
-     *         the results. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>.  The default value is ''.
-     * 
+     * the results. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>.  The default value is ''.
      */
     public String getViewName() {
         return viewName;
     }
 
     /**
-     * 
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * 
+     * @param viewName If provided, then this will be the name of the view
+     *                 containing the results. Has the same naming
+     *                 restrictions as <a
+     *                 href="../../../../../concepts/tables.html"
+     *                 target="_top">tables</a>.  The default value is ''.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setViewName(String viewName) {
         this.viewName = (viewName == null) ? "" : viewName;
@@ -188,21 +145,16 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of a column on which the operation would be applied.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Name of a column on which the operation would be
-     *                    applied.
-     * 
+     * @param columnName Name of a column on which the operation would be
+     *                   applied.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -210,20 +162,15 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of the lower bound (inclusive).
-     * 
      */
     public double getLowerBound() {
         return lowerBound;
     }
 
     /**
-     * 
-     * @param lowerBound  Value of the lower bound (inclusive).
-     * 
+     * @param lowerBound Value of the lower bound (inclusive).
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setLowerBound(double lowerBound) {
         this.lowerBound = lowerBound;
@@ -231,20 +178,15 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of the upper bound (inclusive).
-     * 
      */
     public double getUpperBound() {
         return upperBound;
     }
 
     /**
-     * 
-     * @param upperBound  Value of the upper bound (inclusive).
-     * 
+     * @param upperBound Value of the upper bound (inclusive).
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setUpperBound(double upperBound) {
         this.upperBound = upperBound;
@@ -252,39 +194,34 @@ public class FilterByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByRangeRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -294,9 +231,8 @@ public class FilterByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -306,13 +242,10 @@ public class FilterByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -343,39 +276,37 @@ public class FilterByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.viewName = (String)value;
+                this.viewName = (String) value;
                 break;
 
             case 2:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 3:
-                this.lowerBound = (Double)value;
+                this.lowerBound = (Double) value;
                 break;
 
             case 4:
-                this.upperBound = (Double)value;
+                this.upperBound = (Double) value;
                 break;
 
             case 5:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -385,53 +316,53 @@ public class FilterByRangeRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByRangeRequest that = (FilterByRangeRequest)obj;
+        FilterByRangeRequest that = (FilterByRangeRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && this.columnName.equals( that.columnName )
-                 && ( (Double)this.lowerBound ).equals( (Double)that.lowerBound )
-                 && ( (Double)this.upperBound ).equals( (Double)that.upperBound )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && this.columnName.equals(that.columnName)
+                && ((Double) this.lowerBound).equals((Double) that.lowerBound)
+                && ((Double) this.upperBound).equals((Double) that.upperBound)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "lowerBound" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.lowerBound ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "upperBound" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.upperBound ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("lowerBound"));
+        builder.append(": ");
+        builder.append(gd.toString(this.lowerBound));
+        builder.append(", ");
+        builder.append(gd.toString("upperBound"));
+        builder.append(": ");
+        builder.append(gd.toString(this.upperBound));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -442,10 +373,37 @@ public class FilterByRangeRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.tableName.hashCode();
         hashCode = (31 * hashCode) + this.viewName.hashCode();
         hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.lowerBound).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.upperBound).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.lowerBound).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.upperBound).hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByRangeRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the newly
+     * created view. If the collection provided is non-existent, the collection
+     * will be automatically created. If empty, then the newly created view
+     * will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code options}.
+     */
+    public static final class Options {
+
+        /**
+         * Name of a collection which is to contain the newly created view. If
+         * the collection provided is non-existent, the collection will be
+         * automatically created. If empty, then the newly created view will be
+         * top-level.
+         */
+        public static final String COLLECTION_NAME = "collection_name";
+
+        private Options() {
+        }
     }
 
 }

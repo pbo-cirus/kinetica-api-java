@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,26 +24,11 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
             .record("AggregateStatisticsByRangeResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("stats").type().map().values().array().items().doubleType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("stats").type().map().values().array().items().doubleType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private Map<String, List<Double>> stats;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AggregateStatisticsByRangeResponse object with default
      * parameters.
@@ -51,27 +37,32 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return A map with a key for each statistic in the stats input parameter
-     *         having a value that is a vector of the corresponding
-     *         value-column bin statistics. In a addition the key count has a
-     *         value that is a histogram of the binning-column.
-     * 
+     * having a value that is a vector of the corresponding
+     * value-column bin statistics. In a addition the key count has a
+     * value that is a histogram of the binning-column.
      */
     public Map<String, List<Double>> getStats() {
         return stats;
     }
 
     /**
-     * 
-     * @param stats  A map with a key for each statistic in the stats input
-     *               parameter having a value that is a vector of the
-     *               corresponding value-column bin statistics. In a addition
-     *               the key count has a value that is a histogram of the
-     *               binning-column.
-     * 
+     * @param stats A map with a key for each statistic in the stats input
+     *              parameter having a value that is a vector of the
+     *              corresponding value-column bin statistics. In a addition
+     *              the key count has a value that is a histogram of the
+     *              binning-column.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateStatisticsByRangeResponse setStats(Map<String, List<Double>> stats) {
         this.stats = (stats == null) ? new LinkedHashMap<String, List<Double>>() : stats;
@@ -79,20 +70,15 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateStatisticsByRangeResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -102,9 +88,8 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -114,13 +99,10 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -139,23 +121,21 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.stats = (Map<String, List<Double>>)value;
+                this.stats = (Map<String, List<Double>>) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -165,33 +145,33 @@ public class AggregateStatisticsByRangeResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AggregateStatisticsByRangeResponse that = (AggregateStatisticsByRangeResponse)obj;
+        AggregateStatisticsByRangeResponse that = (AggregateStatisticsByRangeResponse) obj;
 
-        return ( this.stats.equals( that.stats )
-                 && this.info.equals( that.info ) );
+        return (this.stats.equals(that.stats)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "stats" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.stats ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("stats"));
+        builder.append(": ");
+        builder.append(gd.toString(this.stats));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

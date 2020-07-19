@@ -233,6 +233,7 @@ public final class ColumnProperty {
      */
     public static final String INIT_WITH_NOW = "init_with_now";
 
-    private ColumnProperty() {  }
+    private ColumnProperty() {
+    }
 }
 

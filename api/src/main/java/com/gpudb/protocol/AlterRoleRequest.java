@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,55 +24,15 @@ public class AlterRoleRequest implements IndexedRecord {
             .record("AlterRoleRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("name").type().stringType().noDefault()
-                .name("action").type().stringType().noDefault()
-                .name("value").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("name").type().stringType().noDefault()
+            .name("action").type().stringType().noDefault()
+            .name("value").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Modification operation to be applied to the role.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
-     * SET_RESOURCE_GROUP}: Sets the resource group for an internal role. The
-     * resource group must exist, otherwise, an empty string assigns the role
-     * to the default resource group.
-     * </ul>
-     * A set of string constants for the parameter {@code action}.
-     */
-    public static final class Action {
-
-        /**
-         * Sets the resource group for an internal role. The resource group
-         * must exist, otherwise, an empty string assigns the role to the
-         * default resource group.
-         */
-        public static final String SET_RESOURCE_GROUP = "set_resource_group";
-
-        private Action() {  }
-    }
-
     private String name;
     private String action;
     private String value;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AlterRoleRequest object with default parameters.
      */
@@ -81,11 +42,10 @@ public class AlterRoleRequest implements IndexedRecord {
         value = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs an AlterRoleRequest object with the specified parameters.
-     * 
-     * @param name  Name of the role to be altered. Must be an existing role.
+     *
+     * @param name    Name of the role to be altered. Must be an existing role.
      * @param action  Modification operation to be applied to the role.
      *                Supported values:
      *                <ul>
@@ -96,11 +56,10 @@ public class AlterRoleRequest implements IndexedRecord {
      *                an empty string assigns the role to the default resource
      *                group.
      *                </ul>
-     * @param value  The value of the modification, depending on {@code
-     *               action}.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param value   The value of the modification, depending on {@code
+     *                action}.
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      */
     public AlterRoleRequest(String name, String action, String value, Map<String, String> options) {
         this.name = (name == null) ? "" : name;
@@ -110,20 +69,25 @@ public class AlterRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the role to be altered. Must be an existing role.
-     * 
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name  Name of the role to be altered. Must be an existing role.
-     * 
+     * @param name Name of the role to be altered. Must be an existing role.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterRoleRequest setName(String name) {
         this.name = (name == null) ? "" : name;
@@ -131,37 +95,32 @@ public class AlterRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Modification operation to be applied to the role.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
-     *         SET_RESOURCE_GROUP}: Sets the resource group for an internal
-     *         role. The resource group must exist, otherwise, an empty string
-     *         assigns the role to the default resource group.
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
+     * SET_RESOURCE_GROUP}: Sets the resource group for an internal
+     * role. The resource group must exist, otherwise, an empty string
+     * assigns the role to the default resource group.
+     * </ul>
      */
     public String getAction() {
         return action;
     }
 
     /**
-     * 
-     * @param action  Modification operation to be applied to the role.
-     *                Supported values:
-     *                <ul>
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
-     *                SET_RESOURCE_GROUP}: Sets the resource group for an
-     *                internal role. The resource group must exist, otherwise,
-     *                an empty string assigns the role to the default resource
-     *                group.
-     *                </ul>
-     * 
+     * @param action Modification operation to be applied to the role.
+     *               Supported values:
+     *               <ul>
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
+     *               SET_RESOURCE_GROUP}: Sets the resource group for an
+     *               internal role. The resource group must exist, otherwise,
+     *               an empty string assigns the role to the default resource
+     *               group.
+     *               </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterRoleRequest setAction(String action) {
         this.action = (action == null) ? "" : action;
@@ -169,21 +128,16 @@ public class AlterRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The value of the modification, depending on {@code action}.
-     * 
      */
     public String getValue() {
         return value;
     }
 
     /**
-     * 
-     * @param value  The value of the modification, depending on {@code
-     *               action}.
-     * 
+     * @param value The value of the modification, depending on {@code
+     *              action}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterRoleRequest setValue(String value) {
         this.value = (value == null) ? "" : value;
@@ -191,21 +145,16 @@ public class AlterRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterRoleRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -215,9 +164,8 @@ public class AlterRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -227,13 +175,10 @@ public class AlterRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -258,31 +203,29 @@ public class AlterRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.name = (String)value;
+                this.name = (String) value;
                 break;
 
             case 1:
-                this.action = (String)value;
+                this.action = (String) value;
                 break;
 
             case 2:
-                this.value = (String)value;
+                this.value = (String) value;
                 break;
 
             case 3:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -292,43 +235,43 @@ public class AlterRoleRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AlterRoleRequest that = (AlterRoleRequest)obj;
+        AlterRoleRequest that = (AlterRoleRequest) obj;
 
-        return ( this.name.equals( that.name )
-                 && this.action.equals( that.action )
-                 && this.value.equals( that.value )
-                 && this.options.equals( that.options ) );
+        return (this.name.equals(that.name)
+                && this.action.equals(that.action)
+                && this.value.equals(that.value)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "name" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.name ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "action" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.action ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "value" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.value ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("name"));
+        builder.append(": ");
+        builder.append(gd.toString(this.name));
+        builder.append(", ");
+        builder.append(gd.toString("action"));
+        builder.append(": ");
+        builder.append(gd.toString(this.action));
+        builder.append(", ");
+        builder.append(gd.toString("value"));
+        builder.append(": ");
+        builder.append(gd.toString(this.value));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -341,6 +284,31 @@ public class AlterRoleRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.value.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Modification operation to be applied to the role.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterRoleRequest.Action#SET_RESOURCE_GROUP
+     * SET_RESOURCE_GROUP}: Sets the resource group for an internal role. The
+     * resource group must exist, otherwise, an empty string assigns the role
+     * to the default resource group.
+     * </ul>
+     * A set of string constants for the parameter {@code action}.
+     */
+    public static final class Action {
+
+        /**
+         * Sets the resource group for an internal role. The resource group
+         * must exist, otherwise, an empty string assigns the role to the
+         * default resource group.
+         */
+        public static final String SET_RESOURCE_GROUP = "set_resource_group";
+
+        private Action() {
+        }
     }
 
 }

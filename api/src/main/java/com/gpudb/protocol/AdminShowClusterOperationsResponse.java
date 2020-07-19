@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,391 +25,38 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
             .record("AdminShowClusterOperationsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("historyIndex").type().intType().noDefault()
-                .name("historySize").type().intType().noDefault()
-                .name("inProgress").type().booleanType().noDefault()
-                .name("startTime").type().stringType().noDefault()
-                .name("endTime").type().stringType().noDefault()
-                .name("endpoint").type().stringType().noDefault()
-                .name("endpointSchema").type().stringType().noDefault()
-                .name("overallStatus").type().stringType().noDefault()
-                .name("userStopped").type().booleanType().noDefault()
-                .name("percentComplete").type().intType().noDefault()
-                .name("dryRun").type().booleanType().noDefault()
-                .name("messages").type().array().items().stringType().noDefault()
-                .name("addRanks").type().booleanType().noDefault()
-                .name("addRanksStatus").type().stringType().noDefault()
-                .name("ranksBeingAdded").type().array().items().intType().noDefault()
-                .name("rankHosts").type().array().items().stringType().noDefault()
-                .name("addRanksPercentComplete").type().intType().noDefault()
-                .name("removeRanks").type().booleanType().noDefault()
-                .name("removeRanksStatus").type().stringType().noDefault()
-                .name("ranksBeingRemoved").type().array().items().intType().noDefault()
-                .name("removeRanksPercentComplete").type().intType().noDefault()
-                .name("rebalance").type().booleanType().noDefault()
-                .name("rebalanceUnshardedData").type().booleanType().noDefault()
-                .name("rebalanceUnshardedDataStatus").type().stringType().noDefault()
-                .name("unshardedRebalancePercentComplete").type().intType().noDefault()
-                .name("rebalanceShardedData").type().booleanType().noDefault()
-                .name("shardArrayVersion").type().longType().noDefault()
-                .name("rebalanceShardedDataStatus").type().stringType().noDefault()
-                .name("numShardsChanging").type().intType().noDefault()
-                .name("shardedRebalancePercentComplete").type().intType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("historyIndex").type().intType().noDefault()
+            .name("historySize").type().intType().noDefault()
+            .name("inProgress").type().booleanType().noDefault()
+            .name("startTime").type().stringType().noDefault()
+            .name("endTime").type().stringType().noDefault()
+            .name("endpoint").type().stringType().noDefault()
+            .name("endpointSchema").type().stringType().noDefault()
+            .name("overallStatus").type().stringType().noDefault()
+            .name("userStopped").type().booleanType().noDefault()
+            .name("percentComplete").type().intType().noDefault()
+            .name("dryRun").type().booleanType().noDefault()
+            .name("messages").type().array().items().stringType().noDefault()
+            .name("addRanks").type().booleanType().noDefault()
+            .name("addRanksStatus").type().stringType().noDefault()
+            .name("ranksBeingAdded").type().array().items().intType().noDefault()
+            .name("rankHosts").type().array().items().stringType().noDefault()
+            .name("addRanksPercentComplete").type().intType().noDefault()
+            .name("removeRanks").type().booleanType().noDefault()
+            .name("removeRanksStatus").type().stringType().noDefault()
+            .name("ranksBeingRemoved").type().array().items().intType().noDefault()
+            .name("removeRanksPercentComplete").type().intType().noDefault()
+            .name("rebalance").type().booleanType().noDefault()
+            .name("rebalanceUnshardedData").type().booleanType().noDefault()
+            .name("rebalanceUnshardedDataStatus").type().stringType().noDefault()
+            .name("unshardedRebalancePercentComplete").type().intType().noDefault()
+            .name("rebalanceShardedData").type().booleanType().noDefault()
+            .name("shardArrayVersion").type().longType().noDefault()
+            .name("rebalanceShardedDataStatus").type().stringType().noDefault()
+            .name("numShardsChanging").type().intType().noDefault()
+            .name("shardedRebalancePercentComplete").type().intType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Whether this cluster operation is currently in progress or not.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code inProgress}.
-     */
-    public static final class InProgress {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private InProgress() {  }
-    }
-
-
-    /**
-     * Overall success status of the operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
-     * OK}: The operation was successful, or, if still in progress, the
-     * operation is successful so far.
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
-     * ERROR}: An error occurred executing the operation.
-     * </ul>
-     * A set of string constants for the parameter {@code overallStatus}.
-     */
-    public static final class OverallStatus {
-
-        /**
-         * The operation was successful, or, if still in progress, the
-         * operation is successful so far.
-         */
-        public static final String OK = "OK";
-
-        /**
-         * An error occurred executing the operation.
-         */
-        public static final String ERROR = "ERROR";
-
-        private OverallStatus() {  }
-    }
-
-
-    /**
-     * Whether a user stopped this operation at any point while in progress.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code userStopped}.
-     */
-    public static final class UserStopped {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private UserStopped() {  }
-    }
-
-
-    /**
-     * Whether this operation was a dry run.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code dryRun}.
-     */
-    public static final class DryRun {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private DryRun() {  }
-    }
-
-
-    /**
-     * Whether adding ranks is (or was) part of this operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code addRanks}.
-     */
-    public static final class AddRanks {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private AddRanks() {  }
-    }
-
-
-    /**
-     * If this was a rank-adding operation, the add-specific status of the
-     * operation.
-     * Valid values are:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
-     * NOT_STARTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
-     * IN_PROGRESS}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
-     * INTERRUPTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
-     * COMPLETED_OK}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
-     * ERROR}
-     * </ul>
-     * A set of string constants for the parameter {@code addRanksStatus}.
-     */
-    public static final class AddRanksStatus {
-        public static final String NOT_STARTED = "NOT_STARTED";
-        public static final String IN_PROGRESS = "IN_PROGRESS";
-        public static final String INTERRUPTED = "INTERRUPTED";
-        public static final String COMPLETED_OK = "COMPLETED_OK";
-        public static final String ERROR = "ERROR";
-
-        private AddRanksStatus() {  }
-    }
-
-
-    /**
-     * Whether removing ranks is (or was) part of this operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code removeRanks}.
-     */
-    public static final class RemoveRanks {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private RemoveRanks() {  }
-    }
-
-
-    /**
-     * If this was a rank-removing operation, the removal-specific status of
-     * the operation.
-     * Valid values are:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
-     * NOT_STARTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
-     * IN_PROGRESS}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
-     * INTERRUPTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
-     * COMPLETED_OK}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
-     * ERROR}
-     * </ul>
-     * A set of string constants for the parameter {@code removeRanksStatus}.
-     */
-    public static final class RemoveRanksStatus {
-        public static final String NOT_STARTED = "NOT_STARTED";
-        public static final String IN_PROGRESS = "IN_PROGRESS";
-        public static final String INTERRUPTED = "INTERRUPTED";
-        public static final String COMPLETED_OK = "COMPLETED_OK";
-        public static final String ERROR = "ERROR";
-
-        private RemoveRanksStatus() {  }
-    }
-
-
-    /**
-     * Whether data and/or shard rebalancing is (or was) part of this
-     * operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code rebalance}.
-     */
-    public static final class Rebalance {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private Rebalance() {  }
-    }
-
-
-    /**
-     * Whether rebalancing of unsharded data is (or was) part of this
-     * operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code
-     * rebalanceUnshardedData}.
-     */
-    public static final class RebalanceUnshardedData {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private RebalanceUnshardedData() {  }
-    }
-
-
-    /**
-     * If this was an operation that included rebalancing unsharded data, the
-     * rebalancing-specific status of the operation.
-     * Valid values are:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
-     * NOT_STARTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
-     * IN_PROGRESS}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
-     * INTERRUPTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
-     * COMPLETED_OK}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
-     * ERROR}
-     * </ul>
-     * A set of string constants for the parameter {@code
-     * rebalanceUnshardedDataStatus}.
-     */
-    public static final class RebalanceUnshardedDataStatus {
-        public static final String NOT_STARTED = "NOT_STARTED";
-        public static final String IN_PROGRESS = "IN_PROGRESS";
-        public static final String INTERRUPTED = "INTERRUPTED";
-        public static final String COMPLETED_OK = "COMPLETED_OK";
-        public static final String ERROR = "ERROR";
-
-        private RebalanceUnshardedDataStatus() {  }
-    }
-
-
-    /**
-     * Whether rebalancing of sharded data is (or was) part of this operation.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
-     * TRUE}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code
-     * rebalanceShardedData}.
-     */
-    public static final class RebalanceShardedData {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private RebalanceShardedData() {  }
-    }
-
-
-    /**
-     * If this was an operation that included rebalancing sharded data, the
-     * rebalancing-specific status of the operation.
-     * Valid values are:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
-     * NOT_STARTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
-     * IN_PROGRESS}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
-     * INTERRUPTED}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
-     * COMPLETED_OK}
-     *         <li> {@link
-     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
-     * ERROR}
-     * </ul>
-     * A set of string constants for the parameter {@code
-     * rebalanceShardedDataStatus}.
-     */
-    public static final class RebalanceShardedDataStatus {
-        public static final String NOT_STARTED = "NOT_STARTED";
-        public static final String IN_PROGRESS = "IN_PROGRESS";
-        public static final String INTERRUPTED = "INTERRUPTED";
-        public static final String COMPLETED_OK = "COMPLETED_OK";
-        public static final String ERROR = "ERROR";
-
-        private RebalanceShardedDataStatus() {  }
-    }
-
     private int historyIndex;
     private int historySize;
     private boolean inProgress;
@@ -440,8 +88,6 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     private int numShardsChanging;
     private int shardedRebalancePercentComplete;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AdminShowClusterOperationsResponse object with default
      * parameters.
@@ -450,24 +96,29 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The index of this cluster operation in the
-     *         reverse-chronologically sorted list of operations, where 0 is
-     *         the most recent operation.
-     * 
+     * reverse-chronologically sorted list of operations, where 0 is
+     * the most recent operation.
      */
     public int getHistoryIndex() {
         return historyIndex;
     }
 
     /**
-     * 
-     * @param historyIndex  The index of this cluster operation in the
-     *                      reverse-chronologically sorted list of operations,
-     *                      where 0 is the most recent operation.
-     * 
+     * @param historyIndex The index of this cluster operation in the
+     *                     reverse-chronologically sorted list of operations,
+     *                     where 0 is the most recent operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setHistoryIndex(int historyIndex) {
         this.historyIndex = historyIndex;
@@ -475,20 +126,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Number of cluster operations executed to date.
-     * 
      */
     public int getHistorySize() {
         return historySize;
     }
 
     /**
-     * 
-     * @param historySize  Number of cluster operations executed to date.
-     * 
+     * @param historySize Number of cluster operations executed to date.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setHistorySize(int historySize) {
         this.historySize = historySize;
@@ -496,39 +142,34 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether this cluster operation is currently in progress or not.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getInProgress() {
         return inProgress;
     }
 
     /**
-     * 
-     * @param inProgress  Whether this cluster operation is currently in
-     *                    progress or not.
-     *                    Supported values:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
-     *                    TRUE}
-     *                            <li> {@link
-     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
-     *                    FALSE}
-     *                    </ul>
-     * 
+     * @param inProgress Whether this cluster operation is currently in
+     *                   progress or not.
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
+     *                   TRUE}
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
+     *                   FALSE}
+     *                   </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
@@ -536,20 +177,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The start time of the cluster operation.
-     * 
      */
     public String getStartTime() {
         return startTime;
     }
 
     /**
-     * 
-     * @param startTime  The start time of the cluster operation.
-     * 
+     * @param startTime The start time of the cluster operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setStartTime(String startTime) {
         this.startTime = (startTime == null) ? "" : startTime;
@@ -557,20 +193,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The end time of the cluster operation, if completed.
-     * 
      */
     public String getEndTime() {
         return endTime;
     }
 
     /**
-     * 
-     * @param endTime  The end time of the cluster operation, if completed.
-     * 
+     * @param endTime The end time of the cluster operation, if completed.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setEndTime(String endTime) {
         this.endTime = (endTime == null) ? "" : endTime;
@@ -578,20 +209,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The endpoint that initiated the cluster operation.
-     * 
      */
     public String getEndpoint() {
         return endpoint;
     }
 
     /**
-     * 
-     * @param endpoint  The endpoint that initiated the cluster operation.
-     * 
+     * @param endpoint The endpoint that initiated the cluster operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setEndpoint(String endpoint) {
         this.endpoint = (endpoint == null) ? "" : endpoint;
@@ -599,20 +225,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The schema for the original request.
-     * 
      */
     public String getEndpointSchema() {
         return endpointSchema;
     }
 
     /**
-     * 
-     * @param endpointSchema  The schema for the original request.
-     * 
+     * @param endpointSchema The schema for the original request.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setEndpointSchema(String endpointSchema) {
         this.endpointSchema = (endpointSchema == null) ? "" : endpointSchema;
@@ -620,40 +241,35 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Overall success status of the operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
-     *         OK}: The operation was successful, or, if still in progress, the
-     *         operation is successful so far.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
-     *         ERROR}: An error occurred executing the operation.
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
+     * OK}: The operation was successful, or, if still in progress, the
+     * operation is successful so far.
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
+     * ERROR}: An error occurred executing the operation.
+     * </ul>
      */
     public String getOverallStatus() {
         return overallStatus;
     }
 
     /**
-     * 
-     * @param overallStatus  Overall success status of the operation.
-     *                       Supported values:
-     *                       <ul>
-     *                               <li> {@link
-     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
-     *                       OK}: The operation was successful, or, if still in
-     *                       progress, the operation is successful so far.
-     *                               <li> {@link
-     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
-     *                       ERROR}: An error occurred executing the operation.
-     *                       </ul>
-     * 
+     * @param overallStatus Overall success status of the operation.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
+     *                      OK}: The operation was successful, or, if still in
+     *                      progress, the operation is successful so far.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
+     *                      ERROR}: An error occurred executing the operation.
+     *                      </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setOverallStatus(String overallStatus) {
         this.overallStatus = (overallStatus == null) ? "" : overallStatus;
@@ -661,40 +277,35 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether a user stopped this operation at any point while in
-     *         progress.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * progress.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getUserStopped() {
         return userStopped;
     }
 
     /**
-     * 
-     * @param userStopped  Whether a user stopped this operation at any point
-     *                     while in progress.
-     *                     Supported values:
-     *                     <ul>
-     *                             <li> {@link
-     *                     com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
-     *                     TRUE}
-     *                             <li> {@link
-     *                     com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
-     *                     FALSE}
-     *                     </ul>
-     * 
+     * @param userStopped Whether a user stopped this operation at any point
+     *                    while in progress.
+     *                    Supported values:
+     *                    <ul>
+     *                            <li> {@link
+     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
+     *                    TRUE}
+     *                            <li> {@link
+     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
+     *                    FALSE}
+     *                    </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setUserStopped(boolean userStopped) {
         this.userStopped = userStopped;
@@ -702,20 +313,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Percent complete of this entire operation.
-     * 
      */
     public int getPercentComplete() {
         return percentComplete;
     }
 
     /**
-     * 
-     * @param percentComplete  Percent complete of this entire operation.
-     * 
+     * @param percentComplete Percent complete of this entire operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setPercentComplete(int percentComplete) {
         this.percentComplete = percentComplete;
@@ -723,38 +329,33 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether this operation was a dry run.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getDryRun() {
         return dryRun;
     }
 
     /**
-     * 
-     * @param dryRun  Whether this operation was a dry run.
-     *                Supported values:
-     *                <ul>
-     *                        <li> {@link
-     *                com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE
-     *                TRUE}
-     *                        <li> {@link
-     *                com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
-     *                FALSE}
-     *                </ul>
-     * 
+     * @param dryRun Whether this operation was a dry run.
+     *               Supported values:
+     *               <ul>
+     *                       <li> {@link
+     *               com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE
+     *               TRUE}
+     *                       <li> {@link
+     *               com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
+     *               FALSE}
+     *               </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setDryRun(boolean dryRun) {
         this.dryRun = dryRun;
@@ -762,20 +363,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Updates and error messages if any.
-     * 
      */
     public List<String> getMessages() {
         return messages;
     }
 
     /**
-     * 
-     * @param messages  Updates and error messages if any.
-     * 
+     * @param messages Updates and error messages if any.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setMessages(List<String> messages) {
         this.messages = (messages == null) ? new ArrayList<String>() : messages;
@@ -783,39 +379,34 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether adding ranks is (or was) part of this operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getAddRanks() {
         return addRanks;
     }
 
     /**
-     * 
-     * @param addRanks  Whether adding ranks is (or was) part of this
-     *                  operation.
-     *                  Supported values:
-     *                  <ul>
-     *                          <li> {@link
-     *                  com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
-     *                  TRUE}
-     *                          <li> {@link
-     *                  com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
-     *                  FALSE}
-     *                  </ul>
-     * 
+     * @param addRanks Whether adding ranks is (or was) part of this
+     *                 operation.
+     *                 Supported values:
+     *                 <ul>
+     *                         <li> {@link
+     *                 com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
+     *                 TRUE}
+     *                         <li> {@link
+     *                 com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
+     *                 FALSE}
+     *                 </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setAddRanks(boolean addRanks) {
         this.addRanks = addRanks;
@@ -823,58 +414,53 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If this was a rank-adding operation, the add-specific status of
-     *         the operation.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
-     *         NOT_STARTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
-     *         IN_PROGRESS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
-     *         INTERRUPTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
-     *         COMPLETED_OK}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
-     *         ERROR}
-     *         </ul>
-     * 
+     * the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
+     * ERROR}
+     * </ul>
      */
     public String getAddRanksStatus() {
         return addRanksStatus;
     }
 
     /**
-     * 
-     * @param addRanksStatus  If this was a rank-adding operation, the
-     *                        add-specific status of the operation.
-     *                        Valid values are:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
-     *                        NOT_STARTED}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
-     *                        IN_PROGRESS}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
-     *                        INTERRUPTED}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
-     *                        COMPLETED_OK}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
-     *                        ERROR}
-     *                        </ul>
-     * 
+     * @param addRanksStatus If this was a rank-adding operation, the
+     *                       add-specific status of the operation.
+     *                       Valid values are:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
+     *                       NOT_STARTED}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
+     *                       IN_PROGRESS}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
+     *                       INTERRUPTED}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
+     *                       COMPLETED_OK}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
+     *                       ERROR}
+     *                       </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setAddRanksStatus(String addRanksStatus) {
         this.addRanksStatus = (addRanksStatus == null) ? "" : addRanksStatus;
@@ -882,23 +468,18 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The rank numbers of the ranks currently being added, or the rank
-     *         numbers that were added if the operation is complete.
-     * 
+     * numbers that were added if the operation is complete.
      */
     public List<Integer> getRanksBeingAdded() {
         return ranksBeingAdded;
     }
 
     /**
-     * 
-     * @param ranksBeingAdded  The rank numbers of the ranks currently being
-     *                         added, or the rank numbers that were added if
-     *                         the operation is complete.
-     * 
+     * @param ranksBeingAdded The rank numbers of the ranks currently being
+     *                        added, or the rank numbers that were added if
+     *                        the operation is complete.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRanksBeingAdded(List<Integer> ranksBeingAdded) {
         this.ranksBeingAdded = (ranksBeingAdded == null) ? new ArrayList<Integer>() : ranksBeingAdded;
@@ -906,22 +487,17 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The host IP addresses of the ranks being added, in the same
-     *         order as the {@code ranksBeingAdded} list.
-     * 
+     * order as the {@code ranksBeingAdded} list.
      */
     public List<String> getRankHosts() {
         return rankHosts;
     }
 
     /**
-     * 
-     * @param rankHosts  The host IP addresses of the ranks being added, in the
-     *                   same order as the {@code ranksBeingAdded} list.
-     * 
+     * @param rankHosts The host IP addresses of the ranks being added, in the
+     *                  same order as the {@code ranksBeingAdded} list.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRankHosts(List<String> rankHosts) {
         this.rankHosts = (rankHosts == null) ? new ArrayList<String>() : rankHosts;
@@ -929,21 +505,16 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Current percent complete of the add ranks operation.
-     * 
      */
     public int getAddRanksPercentComplete() {
         return addRanksPercentComplete;
     }
 
     /**
-     * 
-     * @param addRanksPercentComplete  Current percent complete of the add
-     *                                 ranks operation.
-     * 
+     * @param addRanksPercentComplete Current percent complete of the add
+     *                                ranks operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setAddRanksPercentComplete(int addRanksPercentComplete) {
         this.addRanksPercentComplete = addRanksPercentComplete;
@@ -951,39 +522,34 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether removing ranks is (or was) part of this operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getRemoveRanks() {
         return removeRanks;
     }
 
     /**
-     * 
-     * @param removeRanks  Whether removing ranks is (or was) part of this
-     *                     operation.
-     *                     Supported values:
-     *                     <ul>
-     *                             <li> {@link
-     *                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
-     *                     TRUE}
-     *                             <li> {@link
-     *                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
-     *                     FALSE}
-     *                     </ul>
-     * 
+     * @param removeRanks Whether removing ranks is (or was) part of this
+     *                    operation.
+     *                    Supported values:
+     *                    <ul>
+     *                            <li> {@link
+     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
+     *                    TRUE}
+     *                            <li> {@link
+     *                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
+     *                    FALSE}
+     *                    </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRemoveRanks(boolean removeRanks) {
         this.removeRanks = removeRanks;
@@ -991,58 +557,53 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If this was a rank-removing operation, the removal-specific
-     *         status of the operation.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
-     *         NOT_STARTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
-     *         IN_PROGRESS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
-     *         INTERRUPTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
-     *         COMPLETED_OK}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
-     *         ERROR}
-     *         </ul>
-     * 
+     * status of the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
+     * ERROR}
+     * </ul>
      */
     public String getRemoveRanksStatus() {
         return removeRanksStatus;
     }
 
     /**
-     * 
-     * @param removeRanksStatus  If this was a rank-removing operation, the
-     *                           removal-specific status of the operation.
-     *                           Valid values are:
-     *                           <ul>
-     *                                   <li> {@link
-     *                           com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
-     *                           NOT_STARTED}
-     *                                   <li> {@link
-     *                           com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
-     *                           IN_PROGRESS}
-     *                                   <li> {@link
-     *                           com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
-     *                           INTERRUPTED}
-     *                                   <li> {@link
-     *                           com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
-     *                           COMPLETED_OK}
-     *                                   <li> {@link
-     *                           com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
-     *                           ERROR}
-     *                           </ul>
-     * 
+     * @param removeRanksStatus If this was a rank-removing operation, the
+     *                          removal-specific status of the operation.
+     *                          Valid values are:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
+     *                          NOT_STARTED}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
+     *                          IN_PROGRESS}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
+     *                          INTERRUPTED}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
+     *                          COMPLETED_OK}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
+     *                          ERROR}
+     *                          </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRemoveRanksStatus(String removeRanksStatus) {
         this.removeRanksStatus = (removeRanksStatus == null) ? "" : removeRanksStatus;
@@ -1050,22 +611,17 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The ranks being removed, or that have been removed if the
-     *         operation is completed.
-     * 
+     * operation is completed.
      */
     public List<Integer> getRanksBeingRemoved() {
         return ranksBeingRemoved;
     }
 
     /**
-     * 
-     * @param ranksBeingRemoved  The ranks being removed, or that have been
-     *                           removed if the operation is completed.
-     * 
+     * @param ranksBeingRemoved The ranks being removed, or that have been
+     *                          removed if the operation is completed.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRanksBeingRemoved(List<Integer> ranksBeingRemoved) {
         this.ranksBeingRemoved = (ranksBeingRemoved == null) ? new ArrayList<Integer>() : ranksBeingRemoved;
@@ -1073,21 +629,16 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Current percent complete of the remove ranks operation.
-     * 
      */
     public int getRemoveRanksPercentComplete() {
         return removeRanksPercentComplete;
     }
 
     /**
-     * 
-     * @param removeRanksPercentComplete  Current percent complete of the
-     *                                    remove ranks operation.
-     * 
+     * @param removeRanksPercentComplete Current percent complete of the
+     *                                   remove ranks operation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRemoveRanksPercentComplete(int removeRanksPercentComplete) {
         this.removeRanksPercentComplete = removeRanksPercentComplete;
@@ -1095,40 +646,35 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether data and/or shard rebalancing is (or was) part of this
-     *         operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getRebalance() {
         return rebalance;
     }
 
     /**
-     * 
-     * @param rebalance  Whether data and/or shard rebalancing is (or was) part
-     *                   of this operation.
-     *                   Supported values:
-     *                   <ul>
-     *                           <li> {@link
-     *                   com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
-     *                   TRUE}
-     *                           <li> {@link
-     *                   com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
-     *                   FALSE}
-     *                   </ul>
-     * 
+     * @param rebalance Whether data and/or shard rebalancing is (or was) part
+     *                  of this operation.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
+     *                  TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
+     *                  FALSE}
+     *                  </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRebalance(boolean rebalance) {
         this.rebalance = rebalance;
@@ -1136,40 +682,35 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether rebalancing of unsharded data is (or was) part of this
-     *         operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getRebalanceUnshardedData() {
         return rebalanceUnshardedData;
     }
 
     /**
-     * 
-     * @param rebalanceUnshardedData  Whether rebalancing of unsharded data is
-     *                                (or was) part of this operation.
-     *                                Supported values:
-     *                                <ul>
-     *                                        <li> {@link
-     *                                com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
-     *                                TRUE}
-     *                                        <li> {@link
-     *                                com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
-     *                                FALSE}
-     *                                </ul>
-     * 
+     * @param rebalanceUnshardedData Whether rebalancing of unsharded data is
+     *                               (or was) part of this operation.
+     *                               Supported values:
+     *                               <ul>
+     *                                       <li> {@link
+     *                               com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
+     *                               TRUE}
+     *                                       <li> {@link
+     *                               com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
+     *                               FALSE}
+     *                               </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRebalanceUnshardedData(boolean rebalanceUnshardedData) {
         this.rebalanceUnshardedData = rebalanceUnshardedData;
@@ -1177,60 +718,55 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If this was an operation that included rebalancing unsharded
-     *         data, the rebalancing-specific status of the operation.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
-     *         NOT_STARTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
-     *         IN_PROGRESS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
-     *         INTERRUPTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
-     *         COMPLETED_OK}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
-     *         ERROR}
-     *         </ul>
-     * 
+     * data, the rebalancing-specific status of the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
+     * ERROR}
+     * </ul>
      */
     public String getRebalanceUnshardedDataStatus() {
         return rebalanceUnshardedDataStatus;
     }
 
     /**
-     * 
-     * @param rebalanceUnshardedDataStatus  If this was an operation that
-     *                                      included rebalancing unsharded
-     *                                      data, the rebalancing-specific
-     *                                      status of the operation.
-     *                                      Valid values are:
-     *                                      <ul>
-     *                                              <li> {@link
-     *                                      com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
-     *                                      NOT_STARTED}
-     *                                              <li> {@link
-     *                                      com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
-     *                                      IN_PROGRESS}
-     *                                              <li> {@link
-     *                                      com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
-     *                                      INTERRUPTED}
-     *                                              <li> {@link
-     *                                      com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
-     *                                      COMPLETED_OK}
-     *                                              <li> {@link
-     *                                      com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
-     *                                      ERROR}
-     *                                      </ul>
-     * 
+     * @param rebalanceUnshardedDataStatus If this was an operation that
+     *                                     included rebalancing unsharded
+     *                                     data, the rebalancing-specific
+     *                                     status of the operation.
+     *                                     Valid values are:
+     *                                     <ul>
+     *                                             <li> {@link
+     *                                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
+     *                                     NOT_STARTED}
+     *                                             <li> {@link
+     *                                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
+     *                                     IN_PROGRESS}
+     *                                             <li> {@link
+     *                                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
+     *                                     INTERRUPTED}
+     *                                             <li> {@link
+     *                                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
+     *                                     COMPLETED_OK}
+     *                                             <li> {@link
+     *                                     com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
+     *                                     ERROR}
+     *                                     </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRebalanceUnshardedDataStatus(String rebalanceUnshardedDataStatus) {
         this.rebalanceUnshardedDataStatus = (rebalanceUnshardedDataStatus == null) ? "" : rebalanceUnshardedDataStatus;
@@ -1238,24 +774,19 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Percentage of unsharded tables that completed rebalancing, out
-     *         of all unsharded tables to rebalance.
-     * 
+     * of all unsharded tables to rebalance.
      */
     public int getUnshardedRebalancePercentComplete() {
         return unshardedRebalancePercentComplete;
     }
 
     /**
-     * 
-     * @param unshardedRebalancePercentComplete  Percentage of unsharded tables
-     *                                           that completed rebalancing,
-     *                                           out of all unsharded tables to
-     *                                           rebalance.
-     * 
+     * @param unshardedRebalancePercentComplete Percentage of unsharded tables
+     *                                          that completed rebalancing,
+     *                                          out of all unsharded tables to
+     *                                          rebalance.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setUnshardedRebalancePercentComplete(int unshardedRebalancePercentComplete) {
         this.unshardedRebalancePercentComplete = unshardedRebalancePercentComplete;
@@ -1263,40 +794,35 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Whether rebalancing of sharded data is (or was) part of this
-     *         operation.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
-     *         FALSE}
-     *         </ul>
-     * 
+     * operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
+     * FALSE}
+     * </ul>
      */
     public boolean getRebalanceShardedData() {
         return rebalanceShardedData;
     }
 
     /**
-     * 
-     * @param rebalanceShardedData  Whether rebalancing of sharded data is (or
-     *                              was) part of this operation.
-     *                              Supported values:
-     *                              <ul>
-     *                                      <li> {@link
-     *                              com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
-     *                              TRUE}
-     *                                      <li> {@link
-     *                              com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
-     *                              FALSE}
-     *                              </ul>
-     * 
+     * @param rebalanceShardedData Whether rebalancing of sharded data is (or
+     *                             was) part of this operation.
+     *                             Supported values:
+     *                             <ul>
+     *                                     <li> {@link
+     *                             com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
+     *                             TRUE}
+     *                                     <li> {@link
+     *                             com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
+     *                             FALSE}
+     *                             </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRebalanceShardedData(boolean rebalanceShardedData) {
         this.rebalanceShardedData = rebalanceShardedData;
@@ -1304,25 +830,20 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Version of the shard array that is (or was) being rebalanced to.
-     *         Each change to the shard array results in the version number
-     *         incrementing.
-     * 
+     * Each change to the shard array results in the version number
+     * incrementing.
      */
     public long getShardArrayVersion() {
         return shardArrayVersion;
     }
 
     /**
-     * 
-     * @param shardArrayVersion  Version of the shard array that is (or was)
-     *                           being rebalanced to. Each change to the shard
-     *                           array results in the version number
-     *                           incrementing.
-     * 
+     * @param shardArrayVersion Version of the shard array that is (or was)
+     *                          being rebalanced to. Each change to the shard
+     *                          array results in the version number
+     *                          incrementing.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setShardArrayVersion(long shardArrayVersion) {
         this.shardArrayVersion = shardArrayVersion;
@@ -1330,60 +851,55 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If this was an operation that included rebalancing sharded data,
-     *         the rebalancing-specific status of the operation.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
-     *         NOT_STARTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
-     *         IN_PROGRESS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
-     *         INTERRUPTED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
-     *         COMPLETED_OK}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
-     *         ERROR}
-     *         </ul>
-     * 
+     * the rebalancing-specific status of the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
+     * ERROR}
+     * </ul>
      */
     public String getRebalanceShardedDataStatus() {
         return rebalanceShardedDataStatus;
     }
 
     /**
-     * 
-     * @param rebalanceShardedDataStatus  If this was an operation that
-     *                                    included rebalancing sharded data,
-     *                                    the rebalancing-specific status of
-     *                                    the operation.
-     *                                    Valid values are:
-     *                                    <ul>
-     *                                            <li> {@link
-     *                                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
-     *                                    NOT_STARTED}
-     *                                            <li> {@link
-     *                                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
-     *                                    IN_PROGRESS}
-     *                                            <li> {@link
-     *                                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
-     *                                    INTERRUPTED}
-     *                                            <li> {@link
-     *                                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
-     *                                    COMPLETED_OK}
-     *                                            <li> {@link
-     *                                    com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
-     *                                    ERROR}
-     *                                    </ul>
-     * 
+     * @param rebalanceShardedDataStatus If this was an operation that
+     *                                   included rebalancing sharded data,
+     *                                   the rebalancing-specific status of
+     *                                   the operation.
+     *                                   Valid values are:
+     *                                   <ul>
+     *                                           <li> {@link
+     *                                   com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
+     *                                   NOT_STARTED}
+     *                                           <li> {@link
+     *                                   com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
+     *                                   IN_PROGRESS}
+     *                                           <li> {@link
+     *                                   com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
+     *                                   INTERRUPTED}
+     *                                           <li> {@link
+     *                                   com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
+     *                                   COMPLETED_OK}
+     *                                           <li> {@link
+     *                                   com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
+     *                                   ERROR}
+     *                                   </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setRebalanceShardedDataStatus(String rebalanceShardedDataStatus) {
         this.rebalanceShardedDataStatus = (rebalanceShardedDataStatus == null) ? "" : rebalanceShardedDataStatus;
@@ -1391,21 +907,16 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Number of shards that will change as part of rebalance.
-     * 
      */
     public int getNumShardsChanging() {
         return numShardsChanging;
     }
 
     /**
-     * 
-     * @param numShardsChanging  Number of shards that will change as part of
-     *                           rebalance.
-     * 
+     * @param numShardsChanging Number of shards that will change as part of
+     *                          rebalance.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setNumShardsChanging(int numShardsChanging) {
         this.numShardsChanging = numShardsChanging;
@@ -1413,24 +924,19 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Percentage of shard keys, and their associated data if
-     *         applicable, that have completed rebalancing.
-     * 
+     * applicable, that have completed rebalancing.
      */
     public int getShardedRebalancePercentComplete() {
         return shardedRebalancePercentComplete;
     }
 
     /**
-     * 
-     * @param shardedRebalancePercentComplete  Percentage of shard keys, and
-     *                                         their associated data if
-     *                                         applicable, that have completed
-     *                                         rebalancing.
-     * 
+     * @param shardedRebalancePercentComplete Percentage of shard keys, and
+     *                                        their associated data if
+     *                                        applicable, that have completed
+     *                                        rebalancing.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setShardedRebalancePercentComplete(int shardedRebalancePercentComplete) {
         this.shardedRebalancePercentComplete = shardedRebalancePercentComplete;
@@ -1438,20 +944,15 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowClusterOperationsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -1461,9 +962,8 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -1473,13 +973,10 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -1585,139 +1082,137 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.historyIndex = (Integer)value;
+                this.historyIndex = (Integer) value;
                 break;
 
             case 1:
-                this.historySize = (Integer)value;
+                this.historySize = (Integer) value;
                 break;
 
             case 2:
-                this.inProgress = (Boolean)value;
+                this.inProgress = (Boolean) value;
                 break;
 
             case 3:
-                this.startTime = (String)value;
+                this.startTime = (String) value;
                 break;
 
             case 4:
-                this.endTime = (String)value;
+                this.endTime = (String) value;
                 break;
 
             case 5:
-                this.endpoint = (String)value;
+                this.endpoint = (String) value;
                 break;
 
             case 6:
-                this.endpointSchema = (String)value;
+                this.endpointSchema = (String) value;
                 break;
 
             case 7:
-                this.overallStatus = (String)value;
+                this.overallStatus = (String) value;
                 break;
 
             case 8:
-                this.userStopped = (Boolean)value;
+                this.userStopped = (Boolean) value;
                 break;
 
             case 9:
-                this.percentComplete = (Integer)value;
+                this.percentComplete = (Integer) value;
                 break;
 
             case 10:
-                this.dryRun = (Boolean)value;
+                this.dryRun = (Boolean) value;
                 break;
 
             case 11:
-                this.messages = (List<String>)value;
+                this.messages = (List<String>) value;
                 break;
 
             case 12:
-                this.addRanks = (Boolean)value;
+                this.addRanks = (Boolean) value;
                 break;
 
             case 13:
-                this.addRanksStatus = (String)value;
+                this.addRanksStatus = (String) value;
                 break;
 
             case 14:
-                this.ranksBeingAdded = (List<Integer>)value;
+                this.ranksBeingAdded = (List<Integer>) value;
                 break;
 
             case 15:
-                this.rankHosts = (List<String>)value;
+                this.rankHosts = (List<String>) value;
                 break;
 
             case 16:
-                this.addRanksPercentComplete = (Integer)value;
+                this.addRanksPercentComplete = (Integer) value;
                 break;
 
             case 17:
-                this.removeRanks = (Boolean)value;
+                this.removeRanks = (Boolean) value;
                 break;
 
             case 18:
-                this.removeRanksStatus = (String)value;
+                this.removeRanksStatus = (String) value;
                 break;
 
             case 19:
-                this.ranksBeingRemoved = (List<Integer>)value;
+                this.ranksBeingRemoved = (List<Integer>) value;
                 break;
 
             case 20:
-                this.removeRanksPercentComplete = (Integer)value;
+                this.removeRanksPercentComplete = (Integer) value;
                 break;
 
             case 21:
-                this.rebalance = (Boolean)value;
+                this.rebalance = (Boolean) value;
                 break;
 
             case 22:
-                this.rebalanceUnshardedData = (Boolean)value;
+                this.rebalanceUnshardedData = (Boolean) value;
                 break;
 
             case 23:
-                this.rebalanceUnshardedDataStatus = (String)value;
+                this.rebalanceUnshardedDataStatus = (String) value;
                 break;
 
             case 24:
-                this.unshardedRebalancePercentComplete = (Integer)value;
+                this.unshardedRebalancePercentComplete = (Integer) value;
                 break;
 
             case 25:
-                this.rebalanceShardedData = (Boolean)value;
+                this.rebalanceShardedData = (Boolean) value;
                 break;
 
             case 26:
-                this.shardArrayVersion = (Long)value;
+                this.shardArrayVersion = (Long) value;
                 break;
 
             case 27:
-                this.rebalanceShardedDataStatus = (String)value;
+                this.rebalanceShardedDataStatus = (String) value;
                 break;
 
             case 28:
-                this.numShardsChanging = (Integer)value;
+                this.numShardsChanging = (Integer) value;
                 break;
 
             case 29:
-                this.shardedRebalancePercentComplete = (Integer)value;
+                this.shardedRebalancePercentComplete = (Integer) value;
                 break;
 
             case 30:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -1727,178 +1222,178 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminShowClusterOperationsResponse that = (AdminShowClusterOperationsResponse)obj;
+        AdminShowClusterOperationsResponse that = (AdminShowClusterOperationsResponse) obj;
 
-        return ( ( this.historyIndex == that.historyIndex )
-                 && ( this.historySize == that.historySize )
-                 && ( this.inProgress == that.inProgress )
-                 && this.startTime.equals( that.startTime )
-                 && this.endTime.equals( that.endTime )
-                 && this.endpoint.equals( that.endpoint )
-                 && this.endpointSchema.equals( that.endpointSchema )
-                 && this.overallStatus.equals( that.overallStatus )
-                 && ( this.userStopped == that.userStopped )
-                 && ( this.percentComplete == that.percentComplete )
-                 && ( this.dryRun == that.dryRun )
-                 && this.messages.equals( that.messages )
-                 && ( this.addRanks == that.addRanks )
-                 && this.addRanksStatus.equals( that.addRanksStatus )
-                 && this.ranksBeingAdded.equals( that.ranksBeingAdded )
-                 && this.rankHosts.equals( that.rankHosts )
-                 && ( this.addRanksPercentComplete == that.addRanksPercentComplete )
-                 && ( this.removeRanks == that.removeRanks )
-                 && this.removeRanksStatus.equals( that.removeRanksStatus )
-                 && this.ranksBeingRemoved.equals( that.ranksBeingRemoved )
-                 && ( this.removeRanksPercentComplete == that.removeRanksPercentComplete )
-                 && ( this.rebalance == that.rebalance )
-                 && ( this.rebalanceUnshardedData == that.rebalanceUnshardedData )
-                 && this.rebalanceUnshardedDataStatus.equals( that.rebalanceUnshardedDataStatus )
-                 && ( this.unshardedRebalancePercentComplete == that.unshardedRebalancePercentComplete )
-                 && ( this.rebalanceShardedData == that.rebalanceShardedData )
-                 && ( this.shardArrayVersion == that.shardArrayVersion )
-                 && this.rebalanceShardedDataStatus.equals( that.rebalanceShardedDataStatus )
-                 && ( this.numShardsChanging == that.numShardsChanging )
-                 && ( this.shardedRebalancePercentComplete == that.shardedRebalancePercentComplete )
-                 && this.info.equals( that.info ) );
+        return ((this.historyIndex == that.historyIndex)
+                && (this.historySize == that.historySize)
+                && (this.inProgress == that.inProgress)
+                && this.startTime.equals(that.startTime)
+                && this.endTime.equals(that.endTime)
+                && this.endpoint.equals(that.endpoint)
+                && this.endpointSchema.equals(that.endpointSchema)
+                && this.overallStatus.equals(that.overallStatus)
+                && (this.userStopped == that.userStopped)
+                && (this.percentComplete == that.percentComplete)
+                && (this.dryRun == that.dryRun)
+                && this.messages.equals(that.messages)
+                && (this.addRanks == that.addRanks)
+                && this.addRanksStatus.equals(that.addRanksStatus)
+                && this.ranksBeingAdded.equals(that.ranksBeingAdded)
+                && this.rankHosts.equals(that.rankHosts)
+                && (this.addRanksPercentComplete == that.addRanksPercentComplete)
+                && (this.removeRanks == that.removeRanks)
+                && this.removeRanksStatus.equals(that.removeRanksStatus)
+                && this.ranksBeingRemoved.equals(that.ranksBeingRemoved)
+                && (this.removeRanksPercentComplete == that.removeRanksPercentComplete)
+                && (this.rebalance == that.rebalance)
+                && (this.rebalanceUnshardedData == that.rebalanceUnshardedData)
+                && this.rebalanceUnshardedDataStatus.equals(that.rebalanceUnshardedDataStatus)
+                && (this.unshardedRebalancePercentComplete == that.unshardedRebalancePercentComplete)
+                && (this.rebalanceShardedData == that.rebalanceShardedData)
+                && (this.shardArrayVersion == that.shardArrayVersion)
+                && this.rebalanceShardedDataStatus.equals(that.rebalanceShardedDataStatus)
+                && (this.numShardsChanging == that.numShardsChanging)
+                && (this.shardedRebalancePercentComplete == that.shardedRebalancePercentComplete)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "historyIndex" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.historyIndex ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "historySize" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.historySize ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "inProgress" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.inProgress ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "startTime" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.startTime ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "endTime" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endTime ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "endpoint" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endpoint ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "endpointSchema" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endpointSchema ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "overallStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.overallStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "userStopped" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.userStopped ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "percentComplete" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.percentComplete ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "dryRun" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.dryRun ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "messages" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.messages ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "addRanks" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.addRanks ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "addRanksStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.addRanksStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "ranksBeingAdded" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.ranksBeingAdded ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rankHosts" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rankHosts ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "addRanksPercentComplete" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.addRanksPercentComplete ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "removeRanks" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.removeRanks ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "removeRanksStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.removeRanksStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "ranksBeingRemoved" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.ranksBeingRemoved ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "removeRanksPercentComplete" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.removeRanksPercentComplete ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rebalance" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rebalance ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rebalanceUnshardedData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rebalanceUnshardedData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rebalanceUnshardedDataStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rebalanceUnshardedDataStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "unshardedRebalancePercentComplete" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.unshardedRebalancePercentComplete ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rebalanceShardedData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rebalanceShardedData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "shardArrayVersion" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.shardArrayVersion ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rebalanceShardedDataStatus" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rebalanceShardedDataStatus ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "numShardsChanging" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numShardsChanging ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "shardedRebalancePercentComplete" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.shardedRebalancePercentComplete ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("historyIndex"));
+        builder.append(": ");
+        builder.append(gd.toString(this.historyIndex));
+        builder.append(", ");
+        builder.append(gd.toString("historySize"));
+        builder.append(": ");
+        builder.append(gd.toString(this.historySize));
+        builder.append(", ");
+        builder.append(gd.toString("inProgress"));
+        builder.append(": ");
+        builder.append(gd.toString(this.inProgress));
+        builder.append(", ");
+        builder.append(gd.toString("startTime"));
+        builder.append(": ");
+        builder.append(gd.toString(this.startTime));
+        builder.append(", ");
+        builder.append(gd.toString("endTime"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endTime));
+        builder.append(", ");
+        builder.append(gd.toString("endpoint"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endpoint));
+        builder.append(", ");
+        builder.append(gd.toString("endpointSchema"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endpointSchema));
+        builder.append(", ");
+        builder.append(gd.toString("overallStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.overallStatus));
+        builder.append(", ");
+        builder.append(gd.toString("userStopped"));
+        builder.append(": ");
+        builder.append(gd.toString(this.userStopped));
+        builder.append(", ");
+        builder.append(gd.toString("percentComplete"));
+        builder.append(": ");
+        builder.append(gd.toString(this.percentComplete));
+        builder.append(", ");
+        builder.append(gd.toString("dryRun"));
+        builder.append(": ");
+        builder.append(gd.toString(this.dryRun));
+        builder.append(", ");
+        builder.append(gd.toString("messages"));
+        builder.append(": ");
+        builder.append(gd.toString(this.messages));
+        builder.append(", ");
+        builder.append(gd.toString("addRanks"));
+        builder.append(": ");
+        builder.append(gd.toString(this.addRanks));
+        builder.append(", ");
+        builder.append(gd.toString("addRanksStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.addRanksStatus));
+        builder.append(", ");
+        builder.append(gd.toString("ranksBeingAdded"));
+        builder.append(": ");
+        builder.append(gd.toString(this.ranksBeingAdded));
+        builder.append(", ");
+        builder.append(gd.toString("rankHosts"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rankHosts));
+        builder.append(", ");
+        builder.append(gd.toString("addRanksPercentComplete"));
+        builder.append(": ");
+        builder.append(gd.toString(this.addRanksPercentComplete));
+        builder.append(", ");
+        builder.append(gd.toString("removeRanks"));
+        builder.append(": ");
+        builder.append(gd.toString(this.removeRanks));
+        builder.append(", ");
+        builder.append(gd.toString("removeRanksStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.removeRanksStatus));
+        builder.append(", ");
+        builder.append(gd.toString("ranksBeingRemoved"));
+        builder.append(": ");
+        builder.append(gd.toString(this.ranksBeingRemoved));
+        builder.append(", ");
+        builder.append(gd.toString("removeRanksPercentComplete"));
+        builder.append(": ");
+        builder.append(gd.toString(this.removeRanksPercentComplete));
+        builder.append(", ");
+        builder.append(gd.toString("rebalance"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rebalance));
+        builder.append(", ");
+        builder.append(gd.toString("rebalanceUnshardedData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rebalanceUnshardedData));
+        builder.append(", ");
+        builder.append(gd.toString("rebalanceUnshardedDataStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rebalanceUnshardedDataStatus));
+        builder.append(", ");
+        builder.append(gd.toString("unshardedRebalancePercentComplete"));
+        builder.append(": ");
+        builder.append(gd.toString(this.unshardedRebalancePercentComplete));
+        builder.append(", ");
+        builder.append(gd.toString("rebalanceShardedData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rebalanceShardedData));
+        builder.append(", ");
+        builder.append(gd.toString("shardArrayVersion"));
+        builder.append(": ");
+        builder.append(gd.toString(this.shardArrayVersion));
+        builder.append(", ");
+        builder.append(gd.toString("rebalanceShardedDataStatus"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rebalanceShardedDataStatus));
+        builder.append(", ");
+        builder.append(gd.toString("numShardsChanging"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numShardsChanging));
+        builder.append(", ");
+        builder.append(gd.toString("shardedRebalancePercentComplete"));
+        builder.append(": ");
+        builder.append(gd.toString(this.shardedRebalancePercentComplete));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -1908,36 +1403,376 @@ public class AdminShowClusterOperationsResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.historyIndex;
         hashCode = (31 * hashCode) + this.historySize;
-        hashCode = (31 * hashCode) + ((Boolean)this.inProgress).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.inProgress).hashCode();
         hashCode = (31 * hashCode) + this.startTime.hashCode();
         hashCode = (31 * hashCode) + this.endTime.hashCode();
         hashCode = (31 * hashCode) + this.endpoint.hashCode();
         hashCode = (31 * hashCode) + this.endpointSchema.hashCode();
         hashCode = (31 * hashCode) + this.overallStatus.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.userStopped).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.userStopped).hashCode();
         hashCode = (31 * hashCode) + this.percentComplete;
-        hashCode = (31 * hashCode) + ((Boolean)this.dryRun).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.dryRun).hashCode();
         hashCode = (31 * hashCode) + this.messages.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.addRanks).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.addRanks).hashCode();
         hashCode = (31 * hashCode) + this.addRanksStatus.hashCode();
         hashCode = (31 * hashCode) + this.ranksBeingAdded.hashCode();
         hashCode = (31 * hashCode) + this.rankHosts.hashCode();
         hashCode = (31 * hashCode) + this.addRanksPercentComplete;
-        hashCode = (31 * hashCode) + ((Boolean)this.removeRanks).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.removeRanks).hashCode();
         hashCode = (31 * hashCode) + this.removeRanksStatus.hashCode();
         hashCode = (31 * hashCode) + this.ranksBeingRemoved.hashCode();
         hashCode = (31 * hashCode) + this.removeRanksPercentComplete;
-        hashCode = (31 * hashCode) + ((Boolean)this.rebalance).hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.rebalanceUnshardedData).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.rebalance).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.rebalanceUnshardedData).hashCode();
         hashCode = (31 * hashCode) + this.rebalanceUnshardedDataStatus.hashCode();
         hashCode = (31 * hashCode) + this.unshardedRebalancePercentComplete;
-        hashCode = (31 * hashCode) + ((Boolean)this.rebalanceShardedData).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.shardArrayVersion).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.rebalanceShardedData).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.shardArrayVersion).hashCode();
         hashCode = (31 * hashCode) + this.rebalanceShardedDataStatus.hashCode();
         hashCode = (31 * hashCode) + this.numShardsChanging;
         hashCode = (31 * hashCode) + this.shardedRebalancePercentComplete;
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Whether this cluster operation is currently in progress or not.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.InProgress#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code inProgress}.
+     */
+    public static final class InProgress {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private InProgress() {
+        }
+    }
+
+    /**
+     * Overall success status of the operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#OK
+     * OK}: The operation was successful, or, if still in progress, the
+     * operation is successful so far.
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.OverallStatus#ERROR
+     * ERROR}: An error occurred executing the operation.
+     * </ul>
+     * A set of string constants for the parameter {@code overallStatus}.
+     */
+    public static final class OverallStatus {
+
+        /**
+         * The operation was successful, or, if still in progress, the
+         * operation is successful so far.
+         */
+        public static final String OK = "OK";
+
+        /**
+         * An error occurred executing the operation.
+         */
+        public static final String ERROR = "ERROR";
+
+        private OverallStatus() {
+        }
+    }
+
+    /**
+     * Whether a user stopped this operation at any point while in progress.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.UserStopped#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code userStopped}.
+     */
+    public static final class UserStopped {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private UserStopped() {
+        }
+    }
+
+    /**
+     * Whether this operation was a dry run.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.DryRun#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code dryRun}.
+     */
+    public static final class DryRun {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private DryRun() {
+        }
+    }
+
+    /**
+     * Whether adding ranks is (or was) part of this operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanks#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code addRanks}.
+     */
+    public static final class AddRanks {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private AddRanks() {
+        }
+    }
+
+    /**
+     * If this was a rank-adding operation, the add-specific status of the
+     * operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.AddRanksStatus#ERROR
+     * ERROR}
+     * </ul>
+     * A set of string constants for the parameter {@code addRanksStatus}.
+     */
+    public static final class AddRanksStatus {
+        public static final String NOT_STARTED = "NOT_STARTED";
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String INTERRUPTED = "INTERRUPTED";
+        public static final String COMPLETED_OK = "COMPLETED_OK";
+        public static final String ERROR = "ERROR";
+
+        private AddRanksStatus() {
+        }
+    }
+
+    /**
+     * Whether removing ranks is (or was) part of this operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanks#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code removeRanks}.
+     */
+    public static final class RemoveRanks {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private RemoveRanks() {
+        }
+    }
+
+    /**
+     * If this was a rank-removing operation, the removal-specific status of
+     * the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RemoveRanksStatus#ERROR
+     * ERROR}
+     * </ul>
+     * A set of string constants for the parameter {@code removeRanksStatus}.
+     */
+    public static final class RemoveRanksStatus {
+        public static final String NOT_STARTED = "NOT_STARTED";
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String INTERRUPTED = "INTERRUPTED";
+        public static final String COMPLETED_OK = "COMPLETED_OK";
+        public static final String ERROR = "ERROR";
+
+        private RemoveRanksStatus() {
+        }
+    }
+
+    /**
+     * Whether data and/or shard rebalancing is (or was) part of this
+     * operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.Rebalance#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code rebalance}.
+     */
+    public static final class Rebalance {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private Rebalance() {
+        }
+    }
+
+    /**
+     * Whether rebalancing of unsharded data is (or was) part of this
+     * operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedData#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code
+     * rebalanceUnshardedData}.
+     */
+    public static final class RebalanceUnshardedData {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private RebalanceUnshardedData() {
+        }
+    }
+
+    /**
+     * If this was an operation that included rebalancing unsharded data, the
+     * rebalancing-specific status of the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceUnshardedDataStatus#ERROR
+     * ERROR}
+     * </ul>
+     * A set of string constants for the parameter {@code
+     * rebalanceUnshardedDataStatus}.
+     */
+    public static final class RebalanceUnshardedDataStatus {
+        public static final String NOT_STARTED = "NOT_STARTED";
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String INTERRUPTED = "INTERRUPTED";
+        public static final String COMPLETED_OK = "COMPLETED_OK";
+        public static final String ERROR = "ERROR";
+
+        private RebalanceUnshardedDataStatus() {
+        }
+    }
+
+    /**
+     * Whether rebalancing of sharded data is (or was) part of this operation.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedData#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code
+     * rebalanceShardedData}.
+     */
+    public static final class RebalanceShardedData {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private RebalanceShardedData() {
+        }
+    }
+
+    /**
+     * If this was an operation that included rebalancing sharded data, the
+     * rebalancing-specific status of the operation.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#NOT_STARTED
+     * NOT_STARTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#IN_PROGRESS
+     * IN_PROGRESS}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#INTERRUPTED
+     * INTERRUPTED}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#COMPLETED_OK
+     * COMPLETED_OK}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminShowClusterOperationsResponse.RebalanceShardedDataStatus#ERROR
+     * ERROR}
+     * </ul>
+     * A set of string constants for the parameter {@code
+     * rebalanceShardedDataStatus}.
+     */
+    public static final class RebalanceShardedDataStatus {
+        public static final String NOT_STARTED = "NOT_STARTED";
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String INTERRUPTED = "INTERRUPTED";
+        public static final String COMPLETED_OK = "COMPLETED_OK";
+        public static final String ERROR = "ERROR";
+
+        private RebalanceShardedDataStatus() {
+        }
     }
 
 }

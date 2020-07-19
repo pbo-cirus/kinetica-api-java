@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -29,55 +30,15 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
             .record("FilterByBoxGeometryRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Optional parameters.
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
-     * COLLECTION_NAME}: Name of a collection which is to contain the newly
-     * created view. If the collection provided is non-existent, the collection
-     * will be automatically created. If empty, then the newly created view
-     * will be top-level.
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code options}.
-     */
-    public static final class Options {
-
-        /**
-         * Name of a collection which is to contain the newly created view. If
-         * the collection provided is non-existent, the collection will be
-         * automatically created. If empty, then the newly created view will be
-         * top-level.
-         */
-        public static final String COLLECTION_NAME = "collection_name";
-
-        private Options() {  }
-    }
-
     private String tableName;
     private String viewName;
     private String columnName;
@@ -86,8 +47,6 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     private double minY;
     private double maxY;
     private Map<String, String> options;
-
-
     /**
      * Constructs a FilterByBoxGeometryRequest object with default parameters.
      */
@@ -97,39 +56,37 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
         columnName = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a FilterByBoxGeometryRequest object with the specified
      * parameters.
-     * 
+     *
      * @param tableName  Name of the table on which the bounding box operation
      *                   will be performed. Must be an existing table.
-     * @param viewName  Optional name of the result view that will be created
-     *                  containing the results of the query. Must not be an
-     *                  already existing collection, table or view.  The
-     *                  default value is ''.
-     * @param columnName  Name of the geospatial geometry column to be
-     *                    filtered.
-     * @param minX  Lower bound for the x-coordinate of the rectangular box.
-     *              Must be less than or equal to {@code maxX}.
-     * @param maxX  Upper bound for the x-coordinate of the rectangular box.
-     *              Must be greater than or equal to {@code minX}.
-     * @param minY  Lower bound for the y-coordinate of the rectangular box.
-     *              Must be less than or equal to {@code maxY}.
-     * @param maxY  Upper bound for the y-coordinate of the rectangular box.
-     *              Must be greater than or equal to {@code minY}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param viewName   Optional name of the result view that will be created
+     *                   containing the results of the query. Must not be an
+     *                   already existing collection, table or view.  The
+     *                   default value is ''.
+     * @param columnName Name of the geospatial geometry column to be
+     *                   filtered.
+     * @param minX       Lower bound for the x-coordinate of the rectangular box.
+     *                   Must be less than or equal to {@code maxX}.
+     * @param maxX       Upper bound for the x-coordinate of the rectangular box.
+     *                   Must be greater than or equal to {@code minX}.
+     * @param minY       Lower bound for the y-coordinate of the rectangular box.
+     *                   Must be less than or equal to {@code maxY}.
+     * @param maxY       Upper bound for the y-coordinate of the rectangular box.
+     *                   Must be greater than or equal to {@code minY}.
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
+     *                   COLLECTION_NAME}: Name of a collection which is to
+     *                   contain the newly created view. If the collection
+     *                   provided is non-existent, the collection will be
+     *                   automatically created. If empty, then the newly created
+     *                   view will be top-level.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
      */
     public FilterByBoxGeometryRequest(String tableName, String viewName, String columnName, double minX, double maxX, double minY, double maxY, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -143,22 +100,27 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the table on which the bounding box operation will be
-     *         performed. Must be an existing table.
-     * 
+     * performed. Must be an existing table.
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Name of the table on which the bounding box operation
-     *                   will be performed. Must be an existing table.
-     * 
+     * @param tableName Name of the table on which the bounding box operation
+     *                  will be performed. Must be an existing table.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -166,25 +128,20 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional name of the result view that will be created containing
-     *         the results of the query. Must not be an already existing
-     *         collection, table or view.  The default value is ''.
-     * 
+     * the results of the query. Must not be an already existing
+     * collection, table or view.  The default value is ''.
      */
     public String getViewName() {
         return viewName;
     }
 
     /**
-     * 
-     * @param viewName  Optional name of the result view that will be created
-     *                  containing the results of the query. Must not be an
-     *                  already existing collection, table or view.  The
-     *                  default value is ''.
-     * 
+     * @param viewName Optional name of the result view that will be created
+     *                 containing the results of the query. Must not be an
+     *                 already existing collection, table or view.  The
+     *                 default value is ''.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setViewName(String viewName) {
         this.viewName = (viewName == null) ? "" : viewName;
@@ -192,21 +149,16 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of the geospatial geometry column to be filtered.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Name of the geospatial geometry column to be
-     *                    filtered.
-     * 
+     * @param columnName Name of the geospatial geometry column to be
+     *                   filtered.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -214,22 +166,17 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Lower bound for the x-coordinate of the rectangular box.  Must
-     *         be less than or equal to {@code maxX}.
-     * 
+     * be less than or equal to {@code maxX}.
      */
     public double getMinX() {
         return minX;
     }
 
     /**
-     * 
-     * @param minX  Lower bound for the x-coordinate of the rectangular box.
-     *              Must be less than or equal to {@code maxX}.
-     * 
+     * @param minX Lower bound for the x-coordinate of the rectangular box.
+     *             Must be less than or equal to {@code maxX}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setMinX(double minX) {
         this.minX = minX;
@@ -237,22 +184,17 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Upper bound for the x-coordinate of the rectangular box.  Must
-     *         be greater than or equal to {@code minX}.
-     * 
+     * be greater than or equal to {@code minX}.
      */
     public double getMaxX() {
         return maxX;
     }
 
     /**
-     * 
-     * @param maxX  Upper bound for the x-coordinate of the rectangular box.
-     *              Must be greater than or equal to {@code minX}.
-     * 
+     * @param maxX Upper bound for the x-coordinate of the rectangular box.
+     *             Must be greater than or equal to {@code minX}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setMaxX(double maxX) {
         this.maxX = maxX;
@@ -260,22 +202,17 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Lower bound for the y-coordinate of the rectangular box. Must be
-     *         less than or equal to {@code maxY}.
-     * 
+     * less than or equal to {@code maxY}.
      */
     public double getMinY() {
         return minY;
     }
 
     /**
-     * 
-     * @param minY  Lower bound for the y-coordinate of the rectangular box.
-     *              Must be less than or equal to {@code maxY}.
-     * 
+     * @param minY Lower bound for the y-coordinate of the rectangular box.
+     *             Must be less than or equal to {@code maxY}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setMinY(double minY) {
         this.minY = minY;
@@ -283,22 +220,17 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Upper bound for the y-coordinate of the rectangular box. Must be
-     *         greater than or equal to {@code minY}.
-     * 
+     * greater than or equal to {@code minY}.
      */
     public double getMaxY() {
         return maxY;
     }
 
     /**
-     * 
-     * @param maxY  Upper bound for the y-coordinate of the rectangular box.
-     *              Must be greater than or equal to {@code minY}.
-     * 
+     * @param maxY Upper bound for the y-coordinate of the rectangular box.
+     *             Must be greater than or equal to {@code minY}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setMaxY(double maxY) {
         this.maxY = maxY;
@@ -306,39 +238,34 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByBoxGeometryRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -348,9 +275,8 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -360,13 +286,10 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -403,47 +326,45 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.viewName = (String)value;
+                this.viewName = (String) value;
                 break;
 
             case 2:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 3:
-                this.minX = (Double)value;
+                this.minX = (Double) value;
                 break;
 
             case 4:
-                this.maxX = (Double)value;
+                this.maxX = (Double) value;
                 break;
 
             case 5:
-                this.minY = (Double)value;
+                this.minY = (Double) value;
                 break;
 
             case 6:
-                this.maxY = (Double)value;
+                this.maxY = (Double) value;
                 break;
 
             case 7:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -453,63 +374,63 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByBoxGeometryRequest that = (FilterByBoxGeometryRequest)obj;
+        FilterByBoxGeometryRequest that = (FilterByBoxGeometryRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && this.columnName.equals( that.columnName )
-                 && ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && this.columnName.equals(that.columnName)
+                && ((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -520,12 +441,39 @@ public class FilterByBoxGeometryRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.tableName.hashCode();
         hashCode = (31 * hashCode) + this.viewName.hashCode();
         hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByBoxGeometryRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the newly
+     * created view. If the collection provided is non-existent, the collection
+     * will be automatically created. If empty, then the newly created view
+     * will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code options}.
+     */
+    public static final class Options {
+
+        /**
+         * Name of a collection which is to contain the newly created view. If
+         * the collection provided is non-existent, the collection will be
+         * automatically created. If empty, then the newly created view will be
+         * top-level.
+         */
+        public static final String COLLECTION_NAME = "collection_name";
+
+        private Options() {
+        }
     }
 
 }

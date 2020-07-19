@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,28 +25,13 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
             .record("AdminRemoveRanksResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("removedRanks").type().array().items().intType().noDefault()
-                .name("results").type().array().items().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("removedRanks").type().array().items().intType().noDefault()
+            .name("results").type().array().items().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<Integer> removedRanks;
     private List<String> results;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AdminRemoveRanksResponse object with default parameters.
      */
@@ -53,22 +39,27 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Ranks that were removed from the cluster.  May be empty in the
-     *         case of failures.
-     * 
+     * case of failures.
      */
     public List<Integer> getRemovedRanks() {
         return removedRanks;
     }
 
     /**
-     * 
-     * @param removedRanks  Ranks that were removed from the cluster.  May be
-     *                      empty in the case of failures.
-     * 
+     * @param removedRanks Ranks that were removed from the cluster.  May be
+     *                     empty in the case of failures.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminRemoveRanksResponse setRemovedRanks(List<Integer> removedRanks) {
         this.removedRanks = (removedRanks == null) ? new ArrayList<Integer>() : removedRanks;
@@ -76,24 +67,19 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Text description of the result of each rank being removed.
-     *         Indicates the reason for any errors that occur. Entries are in
-     *         the same order as the {@code ranks}.
-     * 
+     * Indicates the reason for any errors that occur. Entries are in
+     * the same order as the {@code ranks}.
      */
     public List<String> getResults() {
         return results;
     }
 
     /**
-     * 
-     * @param results  Text description of the result of each rank being
-     *                 removed. Indicates the reason for any errors that occur.
-     *                 Entries are in the same order as the {@code ranks}.
-     * 
+     * @param results Text description of the result of each rank being
+     *                removed. Indicates the reason for any errors that occur.
+     *                Entries are in the same order as the {@code ranks}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminRemoveRanksResponse setResults(List<String> results) {
         this.results = (results == null) ? new ArrayList<String>() : results;
@@ -101,20 +87,15 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminRemoveRanksResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -124,9 +105,8 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -136,13 +116,10 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -164,27 +141,25 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.removedRanks = (List<Integer>)value;
+                this.removedRanks = (List<Integer>) value;
                 break;
 
             case 1:
-                this.results = (List<String>)value;
+                this.results = (List<String>) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -194,38 +169,38 @@ public class AdminRemoveRanksResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminRemoveRanksResponse that = (AdminRemoveRanksResponse)obj;
+        AdminRemoveRanksResponse that = (AdminRemoveRanksResponse) obj;
 
-        return ( this.removedRanks.equals( that.removedRanks )
-                 && this.results.equals( that.results )
-                 && this.info.equals( that.info ) );
+        return (this.removedRanks.equals(that.removedRanks)
+                && this.results.equals(that.results)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "removedRanks" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.removedRanks ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "results" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.results ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("removedRanks"));
+        builder.append(": ");
+        builder.append(gd.toString(this.removedRanks));
+        builder.append(", ");
+        builder.append(gd.toString("results"));
+        builder.append(": ");
+        builder.append(gd.toString(this.results));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

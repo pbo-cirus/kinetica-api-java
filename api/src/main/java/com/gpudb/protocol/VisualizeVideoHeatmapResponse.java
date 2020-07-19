@@ -7,15 +7,16 @@
 package com.gpudb.protocol;
 
 
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.IndexedRecord;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.IndexedRecord;
 
 
 public class VisualizeVideoHeatmapResponse implements IndexedRecord {
@@ -24,21 +25,14 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
             .record("VisualizeVideoHeatmapResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("width").type().doubleType().noDefault()
-                .name("height").type().doubleType().noDefault()
-                .name("bgColor").type().longType().noDefault()
-                .name("numFrames").type().intType().noDefault()
-                .name("sessionKey").type().stringType().noDefault()
-                .name("data").type().array().items().bytesType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("width").type().doubleType().noDefault()
+            .name("height").type().doubleType().noDefault()
+            .name("bgColor").type().longType().noDefault()
+            .name("numFrames").type().intType().noDefault()
+            .name("sessionKey").type().stringType().noDefault()
+            .name("data").type().array().items().bytesType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private double width;
     private double height;
     private long bgColor;
@@ -46,9 +40,11 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
     private String sessionKey;
     private List<ByteBuffer> data;
     private Map<String, String> info;
-
-
     public VisualizeVideoHeatmapResponse() {
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public double getWidth() {
@@ -153,31 +149,31 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.width = (Double)value;
+                this.width = (Double) value;
                 break;
 
             case 1:
-                this.height = (Double)value;
+                this.height = (Double) value;
                 break;
 
             case 2:
-                this.bgColor = (Long)value;
+                this.bgColor = (Long) value;
                 break;
 
             case 3:
-                this.numFrames = (Integer)value;
+                this.numFrames = (Integer) value;
                 break;
 
             case 4:
-                this.sessionKey = (String)value;
+                this.sessionKey = (String) value;
                 break;
 
             case 5:
-                this.data = (List<ByteBuffer>)value;
+                this.data = (List<ByteBuffer>) value;
                 break;
 
             case 6:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -188,23 +184,23 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeVideoHeatmapResponse that = (VisualizeVideoHeatmapResponse)obj;
+        VisualizeVideoHeatmapResponse that = (VisualizeVideoHeatmapResponse) obj;
 
-        return ( ( (Double)this.width ).equals( (Double)that.width )
-                 && ( (Double)this.height ).equals( (Double)that.height )
-                 && ( this.bgColor == that.bgColor )
-                 && ( this.numFrames == that.numFrames )
-                 && this.sessionKey.equals( that.sessionKey )
-                 && this.data.equals( that.data )
-                 && this.info.equals( that.info ) );
+        return (((Double) this.width).equals((Double) that.width)
+                && ((Double) this.height).equals((Double) that.height)
+                && (this.bgColor == that.bgColor)
+                && (this.numFrames == that.numFrames)
+                && this.sessionKey.equals(that.sessionKey)
+                && this.data.equals(that.data)
+                && this.info.equals(that.info));
     }
 
 
@@ -212,35 +208,35 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "numFrames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numFrames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sessionKey" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sessionKey ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "data" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.data ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("numFrames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numFrames));
+        builder.append(", ");
+        builder.append(gd.toString("sessionKey"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sessionKey));
+        builder.append(", ");
+        builder.append(gd.toString("data"));
+        builder.append(": ");
+        builder.append(gd.toString(this.data));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -249,9 +245,9 @@ public class VisualizeVideoHeatmapResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Double)this.width).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.height).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.bgColor).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.width).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.height).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.bgColor).hashCode();
         hashCode = (31 * hashCode) + this.numFrames;
         hashCode = (31 * hashCode) + this.sessionKey.hashCode();
         hashCode = (31 * hashCode) + this.data.hashCode();

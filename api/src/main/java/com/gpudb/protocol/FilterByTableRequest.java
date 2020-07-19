@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -32,26 +33,579 @@ public class FilterByTableRequest implements IndexedRecord {
             .record("FilterByTableRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("sourceTableName").type().stringType().noDefault()
-                .name("sourceTableColumnName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("sourceTableName").type().stringType().noDefault()
+            .name("sourceTableColumnName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String viewName;
+    private String columnName;
+    private String sourceTableName;
+    private String sourceTableColumnName;
+    private Map<String, String> options;
+    /**
+     * Constructs a FilterByTableRequest object with default parameters.
+     */
+    public FilterByTableRequest() {
+        tableName = "";
+        viewName = "";
+        columnName = "";
+        sourceTableName = "";
+        sourceTableColumnName = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a FilterByTableRequest object with the specified parameters.
+     *
+     * @param tableName             Name of the table whose data will be filtered. Must be
+     *                              an existing table.
+     * @param viewName              If provided, then this will be the name of the view
+     *                              containing the results. Has the same naming
+     *                              restrictions as <a
+     *                              href="../../../../../concepts/tables.html"
+     *                              target="_top">tables</a>.  The default value is ''.
+     * @param columnName            Name of the column by whose value the data will be
+     *                              filtered from the table designated by {@code
+     *                              tableName}.
+     * @param sourceTableName       Name of the table whose data will be compared
+     *                              against in the table called {@code tableName}.
+     *                              Must be an existing table.
+     * @param sourceTableColumnName Name of the column in the {@code
+     *                              sourceTableName} whose values will be used
+     *                              as the filter for table {@code tableName}.
+     *                              Must be a geospatial geometry column if in
+     *                              'spatial' mode; otherwise, Must match the
+     *                              type of the {@code columnName}.
+     * @param options               Optional parameters.
+     *                              <ul>
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
+     *                              COLLECTION_NAME}: Name of a collection which is to
+     *                              contain the newly created view. If the collection
+     *                              provided is non-existent, the collection will be
+     *                              automatically created. If empty, then the newly created
+     *                              view will be top-level.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
+     *                              FILTER_MODE}: String indicating the filter mode, either
+     *                              {@code in_table} or {@code not_in_table}.
+     *                              Supported values:
+     *                              <ul>
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     *                              IN_TABLE}
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
+     *                              NOT_IN_TABLE}
+     *                              </ul>
+     *                              The default value is {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     *                              IN_TABLE}.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#MODE
+     *                              MODE}: Mode - should be either {@code spatial} or {@code
+     *                              normal}.
+     *                              Supported values:
+     *                              <ul>
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                              NORMAL}
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL
+     *                              SPATIAL}
+     *                              </ul>
+     *                              The default value is {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                              NORMAL}.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#BUFFER
+     *                              BUFFER}: Buffer size, in meters. Only relevant for
+     *                              {@code spatial} mode.  The default value is '0'.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
+     *                              BUFFER_METHOD}: Method used to buffer polygons.  Only
+     *                              relevant for {@code spatial} mode.
+     *                              Supported values:
+     *                              <ul>
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                              NORMAL}
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#GEOS
+     *                              GEOS}: Use geos 1 edge per corner algorithm
+     *                              </ul>
+     *                              The default value is {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                              NORMAL}.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
+     *                              MAX_PARTITION_SIZE}: Maximum number of points in a
+     *                              partition. Only relevant for {@code spatial} mode.  The
+     *                              default value is '0'.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
+     *                              MAX_PARTITION_SCORE}: Maximum number of points * edges
+     *                              in a partition. Only relevant for {@code spatial} mode.
+     *                              The default value is '8000000'.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
+     *                              X_COLUMN_NAME}: Name of column containing x value of
+     *                              point being filtered in {@code spatial} mode.  The
+     *                              default value is 'x'.
+     *                                      <li> {@link
+     *                              com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
+     *                              Y_COLUMN_NAME}: Name of column containing y value of
+     *                              point being filtered in {@code spatial} mode.  The
+     *                              default value is 'y'.
+     *                              </ul>
+     *                              The default value is an empty {@link Map}.
+     */
+    public FilterByTableRequest(String tableName, String viewName, String columnName, String sourceTableName, String sourceTableColumnName, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.viewName = (viewName == null) ? "" : viewName;
+        this.columnName = (columnName == null) ? "" : columnName;
+        this.sourceTableName = (sourceTableName == null) ? "" : sourceTableName;
+        this.sourceTableColumnName = (sourceTableColumnName == null) ? "" : sourceTableColumnName;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table whose data will be filtered. Must be an
+     * existing table.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table whose data will be filtered. Must be
+     *                  an existing table.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return If provided, then this will be the name of the view containing
+     * the results. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>.  The default value is ''.
+     */
+    public String getViewName() {
+        return viewName;
+    }
+
+    /**
+     * @param viewName If provided, then this will be the name of the view
+     *                 containing the results. Has the same naming
+     *                 restrictions as <a
+     *                 href="../../../../../concepts/tables.html"
+     *                 target="_top">tables</a>.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setViewName(String viewName) {
+        this.viewName = (viewName == null) ? "" : viewName;
+        return this;
+    }
+
+    /**
+     * @return Name of the column by whose value the data will be filtered from
+     * the table designated by {@code tableName}.
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * @param columnName Name of the column by whose value the data will be
+     *                   filtered from the table designated by {@code
+     *                   tableName}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setColumnName(String columnName) {
+        this.columnName = (columnName == null) ? "" : columnName;
+        return this;
+    }
+
+    /**
+     * @return Name of the table whose data will be compared against in the
+     * table called {@code tableName}. Must be an existing table.
+     */
+    public String getSourceTableName() {
+        return sourceTableName;
+    }
+
+    /**
+     * @param sourceTableName Name of the table whose data will be compared
+     *                        against in the table called {@code tableName}.
+     *                        Must be an existing table.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setSourceTableName(String sourceTableName) {
+        this.sourceTableName = (sourceTableName == null) ? "" : sourceTableName;
+        return this;
+    }
+
+    /**
+     * @return Name of the column in the {@code sourceTableName} whose values
+     * will be used as the filter for table {@code tableName}. Must be
+     * a geospatial geometry column if in 'spatial' mode; otherwise,
+     * Must match the type of the {@code columnName}.
+     */
+    public String getSourceTableColumnName() {
+        return sourceTableColumnName;
+    }
+
+    /**
+     * @param sourceTableColumnName Name of the column in the {@code
+     *                              sourceTableName} whose values will be used
+     *                              as the filter for table {@code tableName}.
+     *                              Must be a geospatial geometry column if in
+     *                              'spatial' mode; otherwise, Must match the
+     *                              type of the {@code columnName}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setSourceTableColumnName(String sourceTableColumnName) {
+        this.sourceTableColumnName = (sourceTableColumnName == null) ? "" : sourceTableColumnName;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
+     * FILTER_MODE}: String indicating the filter mode, either {@code
+     * in_table} or {@code not_in_table}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     * IN_TABLE}
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
+     * NOT_IN_TABLE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     * IN_TABLE}.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#MODE MODE}: Mode
+     * - should be either {@code spatial} or {@code normal}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL SPATIAL}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#BUFFER BUFFER}:
+     * Buffer size, in meters. Only relevant for {@code spatial} mode.
+     * The default value is '0'.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
+     * BUFFER_METHOD}: Method used to buffer polygons.  Only relevant
+     * for {@code spatial} mode.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#GEOS GEOS}: Use
+     * geos 1 edge per corner algorithm
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
+     * MAX_PARTITION_SIZE}: Maximum number of points in a partition.
+     * Only relevant for {@code spatial} mode.  The default value is
+     * '0'.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
+     * MAX_PARTITION_SCORE}: Maximum number of points * edges in a
+     * partition. Only relevant for {@code spatial} mode.  The default
+     * value is '8000000'.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
+     * X_COLUMN_NAME}: Name of column containing x value of point being
+     * filtered in {@code spatial} mode.  The default value is 'x'.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
+     * Y_COLUMN_NAME}: Name of column containing y value of point being
+     * filtered in {@code spatial} mode.  The default value is 'y'.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
+     *                FILTER_MODE}: String indicating the filter mode, either
+     *                {@code in_table} or {@code not_in_table}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     *                IN_TABLE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
+     *                NOT_IN_TABLE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
+     *                IN_TABLE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#MODE
+     *                MODE}: Mode - should be either {@code spatial} or {@code
+     *                normal}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                NORMAL}
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL
+     *                SPATIAL}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                NORMAL}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#BUFFER
+     *                BUFFER}: Buffer size, in meters. Only relevant for
+     *                {@code spatial} mode.  The default value is '0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
+     *                BUFFER_METHOD}: Method used to buffer polygons.  Only
+     *                relevant for {@code spatial} mode.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                NORMAL}
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#GEOS
+     *                GEOS}: Use geos 1 edge per corner algorithm
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
+     *                NORMAL}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
+     *                MAX_PARTITION_SIZE}: Maximum number of points in a
+     *                partition. Only relevant for {@code spatial} mode.  The
+     *                default value is '0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
+     *                MAX_PARTITION_SCORE}: Maximum number of points * edges
+     *                in a partition. Only relevant for {@code spatial} mode.
+     *                The default value is '8000000'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
+     *                X_COLUMN_NAME}: Name of column containing x value of
+     *                point being filtered in {@code spatial} mode.  The
+     *                default value is 'x'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
+     *                Y_COLUMN_NAME}: Name of column containing y value of
+     *                point being filtered in {@code spatial} mode.  The
+     *                default value is 'y'.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByTableRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.viewName;
+
+            case 2:
+                return this.columnName;
+
+            case 3:
+                return this.sourceTableName;
+
+            case 4:
+                return this.sourceTableColumnName;
+
+            case 5:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.viewName = (String) value;
+                break;
+
+            case 2:
+                this.columnName = (String) value;
+                break;
+
+            case 3:
+                this.sourceTableName = (String) value;
+                break;
+
+            case 4:
+                this.sourceTableColumnName = (String) value;
+                break;
+
+            case 5:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        FilterByTableRequest that = (FilterByTableRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && this.columnName.equals(that.columnName)
+                && this.sourceTableName.equals(that.sourceTableName)
+                && this.sourceTableColumnName.equals(that.sourceTableColumnName)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("sourceTableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sourceTableName));
+        builder.append(", ");
+        builder.append(gd.toString("sourceTableColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sourceTableColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.viewName.hashCode();
+        hashCode = (31 * hashCode) + this.columnName.hashCode();
+        hashCode = (31 * hashCode) + this.sourceTableName.hashCode();
+        hashCode = (31 * hashCode) + this.sourceTableColumnName.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -219,604 +773,8 @@ public class FilterByTableRequest implements IndexedRecord {
          */
         public static final String Y_COLUMN_NAME = "y_column_name";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String viewName;
-    private String columnName;
-    private String sourceTableName;
-    private String sourceTableColumnName;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a FilterByTableRequest object with default parameters.
-     */
-    public FilterByTableRequest() {
-        tableName = "";
-        viewName = "";
-        columnName = "";
-        sourceTableName = "";
-        sourceTableColumnName = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a FilterByTableRequest object with the specified parameters.
-     * 
-     * @param tableName  Name of the table whose data will be filtered. Must be
-     *                   an existing table.
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * @param columnName  Name of the column by whose value the data will be
-     *                    filtered from the table designated by {@code
-     *                    tableName}.
-     * @param sourceTableName  Name of the table whose data will be compared
-     *                         against in the table called {@code tableName}.
-     *                         Must be an existing table.
-     * @param sourceTableColumnName  Name of the column in the {@code
-     *                               sourceTableName} whose values will be used
-     *                               as the filter for table {@code tableName}.
-     *                               Must be a geospatial geometry column if in
-     *                               'spatial' mode; otherwise, Must match the
-     *                               type of the {@code columnName}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
-     *                 FILTER_MODE}: String indicating the filter mode, either
-     *                 {@code in_table} or {@code not_in_table}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *                 IN_TABLE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
-     *                 NOT_IN_TABLE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *                 IN_TABLE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MODE
-     *                 MODE}: Mode - should be either {@code spatial} or {@code
-     *                 normal}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL
-     *                 SPATIAL}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#BUFFER
-     *                 BUFFER}: Buffer size, in meters. Only relevant for
-     *                 {@code spatial} mode.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
-     *                 BUFFER_METHOD}: Method used to buffer polygons.  Only
-     *                 relevant for {@code spatial} mode.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#GEOS
-     *                 GEOS}: Use geos 1 edge per corner algorithm
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
-     *                 MAX_PARTITION_SIZE}: Maximum number of points in a
-     *                 partition. Only relevant for {@code spatial} mode.  The
-     *                 default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
-     *                 MAX_PARTITION_SCORE}: Maximum number of points * edges
-     *                 in a partition. Only relevant for {@code spatial} mode.
-     *                 The default value is '8000000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
-     *                 X_COLUMN_NAME}: Name of column containing x value of
-     *                 point being filtered in {@code spatial} mode.  The
-     *                 default value is 'x'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
-     *                 Y_COLUMN_NAME}: Name of column containing y value of
-     *                 point being filtered in {@code spatial} mode.  The
-     *                 default value is 'y'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public FilterByTableRequest(String tableName, String viewName, String columnName, String sourceTableName, String sourceTableColumnName, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.viewName = (viewName == null) ? "" : viewName;
-        this.columnName = (columnName == null) ? "" : columnName;
-        this.sourceTableName = (sourceTableName == null) ? "" : sourceTableName;
-        this.sourceTableColumnName = (sourceTableColumnName == null) ? "" : sourceTableColumnName;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table whose data will be filtered. Must be an
-     *         existing table.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table whose data will be filtered. Must be
-     *                   an existing table.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return If provided, then this will be the name of the view containing
-     *         the results. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>.  The default value is ''.
-     * 
-     */
-    public String getViewName() {
-        return viewName;
-    }
-
-    /**
-     * 
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setViewName(String viewName) {
-        this.viewName = (viewName == null) ? "" : viewName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the column by whose value the data will be filtered from
-     *         the table designated by {@code tableName}.
-     * 
-     */
-    public String getColumnName() {
-        return columnName;
-    }
-
-    /**
-     * 
-     * @param columnName  Name of the column by whose value the data will be
-     *                    filtered from the table designated by {@code
-     *                    tableName}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setColumnName(String columnName) {
-        this.columnName = (columnName == null) ? "" : columnName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the table whose data will be compared against in the
-     *         table called {@code tableName}. Must be an existing table.
-     * 
-     */
-    public String getSourceTableName() {
-        return sourceTableName;
-    }
-
-    /**
-     * 
-     * @param sourceTableName  Name of the table whose data will be compared
-     *                         against in the table called {@code tableName}.
-     *                         Must be an existing table.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setSourceTableName(String sourceTableName) {
-        this.sourceTableName = (sourceTableName == null) ? "" : sourceTableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the column in the {@code sourceTableName} whose values
-     *         will be used as the filter for table {@code tableName}. Must be
-     *         a geospatial geometry column if in 'spatial' mode; otherwise,
-     *         Must match the type of the {@code columnName}.
-     * 
-     */
-    public String getSourceTableColumnName() {
-        return sourceTableColumnName;
-    }
-
-    /**
-     * 
-     * @param sourceTableColumnName  Name of the column in the {@code
-     *                               sourceTableName} whose values will be used
-     *                               as the filter for table {@code tableName}.
-     *                               Must be a geospatial geometry column if in
-     *                               'spatial' mode; otherwise, Must match the
-     *                               type of the {@code columnName}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setSourceTableColumnName(String sourceTableColumnName) {
-        this.sourceTableColumnName = (sourceTableColumnName == null) ? "" : sourceTableColumnName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
-     *         FILTER_MODE}: String indicating the filter mode, either {@code
-     *         in_table} or {@code not_in_table}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *         IN_TABLE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
-     *         NOT_IN_TABLE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *         IN_TABLE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#MODE MODE}: Mode
-     *         - should be either {@code spatial} or {@code normal}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL SPATIAL}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#BUFFER BUFFER}:
-     *         Buffer size, in meters. Only relevant for {@code spatial} mode.
-     *         The default value is '0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
-     *         BUFFER_METHOD}: Method used to buffer polygons.  Only relevant
-     *         for {@code spatial} mode.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#GEOS GEOS}: Use
-     *         geos 1 edge per corner algorithm
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#NORMAL NORMAL}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
-     *         MAX_PARTITION_SIZE}: Maximum number of points in a partition.
-     *         Only relevant for {@code spatial} mode.  The default value is
-     *         '0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
-     *         MAX_PARTITION_SCORE}: Maximum number of points * edges in a
-     *         partition. Only relevant for {@code spatial} mode.  The default
-     *         value is '8000000'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
-     *         X_COLUMN_NAME}: Name of column containing x value of point being
-     *         filtered in {@code spatial} mode.  The default value is 'x'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
-     *         Y_COLUMN_NAME}: Name of column containing y value of point being
-     *         filtered in {@code spatial} mode.  The default value is 'y'.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#FILTER_MODE
-     *                 FILTER_MODE}: String indicating the filter mode, either
-     *                 {@code in_table} or {@code not_in_table}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *                 IN_TABLE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NOT_IN_TABLE
-     *                 NOT_IN_TABLE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#IN_TABLE
-     *                 IN_TABLE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MODE
-     *                 MODE}: Mode - should be either {@code spatial} or {@code
-     *                 normal}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#SPATIAL
-     *                 SPATIAL}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#BUFFER
-     *                 BUFFER}: Buffer size, in meters. Only relevant for
-     *                 {@code spatial} mode.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#BUFFER_METHOD
-     *                 BUFFER_METHOD}: Method used to buffer polygons.  Only
-     *                 relevant for {@code spatial} mode.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#GEOS
-     *                 GEOS}: Use geos 1 edge per corner algorithm
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#NORMAL
-     *                 NORMAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SIZE
-     *                 MAX_PARTITION_SIZE}: Maximum number of points in a
-     *                 partition. Only relevant for {@code spatial} mode.  The
-     *                 default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#MAX_PARTITION_SCORE
-     *                 MAX_PARTITION_SCORE}: Maximum number of points * edges
-     *                 in a partition. Only relevant for {@code spatial} mode.
-     *                 The default value is '8000000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#X_COLUMN_NAME
-     *                 X_COLUMN_NAME}: Name of column containing x value of
-     *                 point being filtered in {@code spatial} mode.  The
-     *                 default value is 'x'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByTableRequest.Options#Y_COLUMN_NAME
-     *                 Y_COLUMN_NAME}: Name of column containing y value of
-     *                 point being filtered in {@code spatial} mode.  The
-     *                 default value is 'y'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByTableRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.viewName;
-
-            case 2:
-                return this.columnName;
-
-            case 3:
-                return this.sourceTableName;
-
-            case 4:
-                return this.sourceTableColumnName;
-
-            case 5:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.viewName = (String)value;
-                break;
-
-            case 2:
-                this.columnName = (String)value;
-                break;
-
-            case 3:
-                this.sourceTableName = (String)value;
-                break;
-
-            case 4:
-                this.sourceTableColumnName = (String)value;
-                break;
-
-            case 5:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        FilterByTableRequest that = (FilterByTableRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && this.columnName.equals( that.columnName )
-                 && this.sourceTableName.equals( that.sourceTableName )
-                 && this.sourceTableColumnName.equals( that.sourceTableColumnName )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sourceTableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sourceTableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sourceTableColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sourceTableColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.viewName.hashCode();
-        hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + this.sourceTableName.hashCode();
-        hashCode = (31 * hashCode) + this.sourceTableColumnName.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

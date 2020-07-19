@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -33,22 +34,403 @@ public class CreateMaterializedViewRequest implements IndexedRecord {
             .record("CreateMaterializedViewRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
+    private String tableName;
+    private Map<String, String> options;
 
+    /**
+     * Constructs a CreateMaterializedViewRequest object with default
+     * parameters.
+     */
+    public CreateMaterializedViewRequest() {
+        tableName = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a CreateMaterializedViewRequest object with the specified
+     * parameters.
+     *
+     * @param tableName Name of the table to be created that is the top-level
+     *                  table of the materialized view.
+     * @param options   Optional parameters.
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
+     *                  COLLECTION_NAME}: Name of a collection which is to
+     *                  contain the newly created view. If the collection
+     *                  provided is non-existent, the collection will be
+     *                  automatically created. If empty, then the newly created
+     *                  table will be a top-level table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
+     *                  TTL}: Sets the <a
+     *                  href="../../../../../concepts/ttl.html"
+     *                  target="_top">TTL</a> of the table specified in {@code
+     *                  tableName}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
+     *                  PERSIST}: If {@code true}, then the materialized view
+     *                  specified in {@code tableName} will be persisted and
+     *                  will not expire unless a {@code ttl} is specified.   If
+     *                  {@code false}, then the materialized view will be an
+     *                  in-memory table and will expire unless a {@code ttl} is
+     *                  specified otherwise.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
+     *                  TRUE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     *                  FALSE}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     *                  FALSE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
+     *                  REFRESH_METHOD}: Method by which the join can be
+     *                  refreshed when the data in underlying member tables have
+     *                  changed.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     *                  MANUAL}: Refresh only occurs when manually requested by
+     *                  calling {@link
+     *                  com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
+     *                  'action' of 'refresh'
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
+     *                  ON_QUERY}: For future use.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
+     *                  ON_CHANGE}: If possible, incrementally refresh (refresh
+     *                  just those records added) whenever an insert, update,
+     *                  delete or refresh of input table is done.  A full
+     *                  refresh is done if an incremental refresh is not
+     *                  possible.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
+     *                  PERIODIC}: Refresh table periodically at rate specified
+     *                  by {@code refresh_period}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     *                  MANUAL}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
+     *                  REFRESH_PERIOD}: When {@code refresh_method} is {@code
+     *                  periodic}, specifies the period in seconds at which
+     *                  refresh occurs
+     *                          <li> {@link
+     *                  com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
+     *                  REFRESH_START_TIME}: When {@code refresh_method} is
+     *                  {@code periodic}, specifies the first time at which a
+     *                  refresh is to be done.  Value is a datetime string with
+     *                  format 'YYYY-MM-DD HH:MM:SS'.
+     *                  </ul>
+     *                  The default value is an empty {@link Map}.
+     */
+    public CreateMaterializedViewRequest(String tableName, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table to be created that is the top-level table of
+     * the materialized view.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table to be created that is the top-level
+     *                  table of the materialized view.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateMaterializedViewRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created table will be a top-level table.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
+     * TTL}: Sets the <a href="../../../../../concepts/ttl.html"
+     * target="_top">TTL</a> of the table specified in {@code
+     * tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
+     * PERSIST}: If {@code true}, then the materialized view specified
+     * in {@code tableName} will be persisted and will not expire
+     * unless a {@code ttl} is specified.   If {@code false}, then the
+     * materialized view will be an in-memory table and will expire
+     * unless a {@code ttl} is specified otherwise.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     * FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
+     * REFRESH_METHOD}: Method by which the join can be refreshed when
+     * the data in underlying member tables have changed.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     * MANUAL}: Refresh only occurs when manually requested by calling
+     * {@link com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
+     * 'action' of 'refresh'
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
+     * ON_QUERY}: For future use.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
+     * ON_CHANGE}: If possible, incrementally refresh (refresh just
+     * those records added) whenever an insert, update, delete or
+     * refresh of input table is done.  A full refresh is done if an
+     * incremental refresh is not possible.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
+     * PERIODIC}: Refresh table periodically at rate specified by
+     * {@code refresh_period}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     * MANUAL}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
+     * REFRESH_PERIOD}: When {@code refresh_method} is {@code
+     * periodic}, specifies the period in seconds at which refresh
+     * occurs
+     *         <li> {@link
+     * com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
+     * REFRESH_START_TIME}: When {@code refresh_method} is {@code
+     * periodic}, specifies the first time at which a refresh is to be
+     * done.  Value is a datetime string with format 'YYYY-MM-DD
+     * HH:MM:SS'.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                table will be a top-level table.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
+     *                TTL}: Sets the <a
+     *                href="../../../../../concepts/ttl.html"
+     *                target="_top">TTL</a> of the table specified in {@code
+     *                tableName}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
+     *                PERSIST}: If {@code true}, then the materialized view
+     *                specified in {@code tableName} will be persisted and
+     *                will not expire unless a {@code ttl} is specified.   If
+     *                {@code false}, then the materialized view will be an
+     *                in-memory table and will expire unless a {@code ttl} is
+     *                specified otherwise.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
+     *                REFRESH_METHOD}: Method by which the join can be
+     *                refreshed when the data in underlying member tables have
+     *                changed.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     *                MANUAL}: Refresh only occurs when manually requested by
+     *                calling {@link
+     *                com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
+     *                'action' of 'refresh'
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
+     *                ON_QUERY}: For future use.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
+     *                ON_CHANGE}: If possible, incrementally refresh (refresh
+     *                just those records added) whenever an insert, update,
+     *                delete or refresh of input table is done.  A full
+     *                refresh is done if an incremental refresh is not
+     *                possible.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
+     *                PERIODIC}: Refresh table periodically at rate specified
+     *                by {@code refresh_period}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
+     *                MANUAL}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
+     *                REFRESH_PERIOD}: When {@code refresh_method} is {@code
+     *                periodic}, specifies the period in seconds at which
+     *                refresh occurs
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
+     *                REFRESH_START_TIME}: When {@code refresh_method} is
+     *                {@code periodic}, specifies the first time at which a
+     *                refresh is to be done.  Value is a datetime string with
+     *                format 'YYYY-MM-DD HH:MM:SS'.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateMaterializedViewRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        CreateMaterializedViewRequest that = (CreateMaterializedViewRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -226,411 +608,8 @@ public class CreateMaterializedViewRequest implements IndexedRecord {
          */
         public static final String REFRESH_START_TIME = "refresh_start_time";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a CreateMaterializedViewRequest object with default
-     * parameters.
-     */
-    public CreateMaterializedViewRequest() {
-        tableName = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a CreateMaterializedViewRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Name of the table to be created that is the top-level
-     *                   table of the materialized view.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 table will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
-     *                 TTL}: Sets the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
-     *                 PERSIST}: If {@code true}, then the materialized view
-     *                 specified in {@code tableName} will be persisted and
-     *                 will not expire unless a {@code ttl} is specified.   If
-     *                 {@code false}, then the materialized view will be an
-     *                 in-memory table and will expire unless a {@code ttl} is
-     *                 specified otherwise.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
-     *                 REFRESH_METHOD}: Method by which the join can be
-     *                 refreshed when the data in underlying member tables have
-     *                 changed.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *                 MANUAL}: Refresh only occurs when manually requested by
-     *                 calling {@link
-     *                 com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
-     *                 'action' of 'refresh'
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
-     *                 ON_QUERY}: For future use.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
-     *                 ON_CHANGE}: If possible, incrementally refresh (refresh
-     *                 just those records added) whenever an insert, update,
-     *                 delete or refresh of input table is done.  A full
-     *                 refresh is done if an incremental refresh is not
-     *                 possible.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
-     *                 PERIODIC}: Refresh table periodically at rate specified
-     *                 by {@code refresh_period}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *                 MANUAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
-     *                 REFRESH_PERIOD}: When {@code refresh_method} is {@code
-     *                 periodic}, specifies the period in seconds at which
-     *                 refresh occurs
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
-     *                 REFRESH_START_TIME}: When {@code refresh_method} is
-     *                 {@code periodic}, specifies the first time at which a
-     *                 refresh is to be done.  Value is a datetime string with
-     *                 format 'YYYY-MM-DD HH:MM:SS'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public CreateMaterializedViewRequest(String tableName, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table to be created that is the top-level table of
-     *         the materialized view.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table to be created that is the top-level
-     *                   table of the materialized view.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateMaterializedViewRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created table will be a top-level table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
-     *         TTL}: Sets the <a href="../../../../../concepts/ttl.html"
-     *         target="_top">TTL</a> of the table specified in {@code
-     *         tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
-     *         PERSIST}: If {@code true}, then the materialized view specified
-     *         in {@code tableName} will be persisted and will not expire
-     *         unless a {@code ttl} is specified.   If {@code false}, then the
-     *         materialized view will be an in-memory table and will expire
-     *         unless a {@code ttl} is specified otherwise.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *         FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
-     *         REFRESH_METHOD}: Method by which the join can be refreshed when
-     *         the data in underlying member tables have changed.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *         MANUAL}: Refresh only occurs when manually requested by calling
-     *         {@link com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
-     *         'action' of 'refresh'
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
-     *         ON_QUERY}: For future use.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
-     *         ON_CHANGE}: If possible, incrementally refresh (refresh just
-     *         those records added) whenever an insert, update, delete or
-     *         refresh of input table is done.  A full refresh is done if an
-     *         incremental refresh is not possible.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
-     *         PERIODIC}: Refresh table periodically at rate specified by
-     *         {@code refresh_period}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *         MANUAL}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
-     *         REFRESH_PERIOD}: When {@code refresh_method} is {@code
-     *         periodic}, specifies the period in seconds at which refresh
-     *         occurs
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
-     *         REFRESH_START_TIME}: When {@code refresh_method} is {@code
-     *         periodic}, specifies the first time at which a refresh is to be
-     *         done.  Value is a datetime string with format 'YYYY-MM-DD
-     *         HH:MM:SS'.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 table will be a top-level table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#TTL
-     *                 TTL}: Sets the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">TTL</a> of the table specified in {@code
-     *                 tableName}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERSIST
-     *                 PERSIST}: If {@code true}, then the materialized view
-     *                 specified in {@code tableName} will be persisted and
-     *                 will not expire unless a {@code ttl} is specified.   If
-     *                 {@code false}, then the materialized view will be an
-     *                 in-memory table and will expire unless a {@code ttl} is
-     *                 specified otherwise.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_METHOD
-     *                 REFRESH_METHOD}: Method by which the join can be
-     *                 refreshed when the data in underlying member tables have
-     *                 changed.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *                 MANUAL}: Refresh only occurs when manually requested by
-     *                 calling {@link
-     *                 com.gpudb.GPUdb#alterTable(AlterTableRequest)} with an
-     *                 'action' of 'refresh'
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_QUERY
-     *                 ON_QUERY}: For future use.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#ON_CHANGE
-     *                 ON_CHANGE}: If possible, incrementally refresh (refresh
-     *                 just those records added) whenever an insert, update,
-     *                 delete or refresh of input table is done.  A full
-     *                 refresh is done if an incremental refresh is not
-     *                 possible.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#PERIODIC
-     *                 PERIODIC}: Refresh table periodically at rate specified
-     *                 by {@code refresh_period}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#MANUAL
-     *                 MANUAL}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_PERIOD
-     *                 REFRESH_PERIOD}: When {@code refresh_method} is {@code
-     *                 periodic}, specifies the period in seconds at which
-     *                 refresh occurs
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateMaterializedViewRequest.Options#REFRESH_START_TIME
-     *                 REFRESH_START_TIME}: When {@code refresh_method} is
-     *                 {@code periodic}, specifies the first time at which a
-     *                 refresh is to be done.  Value is a datetime string with
-     *                 format 'YYYY-MM-DD HH:MM:SS'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateMaterializedViewRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        CreateMaterializedViewRequest that = (CreateMaterializedViewRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

@@ -7,14 +7,15 @@
 package com.gpudb.protocol;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class CreateExternalTableRequest implements IndexedRecord {
@@ -23,26 +24,179 @@ public class CreateExternalTableRequest implements IndexedRecord {
             .record("CreateExternalTableRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("filepaths").type().array().items().stringType().noDefault()
-                .name("createTableOptions").type().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("filepaths").type().array().items().stringType().noDefault()
+            .name("createTableOptions").type().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private List<String> filepaths;
+    private Map<String, String> createTableOptions;
+    private Map<String, String> options;
+    public CreateExternalTableRequest() {
+        tableName = "";
+        filepaths = new ArrayList<>();
+        createTableOptions = new LinkedHashMap<>();
+        options = new LinkedHashMap<>();
+    }
+    public CreateExternalTableRequest(String tableName, List<String> filepaths, Map<String, String> createTableOptions, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.filepaths = (filepaths == null) ? new ArrayList<String>() : filepaths;
+        this.createTableOptions = (createTableOptions == null) ? new LinkedHashMap<String, String>() : createTableOptions;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public CreateExternalTableRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    public List<String> getFilepaths() {
+        return filepaths;
+    }
+
+    public CreateExternalTableRequest setFilepaths(List<String> filepaths) {
+        this.filepaths = (filepaths == null) ? new ArrayList<String>() : filepaths;
+        return this;
+    }
+
+    public Map<String, String> getCreateTableOptions() {
+        return createTableOptions;
+    }
+
+    public CreateExternalTableRequest setCreateTableOptions(Map<String, String> createTableOptions) {
+        this.createTableOptions = (createTableOptions == null) ? new LinkedHashMap<String, String>() : createTableOptions;
+        return this;
+    }
+
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public CreateExternalTableRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.filepaths;
+
+            case 2:
+                return this.createTableOptions;
+
+            case 3:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.filepaths = (List<String>) value;
+                break;
+
+            case 2:
+                this.createTableOptions = (Map<String, String>) value;
+                break;
+
+            case 3:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        CreateExternalTableRequest that = (CreateExternalTableRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.filepaths.equals(that.filepaths)
+                && this.createTableOptions.equals(that.createTableOptions)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("filepaths"));
+        builder.append(": ");
+        builder.append(gd.toString(this.filepaths));
+        builder.append(", ");
+        builder.append(gd.toString("createTableOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.createTableOptions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.filepaths.hashCode();
+        hashCode = (31 * hashCode) + this.createTableOptions.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     public static final class CreateTableOptions {
 
         public static final String TYPE_ID = "type_id";
 
 
-        private CreateTableOptions() {  }
+        private CreateTableOptions() {
+        }
     }
-
 
     public static final class Options {
 
@@ -119,170 +273,8 @@ public class CreateExternalTableRequest implements IndexedRecord {
         public static final String NUM_TASKS_PER_RANK = "num_tasks_per_rank";
 
 
-        private Options() {  }
-    }
-
-
-    private String tableName;
-    private List<String> filepaths;
-    private Map<String, String> createTableOptions;
-    private Map<String, String> options;
-
-
-    public CreateExternalTableRequest() {
-        tableName = "";
-        filepaths = new ArrayList<>();
-        createTableOptions = new LinkedHashMap<>();
-        options = new LinkedHashMap<>();
-    }
-
-    public CreateExternalTableRequest(String tableName, List<String> filepaths, Map<String, String> createTableOptions, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.filepaths = (filepaths == null) ? new ArrayList<String>() : filepaths;
-        this.createTableOptions = (createTableOptions == null) ? new LinkedHashMap<String, String>() : createTableOptions;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public CreateExternalTableRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    public List<String> getFilepaths() {
-        return filepaths;
-    }
-
-    public CreateExternalTableRequest setFilepaths(List<String> filepaths) {
-        this.filepaths = (filepaths == null) ? new ArrayList<String>() : filepaths;
-        return this;
-    }
-
-    public Map<String, String> getCreateTableOptions() {
-        return createTableOptions;
-    }
-
-    public CreateExternalTableRequest setCreateTableOptions(Map<String, String> createTableOptions) {
-        this.createTableOptions = (createTableOptions == null) ? new LinkedHashMap<String, String>() : createTableOptions;
-        return this;
-    }
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public CreateExternalTableRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.filepaths;
-
-            case 2:
-                return this.createTableOptions;
-
-            case 3:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.filepaths = (List<String>)value;
-                break;
-
-            case 2:
-                this.createTableOptions = (Map<String, String>)value;
-                break;
-
-            case 3:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        CreateExternalTableRequest that = (CreateExternalTableRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.filepaths.equals( that.filepaths )
-                 && this.createTableOptions.equals( that.createTableOptions )
-                 && this.options.equals( that.options ) );
-    }
-
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "filepaths" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.filepaths ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "createTableOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.createTableOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.filepaths.hashCode();
-        hashCode = (31 * hashCode) + this.createTableOptions.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 

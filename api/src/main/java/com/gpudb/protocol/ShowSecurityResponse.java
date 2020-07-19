@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,25 +24,282 @@ public class ShowSecurityResponse implements IndexedRecord {
             .record("ShowSecurityResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("types").type().map().values().stringType().noDefault()
-                .name("roles").type().map().values().array().items().stringType().noDefault()
-                .name("permissions").type().map().values().array().items().map().values().stringType().noDefault()
-                .name("resourceGroups").type().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("types").type().map().values().stringType().noDefault()
+            .name("roles").type().map().values().array().items().stringType().noDefault()
+            .name("permissions").type().map().values().array().items().map().values().stringType().noDefault()
+            .name("resourceGroups").type().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private Map<String, String> types;
+    private Map<String, List<String>> roles;
+    private Map<String, List<Map<String, String>>> permissions;
+    private Map<String, String> resourceGroups;
+    private Map<String, String> info;
+    /**
+     * Constructs a ShowSecurityResponse object with default parameters.
+     */
+    public ShowSecurityResponse() {
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Map of user/role name to the type of that user/role.
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ShowSecurityResponse.Types#INTERNAL_USER
+     * INTERNAL_USER}: A user whose credentials are managed by the
+     * database system.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowSecurityResponse.Types#EXTERNAL_USER
+     * EXTERNAL_USER}: A user whose credentials are managed by an
+     * external LDAP.
+     *         <li> {@link
+     * com.gpudb.protocol.ShowSecurityResponse.Types#ROLE ROLE}: A
+     * role.
+     * </ul>
+     */
+    public Map<String, String> getTypes() {
+        return types;
+    }
+
+    /**
+     * @param types Map of user/role name to the type of that user/role.
+     *              Valid values are:
+     *              <ul>
+     *                      <li> {@link
+     *              com.gpudb.protocol.ShowSecurityResponse.Types#INTERNAL_USER
+     *              INTERNAL_USER}: A user whose credentials are managed by
+     *              the database system.
+     *                      <li> {@link
+     *              com.gpudb.protocol.ShowSecurityResponse.Types#EXTERNAL_USER
+     *              EXTERNAL_USER}: A user whose credentials are managed by an
+     *              external LDAP.
+     *                      <li> {@link
+     *              com.gpudb.protocol.ShowSecurityResponse.Types#ROLE ROLE}:
+     *              A role.
+     *              </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowSecurityResponse setTypes(Map<String, String> types) {
+        this.types = (types == null) ? new LinkedHashMap<String, String>() : types;
+        return this;
+    }
+
+    /**
+     * @return Map of user/role name to a list of names of roles of which that
+     * user/role is a member.
+     */
+    public Map<String, List<String>> getRoles() {
+        return roles;
+    }
+
+    /**
+     * @param roles Map of user/role name to a list of names of roles of which
+     *              that user/role is a member.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowSecurityResponse setRoles(Map<String, List<String>> roles) {
+        this.roles = (roles == null) ? new LinkedHashMap<String, List<String>>() : roles;
+        return this;
+    }
+
+    /**
+     * @return Map of user/role name to a list of permissions directly granted
+     * to that user/role.
+     */
+    public Map<String, List<Map<String, String>>> getPermissions() {
+        return permissions;
+    }
+
+    /**
+     * @param permissions Map of user/role name to a list of permissions
+     *                    directly granted to that user/role.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowSecurityResponse setPermissions(Map<String, List<Map<String, String>>> permissions) {
+        this.permissions = (permissions == null) ? new LinkedHashMap<String, List<Map<String, String>>>() : permissions;
+        return this;
+    }
+
+    /**
+     * @return Map of user name to resource group name.
+     */
+    public Map<String, String> getResourceGroups() {
+        return resourceGroups;
+    }
+
+    /**
+     * @param resourceGroups Map of user name to resource group name.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowSecurityResponse setResourceGroups(Map<String, String> resourceGroups) {
+        this.resourceGroups = (resourceGroups == null) ? new LinkedHashMap<String, String>() : resourceGroups;
+        return this;
+    }
+
+    /**
+     * @return Additional information.
+     */
+    public Map<String, String> getInfo() {
+        return info;
+    }
+
+    /**
+     * @param info Additional information.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ShowSecurityResponse setInfo(Map<String, String> info) {
+        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.types;
+
+            case 1:
+                return this.roles;
+
+            case 2:
+                return this.permissions;
+
+            case 3:
+                return this.resourceGroups;
+
+            case 4:
+                return this.info;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.types = (Map<String, String>) value;
+                break;
+
+            case 1:
+                this.roles = (Map<String, List<String>>) value;
+                break;
+
+            case 2:
+                this.permissions = (Map<String, List<Map<String, String>>>) value;
+                break;
+
+            case 3:
+                this.resourceGroups = (Map<String, String>) value;
+                break;
+
+            case 4:
+                this.info = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        ShowSecurityResponse that = (ShowSecurityResponse) obj;
+
+        return (this.types.equals(that.types)
+                && this.roles.equals(that.roles)
+                && this.permissions.equals(that.permissions)
+                && this.resourceGroups.equals(that.resourceGroups)
+                && this.info.equals(that.info));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("types"));
+        builder.append(": ");
+        builder.append(gd.toString(this.types));
+        builder.append(", ");
+        builder.append(gd.toString("roles"));
+        builder.append(": ");
+        builder.append(gd.toString(this.roles));
+        builder.append(", ");
+        builder.append(gd.toString("permissions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.permissions));
+        builder.append(", ");
+        builder.append(gd.toString("resourceGroups"));
+        builder.append(": ");
+        builder.append(gd.toString(this.resourceGroups));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.types.hashCode();
+        hashCode = (31 * hashCode) + this.roles.hashCode();
+        hashCode = (31 * hashCode) + this.permissions.hashCode();
+        hashCode = (31 * hashCode) + this.resourceGroups.hashCode();
+        hashCode = (31 * hashCode) + this.info.hashCode();
+        return hashCode;
+    }
 
     /**
      * Map of user/role name to the type of that user/role.
@@ -77,301 +335,8 @@ public class ShowSecurityResponse implements IndexedRecord {
          */
         public static final String ROLE = "role";
 
-        private Types() {  }
-    }
-
-    private Map<String, String> types;
-    private Map<String, List<String>> roles;
-    private Map<String, List<Map<String, String>>> permissions;
-    private Map<String, String> resourceGroups;
-    private Map<String, String> info;
-
-
-    /**
-     * Constructs a ShowSecurityResponse object with default parameters.
-     */
-    public ShowSecurityResponse() {
-    }
-
-    /**
-     * 
-     * @return Map of user/role name to the type of that user/role.
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowSecurityResponse.Types#INTERNAL_USER
-     *         INTERNAL_USER}: A user whose credentials are managed by the
-     *         database system.
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowSecurityResponse.Types#EXTERNAL_USER
-     *         EXTERNAL_USER}: A user whose credentials are managed by an
-     *         external LDAP.
-     *                 <li> {@link
-     *         com.gpudb.protocol.ShowSecurityResponse.Types#ROLE ROLE}: A
-     *         role.
-     *         </ul>
-     * 
-     */
-    public Map<String, String> getTypes() {
-        return types;
-    }
-
-    /**
-     * 
-     * @param types  Map of user/role name to the type of that user/role.
-     *               Valid values are:
-     *               <ul>
-     *                       <li> {@link
-     *               com.gpudb.protocol.ShowSecurityResponse.Types#INTERNAL_USER
-     *               INTERNAL_USER}: A user whose credentials are managed by
-     *               the database system.
-     *                       <li> {@link
-     *               com.gpudb.protocol.ShowSecurityResponse.Types#EXTERNAL_USER
-     *               EXTERNAL_USER}: A user whose credentials are managed by an
-     *               external LDAP.
-     *                       <li> {@link
-     *               com.gpudb.protocol.ShowSecurityResponse.Types#ROLE ROLE}:
-     *               A role.
-     *               </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowSecurityResponse setTypes(Map<String, String> types) {
-        this.types = (types == null) ? new LinkedHashMap<String, String>() : types;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Map of user/role name to a list of names of roles of which that
-     *         user/role is a member.
-     * 
-     */
-    public Map<String, List<String>> getRoles() {
-        return roles;
-    }
-
-    /**
-     * 
-     * @param roles  Map of user/role name to a list of names of roles of which
-     *               that user/role is a member.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowSecurityResponse setRoles(Map<String, List<String>> roles) {
-        this.roles = (roles == null) ? new LinkedHashMap<String, List<String>>() : roles;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Map of user/role name to a list of permissions directly granted
-     *         to that user/role.
-     * 
-     */
-    public Map<String, List<Map<String, String>>> getPermissions() {
-        return permissions;
-    }
-
-    /**
-     * 
-     * @param permissions  Map of user/role name to a list of permissions
-     *                     directly granted to that user/role.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowSecurityResponse setPermissions(Map<String, List<Map<String, String>>> permissions) {
-        this.permissions = (permissions == null) ? new LinkedHashMap<String, List<Map<String, String>>>() : permissions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Map of user name to resource group name.
-     * 
-     */
-    public Map<String, String> getResourceGroups() {
-        return resourceGroups;
-    }
-
-    /**
-     * 
-     * @param resourceGroups  Map of user name to resource group name.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowSecurityResponse setResourceGroups(Map<String, String> resourceGroups) {
-        this.resourceGroups = (resourceGroups == null) ? new LinkedHashMap<String, String>() : resourceGroups;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional information.
-     * 
-     */
-    public Map<String, String> getInfo() {
-        return info;
-    }
-
-    /**
-     * 
-     * @param info  Additional information.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ShowSecurityResponse setInfo(Map<String, String> info) {
-        this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.types;
-
-            case 1:
-                return this.roles;
-
-            case 2:
-                return this.permissions;
-
-            case 3:
-                return this.resourceGroups;
-
-            case 4:
-                return this.info;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Types() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.types = (Map<String, String>)value;
-                break;
-
-            case 1:
-                this.roles = (Map<String, List<String>>)value;
-                break;
-
-            case 2:
-                this.permissions = (Map<String, List<Map<String, String>>>)value;
-                break;
-
-            case 3:
-                this.resourceGroups = (Map<String, String>)value;
-                break;
-
-            case 4:
-                this.info = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        ShowSecurityResponse that = (ShowSecurityResponse)obj;
-
-        return ( this.types.equals( that.types )
-                 && this.roles.equals( that.roles )
-                 && this.permissions.equals( that.permissions )
-                 && this.resourceGroups.equals( that.resourceGroups )
-                 && this.info.equals( that.info ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "types" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.types ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "roles" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.roles ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "permissions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.permissions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "resourceGroups" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.resourceGroups ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.types.hashCode();
-        hashCode = (31 * hashCode) + this.roles.hashCode();
-        hashCode = (31 * hashCode) + this.permissions.hashCode();
-        hashCode = (31 * hashCode) + this.resourceGroups.hashCode();
-        hashCode = (31 * hashCode) + this.info.hashCode();
-        return hashCode;
     }
 
 }

@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -61,24 +62,460 @@ public class AggregateStatisticsRequest implements IndexedRecord {
             .record("AggregateStatisticsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("stats").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("stats").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String columnName;
+    private String stats;
+    private Map<String, String> options;
+    /**
+     * Constructs an AggregateStatisticsRequest object with default parameters.
+     */
+    public AggregateStatisticsRequest() {
+        tableName = "";
+        columnName = "";
+        stats = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs an AggregateStatisticsRequest object with the specified
+     * parameters.
+     *
+     * @param tableName  Name of the table on which the statistics operation
+     *                   will be performed.
+     * @param columnName Name of the primary column for which the statistics
+     *                   are to be calculated.
+     * @param stats      Comma separated list of the statistics to calculate, e.g.
+     *                   "sum,mean".
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
+     *                   COUNT}: Number of objects (independent of the given
+     *                   column(s)).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN
+     *                   MEAN}: Arithmetic mean (average), equivalent to sum/count.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV
+     *                   STDV}: Sample standard deviation (denominator is count-1).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
+     *                   VARIANCE}: Unbiased sample variance (denominator is
+     *                   count-1).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW
+     *                   SKEW}: Skewness (third standardized moment).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
+     *                   KURTOSIS}: Kurtosis (fourth standardized moment).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM
+     *                   SUM}: Sum of all values in the column(s).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN
+     *                   MIN}: Minimum value of the column(s).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX
+     *                   MAX}: Maximum value of the column(s).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
+     *                   WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the
+     *                   option {@code weight_column_name} as the weighting
+     *                   column).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
+     *                   CARDINALITY}: Number of unique values in the column(s).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
+     *                   ESTIMATED_CARDINALITY}: Estimate (via hyperloglog
+     *                   technique) of the number of unique values in the
+     *                   column(s).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
+     *                   PERCENTILE}: Estimate (via t-digest) of the given
+     *                   percentile of the column(s) (percentile(50.0) will be an
+     *                   approximation of the median). Add a second,
+     *                   comma-separated value to calculate percentile resolution,
+     *                   e.g., 'percentile(75,150)'
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
+     *                   PERCENTILE_RANK}: Estimate (via t-digest) of the
+     *                   percentile rank of the given value in the column(s) (if
+     *                   the given value is the median of the column(s),
+     *                   percentile_rank(<median>) will return approximately 50.0).
+     *                   </ul>
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
+     *                   ADDITIONAL_COLUMN_NAMES}: A list of comma separated
+     *                   column names over which statistics can be accumulated
+     *                   along with the primary column.  All columns listed and
+     *                   {@code columnName} must be of the same type.  Must not
+     *                   include the column specified in {@code columnName} and
+     *                   no column can be listed twice.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
+     *                   WEIGHT_COLUMN_NAME}: Name of column used as weighting
+     *                   attribute for the weighted average statistic.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
+     */
+    public AggregateStatisticsRequest(String tableName, String columnName, String stats, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.columnName = (columnName == null) ? "" : columnName;
+        this.stats = (stats == null) ? "" : stats;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table on which the statistics operation will be
+     * performed.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table on which the statistics operation
+     *                  will be performed.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AggregateStatisticsRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return Name of the primary column for which the statistics are to be
+     * calculated.
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * @param columnName Name of the primary column for which the statistics
+     *                   are to be calculated.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AggregateStatisticsRequest setColumnName(String columnName) {
+        this.columnName = (columnName == null) ? "" : columnName;
+        return this;
+    }
+
+    /**
+     * @return Comma separated list of the statistics to calculate, e.g.
+     * "sum,mean".
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
+     * COUNT}: Number of objects (independent of the given column(s)).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN MEAN}:
+     * Arithmetic mean (average), equivalent to sum/count.
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV STDV}:
+     * Sample standard deviation (denominator is count-1).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
+     * VARIANCE}: Unbiased sample variance (denominator is count-1).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW SKEW}:
+     * Skewness (third standardized moment).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
+     * KURTOSIS}: Kurtosis (fourth standardized moment).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM SUM}:
+     * Sum of all values in the column(s).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN MIN}:
+     * Minimum value of the column(s).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX MAX}:
+     * Maximum value of the column(s).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
+     * WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the option
+     * {@code weight_column_name} as the weighting column).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
+     * CARDINALITY}: Number of unique values in the column(s).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
+     * ESTIMATED_CARDINALITY}: Estimate (via hyperloglog technique) of
+     * the number of unique values in the column(s).
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
+     * PERCENTILE}: Estimate (via t-digest) of the given percentile of
+     * the column(s) (percentile(50.0) will be an approximation of the
+     * median). Add a second, comma-separated value to calculate
+     * percentile resolution, e.g., 'percentile(75,150)'
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
+     * PERCENTILE_RANK}: Estimate (via t-digest) of the percentile rank
+     * of the given value in the column(s) (if the given value is the
+     * median of the column(s), percentile_rank(<median>) will return
+     * approximately 50.0).
+     * </ul>
+     */
+    public String getStats() {
+        return stats;
+    }
+
+    /**
+     * @param stats Comma separated list of the statistics to calculate, e.g.
+     *              "sum,mean".
+     *              Supported values:
+     *              <ul>
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
+     *              COUNT}: Number of objects (independent of the given
+     *              column(s)).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN
+     *              MEAN}: Arithmetic mean (average), equivalent to sum/count.
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV
+     *              STDV}: Sample standard deviation (denominator is count-1).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
+     *              VARIANCE}: Unbiased sample variance (denominator is
+     *              count-1).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW
+     *              SKEW}: Skewness (third standardized moment).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
+     *              KURTOSIS}: Kurtosis (fourth standardized moment).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM
+     *              SUM}: Sum of all values in the column(s).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN
+     *              MIN}: Minimum value of the column(s).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX
+     *              MAX}: Maximum value of the column(s).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
+     *              WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the
+     *              option {@code weight_column_name} as the weighting
+     *              column).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
+     *              CARDINALITY}: Number of unique values in the column(s).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
+     *              ESTIMATED_CARDINALITY}: Estimate (via hyperloglog
+     *              technique) of the number of unique values in the
+     *              column(s).
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
+     *              PERCENTILE}: Estimate (via t-digest) of the given
+     *              percentile of the column(s) (percentile(50.0) will be an
+     *              approximation of the median). Add a second,
+     *              comma-separated value to calculate percentile resolution,
+     *              e.g., 'percentile(75,150)'
+     *                      <li> {@link
+     *              com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
+     *              PERCENTILE_RANK}: Estimate (via t-digest) of the
+     *              percentile rank of the given value in the column(s) (if
+     *              the given value is the median of the column(s),
+     *              percentile_rank(<median>) will return approximately 50.0).
+     *              </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AggregateStatisticsRequest setStats(String stats) {
+        this.stats = (stats == null) ? "" : stats;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
+     * ADDITIONAL_COLUMN_NAMES}: A list of comma separated column names
+     * over which statistics can be accumulated along with the primary
+     * column.  All columns listed and {@code columnName} must be of
+     * the same type.  Must not include the column specified in {@code
+     * columnName} and no column can be listed twice.
+     *         <li> {@link
+     * com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
+     * WEIGHT_COLUMN_NAME}: Name of column used as weighting attribute
+     * for the weighted average statistic.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
+     *                ADDITIONAL_COLUMN_NAMES}: A list of comma separated
+     *                column names over which statistics can be accumulated
+     *                along with the primary column.  All columns listed and
+     *                {@code columnName} must be of the same type.  Must not
+     *                include the column specified in {@code columnName} and
+     *                no column can be listed twice.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
+     *                WEIGHT_COLUMN_NAME}: Name of column used as weighting
+     *                attribute for the weighted average statistic.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AggregateStatisticsRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.columnName;
+
+            case 2:
+                return this.stats;
+
+            case 3:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.columnName = (String) value;
+                break;
+
+            case 2:
+                this.stats = (String) value;
+                break;
+
+            case 3:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        AggregateStatisticsRequest that = (AggregateStatisticsRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.columnName.equals(that.columnName)
+                && this.stats.equals(that.stats)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("stats"));
+        builder.append(": ");
+        builder.append(gd.toString(this.stats));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.columnName.hashCode();
+        hashCode = (31 * hashCode) + this.stats.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Comma separated list of the statistics to calculate, e.g. "sum,mean".
@@ -215,9 +652,9 @@ public class AggregateStatisticsRequest implements IndexedRecord {
          */
         public static final String PERCENTILE_RANK = "percentile_rank";
 
-        private Stats() {  }
+        private Stats() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -254,477 +691,8 @@ public class AggregateStatisticsRequest implements IndexedRecord {
          */
         public static final String WEIGHT_COLUMN_NAME = "weight_column_name";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String columnName;
-    private String stats;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs an AggregateStatisticsRequest object with default parameters.
-     */
-    public AggregateStatisticsRequest() {
-        tableName = "";
-        columnName = "";
-        stats = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs an AggregateStatisticsRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Name of the table on which the statistics operation
-     *                   will be performed.
-     * @param columnName  Name of the primary column for which the statistics
-     *                    are to be calculated.
-     * @param stats  Comma separated list of the statistics to calculate, e.g.
-     *               "sum,mean".
-     *               Supported values:
-     *               <ul>
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
-     *               COUNT}: Number of objects (independent of the given
-     *               column(s)).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN
-     *               MEAN}: Arithmetic mean (average), equivalent to sum/count.
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV
-     *               STDV}: Sample standard deviation (denominator is count-1).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
-     *               VARIANCE}: Unbiased sample variance (denominator is
-     *               count-1).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW
-     *               SKEW}: Skewness (third standardized moment).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
-     *               KURTOSIS}: Kurtosis (fourth standardized moment).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM
-     *               SUM}: Sum of all values in the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN
-     *               MIN}: Minimum value of the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX
-     *               MAX}: Maximum value of the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
-     *               WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the
-     *               option {@code weight_column_name} as the weighting
-     *               column).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
-     *               CARDINALITY}: Number of unique values in the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
-     *               ESTIMATED_CARDINALITY}: Estimate (via hyperloglog
-     *               technique) of the number of unique values in the
-     *               column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
-     *               PERCENTILE}: Estimate (via t-digest) of the given
-     *               percentile of the column(s) (percentile(50.0) will be an
-     *               approximation of the median). Add a second,
-     *               comma-separated value to calculate percentile resolution,
-     *               e.g., 'percentile(75,150)'
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
-     *               PERCENTILE_RANK}: Estimate (via t-digest) of the
-     *               percentile rank of the given value in the column(s) (if
-     *               the given value is the median of the column(s),
-     *               percentile_rank(<median>) will return approximately 50.0).
-     *               </ul>
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
-     *                 ADDITIONAL_COLUMN_NAMES}: A list of comma separated
-     *                 column names over which statistics can be accumulated
-     *                 along with the primary column.  All columns listed and
-     *                 {@code columnName} must be of the same type.  Must not
-     *                 include the column specified in {@code columnName} and
-     *                 no column can be listed twice.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
-     *                 WEIGHT_COLUMN_NAME}: Name of column used as weighting
-     *                 attribute for the weighted average statistic.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public AggregateStatisticsRequest(String tableName, String columnName, String stats, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.columnName = (columnName == null) ? "" : columnName;
-        this.stats = (stats == null) ? "" : stats;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table on which the statistics operation will be
-     *         performed.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table on which the statistics operation
-     *                   will be performed.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AggregateStatisticsRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the primary column for which the statistics are to be
-     *         calculated.
-     * 
-     */
-    public String getColumnName() {
-        return columnName;
-    }
-
-    /**
-     * 
-     * @param columnName  Name of the primary column for which the statistics
-     *                    are to be calculated.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AggregateStatisticsRequest setColumnName(String columnName) {
-        this.columnName = (columnName == null) ? "" : columnName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Comma separated list of the statistics to calculate, e.g.
-     *         "sum,mean".
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
-     *         COUNT}: Number of objects (independent of the given column(s)).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN MEAN}:
-     *         Arithmetic mean (average), equivalent to sum/count.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV STDV}:
-     *         Sample standard deviation (denominator is count-1).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
-     *         VARIANCE}: Unbiased sample variance (denominator is count-1).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW SKEW}:
-     *         Skewness (third standardized moment).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
-     *         KURTOSIS}: Kurtosis (fourth standardized moment).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM SUM}:
-     *         Sum of all values in the column(s).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN MIN}:
-     *         Minimum value of the column(s).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX MAX}:
-     *         Maximum value of the column(s).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
-     *         WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the option
-     *         {@code weight_column_name} as the weighting column).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
-     *         CARDINALITY}: Number of unique values in the column(s).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
-     *         ESTIMATED_CARDINALITY}: Estimate (via hyperloglog technique) of
-     *         the number of unique values in the column(s).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
-     *         PERCENTILE}: Estimate (via t-digest) of the given percentile of
-     *         the column(s) (percentile(50.0) will be an approximation of the
-     *         median). Add a second, comma-separated value to calculate
-     *         percentile resolution, e.g., 'percentile(75,150)'
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
-     *         PERCENTILE_RANK}: Estimate (via t-digest) of the percentile rank
-     *         of the given value in the column(s) (if the given value is the
-     *         median of the column(s), percentile_rank(<median>) will return
-     *         approximately 50.0).
-     *         </ul>
-     * 
-     */
-    public String getStats() {
-        return stats;
-    }
-
-    /**
-     * 
-     * @param stats  Comma separated list of the statistics to calculate, e.g.
-     *               "sum,mean".
-     *               Supported values:
-     *               <ul>
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#COUNT
-     *               COUNT}: Number of objects (independent of the given
-     *               column(s)).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MEAN
-     *               MEAN}: Arithmetic mean (average), equivalent to sum/count.
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#STDV
-     *               STDV}: Sample standard deviation (denominator is count-1).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#VARIANCE
-     *               VARIANCE}: Unbiased sample variance (denominator is
-     *               count-1).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#SKEW
-     *               SKEW}: Skewness (third standardized moment).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#KURTOSIS
-     *               KURTOSIS}: Kurtosis (fourth standardized moment).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#SUM
-     *               SUM}: Sum of all values in the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MIN
-     *               MIN}: Minimum value of the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#MAX
-     *               MAX}: Maximum value of the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#WEIGHTED_AVERAGE
-     *               WEIGHTED_AVERAGE}: Weighted arithmetic mean (using the
-     *               option {@code weight_column_name} as the weighting
-     *               column).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#CARDINALITY
-     *               CARDINALITY}: Number of unique values in the column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#ESTIMATED_CARDINALITY
-     *               ESTIMATED_CARDINALITY}: Estimate (via hyperloglog
-     *               technique) of the number of unique values in the
-     *               column(s).
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE
-     *               PERCENTILE}: Estimate (via t-digest) of the given
-     *               percentile of the column(s) (percentile(50.0) will be an
-     *               approximation of the median). Add a second,
-     *               comma-separated value to calculate percentile resolution,
-     *               e.g., 'percentile(75,150)'
-     *                       <li> {@link
-     *               com.gpudb.protocol.AggregateStatisticsRequest.Stats#PERCENTILE_RANK
-     *               PERCENTILE_RANK}: Estimate (via t-digest) of the
-     *               percentile rank of the given value in the column(s) (if
-     *               the given value is the median of the column(s),
-     *               percentile_rank(<median>) will return approximately 50.0).
-     *               </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AggregateStatisticsRequest setStats(String stats) {
-        this.stats = (stats == null) ? "" : stats;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
-     *         ADDITIONAL_COLUMN_NAMES}: A list of comma separated column names
-     *         over which statistics can be accumulated along with the primary
-     *         column.  All columns listed and {@code columnName} must be of
-     *         the same type.  Must not include the column specified in {@code
-     *         columnName} and no column can be listed twice.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
-     *         WEIGHT_COLUMN_NAME}: Name of column used as weighting attribute
-     *         for the weighted average statistic.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AggregateStatisticsRequest.Options#ADDITIONAL_COLUMN_NAMES
-     *                 ADDITIONAL_COLUMN_NAMES}: A list of comma separated
-     *                 column names over which statistics can be accumulated
-     *                 along with the primary column.  All columns listed and
-     *                 {@code columnName} must be of the same type.  Must not
-     *                 include the column specified in {@code columnName} and
-     *                 no column can be listed twice.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AggregateStatisticsRequest.Options#WEIGHT_COLUMN_NAME
-     *                 WEIGHT_COLUMN_NAME}: Name of column used as weighting
-     *                 attribute for the weighted average statistic.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AggregateStatisticsRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.columnName;
-
-            case 2:
-                return this.stats;
-
-            case 3:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.columnName = (String)value;
-                break;
-
-            case 2:
-                this.stats = (String)value;
-                break;
-
-            case 3:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        AggregateStatisticsRequest that = (AggregateStatisticsRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.columnName.equals( that.columnName )
-                 && this.stats.equals( that.stats )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "stats" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.stats ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + this.stats.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

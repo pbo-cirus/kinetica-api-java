@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,26 +27,11 @@ public class ShowTableMetadataRequest implements IndexedRecord {
             .record("ShowTableMetadataRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> tableNames;
     private Map<String, String> options;
-
-
     /**
      * Constructs a ShowTableMetadataRequest object with default parameters.
      */
@@ -54,15 +40,15 @@ public class ShowTableMetadataRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a ShowTableMetadataRequest object with the specified
      * parameters.
-     * 
-     * @param tableNames  Tables whose metadata will be fetched. All provided
-     *                    tables must exist, or an error is returned.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param tableNames Tables whose metadata will be fetched. All provided
+     *                   tables must exist, or an error is returned.
+     * @param options    Optional parameters.  The default value is an empty
+     *                   {@link Map}.
      */
     public ShowTableMetadataRequest(List<String> tableNames, Map<String, String> options) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -70,22 +56,27 @@ public class ShowTableMetadataRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Tables whose metadata will be fetched. All provided tables must
-     *         exist, or an error is returned.
-     * 
+     * exist, or an error is returned.
      */
     public List<String> getTableNames() {
         return tableNames;
     }
 
     /**
-     * 
-     * @param tableNames  Tables whose metadata will be fetched. All provided
-     *                    tables must exist, or an error is returned.
-     * 
+     * @param tableNames Tables whose metadata will be fetched. All provided
+     *                   tables must exist, or an error is returned.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTableMetadataRequest setTableNames(List<String> tableNames) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -93,21 +84,16 @@ public class ShowTableMetadataRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTableMetadataRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -117,9 +103,8 @@ public class ShowTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -129,13 +114,10 @@ public class ShowTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -154,23 +136,21 @@ public class ShowTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -180,33 +160,33 @@ public class ShowTableMetadataRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowTableMetadataRequest that = (ShowTableMetadataRequest)obj;
+        ShowTableMetadataRequest that = (ShowTableMetadataRequest) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.options.equals( that.options ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

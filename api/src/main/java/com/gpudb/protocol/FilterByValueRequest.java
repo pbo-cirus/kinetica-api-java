@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -33,54 +34,14 @@ public class FilterByValueRequest implements IndexedRecord {
             .record("FilterByValueRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("isString").type().booleanType().noDefault()
-                .name("value").type().doubleType().noDefault()
-                .name("valueStr").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("isString").type().booleanType().noDefault()
+            .name("value").type().doubleType().noDefault()
+            .name("valueStr").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Optional parameters.
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
-     * COLLECTION_NAME}: Name of a collection which is to contain the newly
-     * created view. If the collection provided is non-existent, the collection
-     * will be automatically created. If empty, then the newly created view
-     * will be top-level.
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code options}.
-     */
-    public static final class Options {
-
-        /**
-         * Name of a collection which is to contain the newly created view. If
-         * the collection provided is non-existent, the collection will be
-         * automatically created. If empty, then the newly created view will be
-         * top-level.
-         */
-        public static final String COLLECTION_NAME = "collection_name";
-
-        private Options() {  }
-    }
-
     private String tableName;
     private String viewName;
     private boolean isString;
@@ -88,8 +49,6 @@ public class FilterByValueRequest implements IndexedRecord {
     private String valueStr;
     private String columnName;
     private Map<String, String> options;
-
-
     /**
      * Constructs a FilterByValueRequest object with default parameters.
      */
@@ -100,36 +59,34 @@ public class FilterByValueRequest implements IndexedRecord {
         columnName = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a FilterByValueRequest object with the specified parameters.
-     * 
+     *
      * @param tableName  Name of an existing table on which to perform the
      *                   calculation.
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * @param isString  Indicates whether the value being searched for is
-     *                  string or numeric.
-     * @param value  The value to search for.  The default value is 0.
-     * @param valueStr  The string value to search for.  The default value is
-     *                  ''.
-     * @param columnName  Name of a column on which the filter by value would
-     *                    be applied.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param viewName   If provided, then this will be the name of the view
+     *                   containing the results. Has the same naming
+     *                   restrictions as <a
+     *                   href="../../../../../concepts/tables.html"
+     *                   target="_top">tables</a>.  The default value is ''.
+     * @param isString   Indicates whether the value being searched for is
+     *                   string or numeric.
+     * @param value      The value to search for.  The default value is 0.
+     * @param valueStr   The string value to search for.  The default value is
+     *                   ''.
+     * @param columnName Name of a column on which the filter by value would
+     *                   be applied.
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
+     *                   COLLECTION_NAME}: Name of a collection which is to
+     *                   contain the newly created view. If the collection
+     *                   provided is non-existent, the collection will be
+     *                   automatically created. If empty, then the newly created
+     *                   view will be top-level.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
      */
     public FilterByValueRequest(String tableName, String viewName, boolean isString, double value, String valueStr, String columnName, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -142,21 +99,26 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of an existing table on which to perform the calculation.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Name of an existing table on which to perform the
-     *                   calculation.
-     * 
+     * @param tableName Name of an existing table on which to perform the
+     *                  calculation.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -164,27 +126,22 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If provided, then this will be the name of the view containing
-     *         the results. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>.  The default value is ''.
-     * 
+     * the results. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>.  The default value is ''.
      */
     public String getViewName() {
         return viewName;
     }
 
     /**
-     * 
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * 
+     * @param viewName If provided, then this will be the name of the view
+     *                 containing the results. Has the same naming
+     *                 restrictions as <a
+     *                 href="../../../../../concepts/tables.html"
+     *                 target="_top">tables</a>.  The default value is ''.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setViewName(String viewName) {
         this.viewName = (viewName == null) ? "" : viewName;
@@ -192,22 +149,17 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Indicates whether the value being searched for is string or
-     *         numeric.
-     * 
+     * numeric.
      */
     public boolean getIsString() {
         return isString;
     }
 
     /**
-     * 
-     * @param isString  Indicates whether the value being searched for is
-     *                  string or numeric.
-     * 
+     * @param isString Indicates whether the value being searched for is
+     *                 string or numeric.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setIsString(boolean isString) {
         this.isString = isString;
@@ -215,20 +167,15 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The value to search for.  The default value is 0.
-     * 
      */
     public double getValue() {
         return value;
     }
 
     /**
-     * 
-     * @param value  The value to search for.  The default value is 0.
-     * 
+     * @param value The value to search for.  The default value is 0.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setValue(double value) {
         this.value = value;
@@ -236,21 +183,16 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The string value to search for.  The default value is ''.
-     * 
      */
     public String getValueStr() {
         return valueStr;
     }
 
     /**
-     * 
-     * @param valueStr  The string value to search for.  The default value is
-     *                  ''.
-     * 
+     * @param valueStr The string value to search for.  The default value is
+     *                 ''.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setValueStr(String valueStr) {
         this.valueStr = (valueStr == null) ? "" : valueStr;
@@ -258,21 +200,16 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of a column on which the filter by value would be applied.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Name of a column on which the filter by value would
-     *                    be applied.
-     * 
+     * @param columnName Name of a column on which the filter by value would
+     *                   be applied.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -280,39 +217,34 @@ public class FilterByValueRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByValueRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -322,9 +254,8 @@ public class FilterByValueRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -334,13 +265,10 @@ public class FilterByValueRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -374,43 +302,41 @@ public class FilterByValueRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.viewName = (String)value;
+                this.viewName = (String) value;
                 break;
 
             case 2:
-                this.isString = (Boolean)value;
+                this.isString = (Boolean) value;
                 break;
 
             case 3:
-                this.value = (Double)value;
+                this.value = (Double) value;
                 break;
 
             case 4:
-                this.valueStr = (String)value;
+                this.valueStr = (String) value;
                 break;
 
             case 5:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 6:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -420,58 +346,58 @@ public class FilterByValueRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByValueRequest that = (FilterByValueRequest)obj;
+        FilterByValueRequest that = (FilterByValueRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && ( this.isString == that.isString )
-                 && ( (Double)this.value ).equals( (Double)that.value )
-                 && this.valueStr.equals( that.valueStr )
-                 && this.columnName.equals( that.columnName )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && (this.isString == that.isString)
+                && ((Double) this.value).equals((Double) that.value)
+                && this.valueStr.equals(that.valueStr)
+                && this.columnName.equals(that.columnName)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "isString" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.isString ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "value" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.value ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "valueStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.valueStr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("isString"));
+        builder.append(": ");
+        builder.append(gd.toString(this.isString));
+        builder.append(", ");
+        builder.append(gd.toString("value"));
+        builder.append(": ");
+        builder.append(gd.toString(this.value));
+        builder.append(", ");
+        builder.append(gd.toString("valueStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.valueStr));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -481,12 +407,39 @@ public class FilterByValueRequest implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.tableName.hashCode();
         hashCode = (31 * hashCode) + this.viewName.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.isString).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.value).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.isString).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.value).hashCode();
         hashCode = (31 * hashCode) + this.valueStr.hashCode();
         hashCode = (31 * hashCode) + this.columnName.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByValueRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the newly
+     * created view. If the collection provided is non-existent, the collection
+     * will be automatically created. If empty, then the newly created view
+     * will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code options}.
+     */
+    public static final class Options {
+
+        /**
+         * Name of a collection which is to contain the newly created view. If
+         * the collection provided is non-existent, the collection will be
+         * automatically created. If empty, then the newly created view will be
+         * top-level.
+         */
+        public static final String COLLECTION_NAME = "collection_name";
+
+        private Options() {
+        }
     }
 
 }

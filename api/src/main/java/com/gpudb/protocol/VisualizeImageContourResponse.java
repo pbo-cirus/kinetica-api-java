@@ -7,13 +7,14 @@
 package com.gpudb.protocol;
 
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class VisualizeImageContourResponse implements IndexedRecord {
@@ -22,25 +23,18 @@ public class VisualizeImageContourResponse implements IndexedRecord {
             .record("VisualizeImageContourResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("bgColor").type().longType().noDefault()
-                .name("imageData").type().bytesType().noDefault()
-                .name("gridData").type().bytesType().noDefault()
-                .name("fillN0").type().doubleType().noDefault()
-                .name("fillNn").type().doubleType().noDefault()
-                .name("minLevel").type().doubleType().noDefault()
-                .name("maxLevel").type().doubleType().noDefault()
-                .name("samplesUsed").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("bgColor").type().longType().noDefault()
+            .name("imageData").type().bytesType().noDefault()
+            .name("gridData").type().bytesType().noDefault()
+            .name("fillN0").type().doubleType().noDefault()
+            .name("fillNn").type().doubleType().noDefault()
+            .name("minLevel").type().doubleType().noDefault()
+            .name("maxLevel").type().doubleType().noDefault()
+            .name("samplesUsed").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private int width;
     private int height;
     private long bgColor;
@@ -52,9 +46,11 @@ public class VisualizeImageContourResponse implements IndexedRecord {
     private double maxLevel;
     private long samplesUsed;
     private Map<String, String> info;
-
-
     public VisualizeImageContourResponse() {
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public int getWidth() {
@@ -89,7 +85,7 @@ public class VisualizeImageContourResponse implements IndexedRecord {
     }
 
     public VisualizeImageContourResponse setImageData(ByteBuffer imageData) {
-        this.imageData = (imageData == null) ? ByteBuffer.wrap( new byte[0] ) : imageData;
+        this.imageData = (imageData == null) ? ByteBuffer.wrap(new byte[0]) : imageData;
         return this;
     }
 
@@ -98,7 +94,7 @@ public class VisualizeImageContourResponse implements IndexedRecord {
     }
 
     public VisualizeImageContourResponse setGridData(ByteBuffer gridData) {
-        this.gridData = (gridData == null) ? ByteBuffer.wrap( new byte[0] ) : gridData;
+        this.gridData = (gridData == null) ? ByteBuffer.wrap(new byte[0]) : gridData;
         return this;
     }
 
@@ -207,47 +203,47 @@ public class VisualizeImageContourResponse implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 1:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 2:
-                this.bgColor = (Long)value;
+                this.bgColor = (Long) value;
                 break;
 
             case 3:
-                this.imageData = (ByteBuffer)value;
+                this.imageData = (ByteBuffer) value;
                 break;
 
             case 4:
-                this.gridData = (ByteBuffer)value;
+                this.gridData = (ByteBuffer) value;
                 break;
 
             case 5:
-                this.fillN0 = (Double)value;
+                this.fillN0 = (Double) value;
                 break;
 
             case 6:
-                this.fillNn = (Double)value;
+                this.fillNn = (Double) value;
                 break;
 
             case 7:
-                this.minLevel = (Double)value;
+                this.minLevel = (Double) value;
                 break;
 
             case 8:
-                this.maxLevel = (Double)value;
+                this.maxLevel = (Double) value;
                 break;
 
             case 9:
-                this.samplesUsed = (Long)value;
+                this.samplesUsed = (Long) value;
                 break;
 
             case 10:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -258,27 +254,27 @@ public class VisualizeImageContourResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeImageContourResponse that = (VisualizeImageContourResponse)obj;
+        VisualizeImageContourResponse that = (VisualizeImageContourResponse) obj;
 
-        return ( ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && ( this.bgColor == that.bgColor )
-                 && this.imageData.equals( that.imageData )
-                 && this.gridData.equals( that.gridData )
-                 && ( (Double)this.fillN0 ).equals( (Double)that.fillN0 )
-                 && ( (Double)this.fillNn ).equals( (Double)that.fillNn )
-                 && ( (Double)this.minLevel ).equals( (Double)that.minLevel )
-                 && ( (Double)this.maxLevel ).equals( (Double)that.maxLevel )
-                 && ( this.samplesUsed == that.samplesUsed )
-                 && this.info.equals( that.info ) );
+        return ((this.width == that.width)
+                && (this.height == that.height)
+                && (this.bgColor == that.bgColor)
+                && this.imageData.equals(that.imageData)
+                && this.gridData.equals(that.gridData)
+                && ((Double) this.fillN0).equals((Double) that.fillN0)
+                && ((Double) this.fillNn).equals((Double) that.fillNn)
+                && ((Double) this.minLevel).equals((Double) that.minLevel)
+                && ((Double) this.maxLevel).equals((Double) that.maxLevel)
+                && (this.samplesUsed == that.samplesUsed)
+                && this.info.equals(that.info));
     }
 
 
@@ -286,51 +282,51 @@ public class VisualizeImageContourResponse implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "imageData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.imageData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "gridData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.gridData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "fillN0" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.fillN0 ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "fillNn" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.fillNn ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minLevel" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minLevel ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxLevel" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxLevel ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "samplesUsed" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.samplesUsed ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("imageData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.imageData));
+        builder.append(", ");
+        builder.append(gd.toString("gridData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.gridData));
+        builder.append(", ");
+        builder.append(gd.toString("fillN0"));
+        builder.append(": ");
+        builder.append(gd.toString(this.fillN0));
+        builder.append(", ");
+        builder.append(gd.toString("fillNn"));
+        builder.append(": ");
+        builder.append(gd.toString(this.fillNn));
+        builder.append(", ");
+        builder.append(gd.toString("minLevel"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minLevel));
+        builder.append(", ");
+        builder.append(gd.toString("maxLevel"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxLevel));
+        builder.append(", ");
+        builder.append(gd.toString("samplesUsed"));
+        builder.append(": ");
+        builder.append(gd.toString(this.samplesUsed));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -341,14 +337,14 @@ public class VisualizeImageContourResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
-        hashCode = (31 * hashCode) + ((Long)this.bgColor).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.bgColor).hashCode();
         hashCode = (31 * hashCode) + this.imageData.hashCode();
         hashCode = (31 * hashCode) + this.gridData.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.fillN0).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.fillNn).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minLevel).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxLevel).hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.samplesUsed).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.fillN0).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.fillNn).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minLevel).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxLevel).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.samplesUsed).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

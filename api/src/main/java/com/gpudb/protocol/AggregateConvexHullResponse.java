@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,32 +25,17 @@ public class AggregateConvexHullResponse implements IndexedRecord {
             .record("AggregateConvexHullResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("xVector").type().array().items().doubleType().noDefault()
-                .name("yVector").type().array().items().doubleType().noDefault()
-                .name("count").type().intType().noDefault()
-                .name("isValid").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("xVector").type().array().items().doubleType().noDefault()
+            .name("yVector").type().array().items().doubleType().noDefault()
+            .name("count").type().intType().noDefault()
+            .name("isValid").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<Double> xVector;
     private List<Double> yVector;
     private int count;
     private boolean isValid;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AggregateConvexHullResponse object with default
      * parameters.
@@ -58,20 +44,25 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Array of x coordinates of the resulting convex set.
-     * 
      */
     public List<Double> getXVector() {
         return xVector;
     }
 
     /**
-     * 
-     * @param xVector  Array of x coordinates of the resulting convex set.
-     * 
+     * @param xVector Array of x coordinates of the resulting convex set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateConvexHullResponse setXVector(List<Double> xVector) {
         this.xVector = (xVector == null) ? new ArrayList<Double>() : xVector;
@@ -79,20 +70,15 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Array of y coordinates of the resulting convex set.
-     * 
      */
     public List<Double> getYVector() {
         return yVector;
     }
 
     /**
-     * 
-     * @param yVector  Array of y coordinates of the resulting convex set.
-     * 
+     * @param yVector Array of y coordinates of the resulting convex set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateConvexHullResponse setYVector(List<Double> yVector) {
         this.yVector = (yVector == null) ? new ArrayList<Double>() : yVector;
@@ -100,35 +86,28 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Count of the number of points in the convex set.
-     * 
      */
     public int getCount() {
         return count;
     }
 
     /**
-     * 
-     * @param count  Count of the number of points in the convex set.
-     * 
+     * @param count Count of the number of points in the convex set.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateConvexHullResponse setCount(int count) {
         this.count = count;
         return this;
     }
+
     public boolean getIsValid() {
         return isValid;
     }
 
     /**
-     * 
      * @param isValid
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateConvexHullResponse setIsValid(boolean isValid) {
         this.isValid = isValid;
@@ -136,20 +115,15 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateConvexHullResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -159,9 +133,8 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -171,13 +144,10 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -205,35 +175,33 @@ public class AggregateConvexHullResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.xVector = (List<Double>)value;
+                this.xVector = (List<Double>) value;
                 break;
 
             case 1:
-                this.yVector = (List<Double>)value;
+                this.yVector = (List<Double>) value;
                 break;
 
             case 2:
-                this.count = (Integer)value;
+                this.count = (Integer) value;
                 break;
 
             case 3:
-                this.isValid = (Boolean)value;
+                this.isValid = (Boolean) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -243,48 +211,48 @@ public class AggregateConvexHullResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AggregateConvexHullResponse that = (AggregateConvexHullResponse)obj;
+        AggregateConvexHullResponse that = (AggregateConvexHullResponse) obj;
 
-        return ( this.xVector.equals( that.xVector )
-                 && this.yVector.equals( that.yVector )
-                 && ( this.count == that.count )
-                 && ( this.isValid == that.isValid )
-                 && this.info.equals( that.info ) );
+        return (this.xVector.equals(that.xVector)
+                && this.yVector.equals(that.yVector)
+                && (this.count == that.count)
+                && (this.isValid == that.isValid)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "xVector" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xVector ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yVector" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yVector ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "count" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.count ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "isValid" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.isValid ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("xVector"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xVector));
+        builder.append(", ");
+        builder.append(gd.toString("yVector"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yVector));
+        builder.append(", ");
+        builder.append(gd.toString("count"));
+        builder.append(": ");
+        builder.append(gd.toString(this.count));
+        builder.append(", ");
+        builder.append(gd.toString("isValid"));
+        builder.append(": ");
+        builder.append(gd.toString(this.isValid));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -295,7 +263,7 @@ public class AggregateConvexHullResponse implements IndexedRecord {
         hashCode = (31 * hashCode) + this.xVector.hashCode();
         hashCode = (31 * hashCode) + this.yVector.hashCode();
         hashCode = (31 * hashCode) + this.count;
-        hashCode = (31 * hashCode) + ((Boolean)this.isValid).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.isValid).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

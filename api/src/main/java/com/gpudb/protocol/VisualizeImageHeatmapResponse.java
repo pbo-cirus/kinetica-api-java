@@ -7,13 +7,14 @@
 package com.gpudb.protocol;
 
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class VisualizeImageHeatmapResponse implements IndexedRecord {
@@ -22,27 +23,22 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
             .record("VisualizeImageHeatmapResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("bgColor").type().longType().noDefault()
-                .name("imageData").type().bytesType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("bgColor").type().longType().noDefault()
+            .name("imageData").type().bytesType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private int width;
     private int height;
     private long bgColor;
     private ByteBuffer imageData;
     private Map<String, String> info;
-
-
     public VisualizeImageHeatmapResponse() {
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public int getWidth() {
@@ -77,7 +73,7 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
     }
 
     public VisualizeImageHeatmapResponse setImageData(ByteBuffer imageData) {
-        this.imageData = (imageData == null) ? ByteBuffer.wrap( new byte[0] ) : imageData;
+        this.imageData = (imageData == null) ? ByteBuffer.wrap(new byte[0]) : imageData;
         return this;
     }
 
@@ -123,23 +119,23 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 1:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 2:
-                this.bgColor = (Long)value;
+                this.bgColor = (Long) value;
                 break;
 
             case 3:
-                this.imageData = (ByteBuffer)value;
+                this.imageData = (ByteBuffer) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -150,21 +146,21 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeImageHeatmapResponse that = (VisualizeImageHeatmapResponse)obj;
+        VisualizeImageHeatmapResponse that = (VisualizeImageHeatmapResponse) obj;
 
-        return ( ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && ( this.bgColor == that.bgColor )
-                 && this.imageData.equals( that.imageData )
-                 && this.info.equals( that.info ) );
+        return ((this.width == that.width)
+                && (this.height == that.height)
+                && (this.bgColor == that.bgColor)
+                && this.imageData.equals(that.imageData)
+                && this.info.equals(that.info));
     }
 
 
@@ -172,27 +168,27 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "imageData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.imageData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("imageData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.imageData));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -203,7 +199,7 @@ public class VisualizeImageHeatmapResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
-        hashCode = (31 * hashCode) + ((Long)this.bgColor).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.bgColor).hashCode();
         hashCode = (31 * hashCode) + this.imageData.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;

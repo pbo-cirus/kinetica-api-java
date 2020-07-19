@@ -7,14 +7,15 @@
 package com.gpudb.protocol;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class GetVectortileRequest implements IndexedRecord {
@@ -23,21 +24,14 @@ public class GetVectortileRequest implements IndexedRecord {
             .record("GetVectortileRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("columnNames").type().array().items().stringType().noDefault()
-                .name("layers").type().map().values().array().items().stringType().noDefault()
-                .name("tileX").type().intType().noDefault()
-                .name("tileY").type().intType().noDefault()
-                .name("zoom").type().intType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("columnNames").type().array().items().stringType().noDefault()
+            .name("layers").type().map().values().array().items().stringType().noDefault()
+            .name("tileX").type().intType().noDefault()
+            .name("tileY").type().intType().noDefault()
+            .name("zoom").type().intType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private List<String> tableNames;
     private List<String> columnNames;
     private Map<String, List<String>> layers;
@@ -45,14 +39,13 @@ public class GetVectortileRequest implements IndexedRecord {
     private int tileY;
     private int zoom;
     private Map<String, String> options;
-
-
     public GetVectortileRequest() {
         tableNames = new ArrayList<>();
         columnNames = new ArrayList<>();
         layers = new LinkedHashMap<>();
         options = new LinkedHashMap<>();
     }
+
 
     public GetVectortileRequest(List<String> tableNames, List<String> columnNames, Map<String, List<String>> layers, int tileX, int tileY, int zoom, Map<String, String> options) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -62,6 +55,10 @@ public class GetVectortileRequest implements IndexedRecord {
         this.tileY = tileY;
         this.zoom = zoom;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public List<String> getTableNames() {
@@ -166,31 +163,31 @@ public class GetVectortileRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.columnNames = (List<String>)value;
+                this.columnNames = (List<String>) value;
                 break;
 
             case 2:
-                this.layers = (Map<String, List<String>>)value;
+                this.layers = (Map<String, List<String>>) value;
                 break;
 
             case 3:
-                this.tileX = (Integer)value;
+                this.tileX = (Integer) value;
                 break;
 
             case 4:
-                this.tileY = (Integer)value;
+                this.tileY = (Integer) value;
                 break;
 
             case 5:
-                this.zoom = (Integer)value;
+                this.zoom = (Integer) value;
                 break;
 
             case 6:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -201,23 +198,23 @@ public class GetVectortileRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        GetVectortileRequest that = (GetVectortileRequest)obj;
+        GetVectortileRequest that = (GetVectortileRequest) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.columnNames.equals( that.columnNames )
-                 && this.layers.equals( that.layers )
-                 && ( this.tileX == that.tileX )
-                 && ( this.tileY == that.tileY )
-                 && ( this.zoom == that.zoom )
-                 && this.options.equals( that.options ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.columnNames.equals(that.columnNames)
+                && this.layers.equals(that.layers)
+                && (this.tileX == that.tileX)
+                && (this.tileY == that.tileY)
+                && (this.zoom == that.zoom)
+                && this.options.equals(that.options));
     }
 
 
@@ -225,35 +222,35 @@ public class GetVectortileRequest implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "layers" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.layers ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "tileX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tileX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "tileY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tileY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "zoom" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.zoom ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("columnNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnNames));
+        builder.append(", ");
+        builder.append(gd.toString("layers"));
+        builder.append(": ");
+        builder.append(gd.toString(this.layers));
+        builder.append(", ");
+        builder.append(gd.toString("tileX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tileX));
+        builder.append(", ");
+        builder.append(gd.toString("tileY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tileY));
+        builder.append(", ");
+        builder.append(gd.toString("zoom"));
+        builder.append(": ");
+        builder.append(gd.toString(this.zoom));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

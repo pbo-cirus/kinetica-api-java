@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,28 +25,13 @@ public class ShowTableMetadataResponse implements IndexedRecord {
             .record("ShowTableMetadataResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("metadataMaps").type().array().items().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("metadataMaps").type().array().items().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> tableNames;
     private List<Map<String, String>> metadataMaps;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowTableMetadataResponse object with default parameters.
      */
@@ -53,20 +39,25 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code tableNames}.
-     * 
      */
     public List<String> getTableNames() {
         return tableNames;
     }
 
     /**
-     * 
-     * @param tableNames  Value of {@code tableNames}.
-     * 
+     * @param tableNames Value of {@code tableNames}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTableMetadataResponse setTableNames(List<String> tableNames) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -74,25 +65,20 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return A list of maps which contain the metadata of the tables in the
-     *         order the tables are listed in {@code tableNames}. Each map has
-     *         (metadata attribute name, metadata attribute value) pairs.
-     * 
+     * order the tables are listed in {@code tableNames}. Each map has
+     * (metadata attribute name, metadata attribute value) pairs.
      */
     public List<Map<String, String>> getMetadataMaps() {
         return metadataMaps;
     }
 
     /**
-     * 
-     * @param metadataMaps  A list of maps which contain the metadata of the
-     *                      tables in the order the tables are listed in {@code
-     *                      tableNames}. Each map has (metadata attribute name,
-     *                      metadata attribute value) pairs.
-     * 
+     * @param metadataMaps A list of maps which contain the metadata of the
+     *                     tables in the order the tables are listed in {@code
+     *                     tableNames}. Each map has (metadata attribute name,
+     *                     metadata attribute value) pairs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTableMetadataResponse setMetadataMaps(List<Map<String, String>> metadataMaps) {
         this.metadataMaps = (metadataMaps == null) ? new ArrayList<Map<String, String>>() : metadataMaps;
@@ -100,20 +86,15 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTableMetadataResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -123,9 +104,8 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -135,13 +115,10 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -163,27 +140,25 @@ public class ShowTableMetadataResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.metadataMaps = (List<Map<String, String>>)value;
+                this.metadataMaps = (List<Map<String, String>>) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -193,38 +168,38 @@ public class ShowTableMetadataResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowTableMetadataResponse that = (ShowTableMetadataResponse)obj;
+        ShowTableMetadataResponse that = (ShowTableMetadataResponse) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.metadataMaps.equals( that.metadataMaps )
-                 && this.info.equals( that.info ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.metadataMaps.equals(that.metadataMaps)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "metadataMaps" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.metadataMaps ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("metadataMaps"));
+        builder.append(": ");
+        builder.append(gd.toString(this.metadataMaps));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

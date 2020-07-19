@@ -5,15 +5,16 @@
  */
 package com.gpudb.protocol;
 
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.IndexedRecord;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.IndexedRecord;
 
 
 /**
@@ -45,27 +46,886 @@ public class RawUpdateRecordsRequest implements IndexedRecord {
             .record("RawUpdateRecordsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("expressions").type().array().items().stringType().noDefault()
-                .name("newValuesMaps").type().array().items().map().values().unionOf().stringType().and().nullType().endUnion().noDefault()
-                .name("recordsToInsert").type().array().items().bytesType().noDefault()
-                .name("recordsToInsertStr").type().array().items().stringType().noDefault()
-                .name("recordEncoding").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("expressions").type().array().items().stringType().noDefault()
+            .name("newValuesMaps").type().array().items().map().values().unionOf().stringType().and().nullType().endUnion().noDefault()
+            .name("recordsToInsert").type().array().items().bytesType().noDefault()
+            .name("recordsToInsertStr").type().array().items().stringType().noDefault()
+            .name("recordEncoding").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private List<String> expressions;
+    private List<Map<String, String>> newValuesMaps;
+    private List<ByteBuffer> recordsToInsert;
+    private List<String> recordsToInsertStr;
+    private String recordEncoding;
+    private Map<String, String> options;
+    /**
+     * Constructs a RawUpdateRecordsRequest object with default parameters.
+     */
+    public RawUpdateRecordsRequest() {
+        tableName = "";
+        expressions = new ArrayList<>();
+        newValuesMaps = new ArrayList<>();
+        recordsToInsert = new ArrayList<>();
+        recordsToInsertStr = new ArrayList<>();
+        recordEncoding = RecordEncoding.BINARY;
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a RawUpdateRecordsRequest object with the specified
+     * parameters.
+     *
+     * @param tableName       Table to be updated. Must be a currently existing
+     *                        table and not a collection or view.
+     * @param expressions     A list of the actual predicates, one for each
+     *                        update; format should follow the guidelines {@link
+     *                        com.gpudb.GPUdb#filter(FilterRequest) here}.
+     * @param newValuesMaps   List of new values for the matching records.  Each
+     *                        element is a map with (key, value) pairs where the
+     *                        keys are the names of the columns whose values are
+     *                        to be updated; the values are the new values.  The
+     *                        number of elements in the list should match the
+     *                        length of {@code expressions}.
+     * @param recordsToInsert An *optional* list of new binary-avro encoded
+     *                        records to insert, one for each update.  If one
+     *                        of {@code expressions} does not yield a matching
+     *                        record to be updated, then the corresponding
+     *                        element from this list will be added to the
+     *                        table.  The default value is an empty {@link
+     *                        List}.
+     * @param options         Optional parameters.
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
+     *                        GLOBAL_EXPRESSION}: An optional global expression to
+     *                        reduce the search space of the predicates listed in
+     *                        {@code expressions}.  The default value is ''.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
+     *                        BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
+     *                        predicates are available for primary key updates.  Keep
+     *                        in mind that it is possible to destroy data in this
+     *                        case, since a single predicate may match multiple
+     *                        objects (potentially all of records of a table), and
+     *                        then updating all of those records to have the same
+     *                        primary key will, due to the primary key uniqueness
+     *                        constraints, effectively delete all but one of those
+     *                        updated records.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                        TRUE}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
+     *                        UPDATE_ON_EXISTING_PK}: Can be used to customize
+     *                        behavior when the updated primary key value already
+     *                        exists as described in {@link
+     *                        com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                        TRUE}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
+     *                        UPDATE_PARTITION}: Force qualifying records to be
+     *                        deleted and reinserted so their partition membership
+     *                        will be reevaluated.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                        TRUE}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
+     *                        TRUNCATE_STRINGS}: If set to {@code true}, any strings
+     *                        which are too long for their charN string fields will be
+     *                        truncated to fit.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                        TRUE}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
+     *                        USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
+     *                        true}, all new values in {@code newValuesMaps} are
+     *                        considered as expression values. When set to {@code
+     *                        false}, all new values in {@code newValuesMaps} are
+     *                        considered as constants.  NOTE:  When {@code true},
+     *                        string constants will need to be quoted to avoid being
+     *                        evaluated as expressions.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                        TRUE}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                        FALSE}.
+     *                                <li> {@link
+     *                        com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
+     *                        RECORD_ID}: ID of a single record to be updated
+     *                        (returned in the call to {@link
+     *                        com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
+     *                        or {@link
+     *                        com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
+     *                        </ul>
+     *                        The default value is an empty {@link Map}.
+     */
+    public RawUpdateRecordsRequest(String tableName, List<String> expressions, List<Map<String, String>> newValuesMaps, List<ByteBuffer> recordsToInsert, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
+        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
+        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
+        this.recordsToInsertStr = new ArrayList<String>();
+        this.recordEncoding = RecordEncoding.BINARY;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+    /**
+     * Constructs a RawUpdateRecordsRequest object with the specified
+     * parameters.
+     *
+     * @param tableName          Table to be updated. Must be a currently existing
+     *                           table and not a collection or view.
+     * @param expressions        A list of the actual predicates, one for each
+     *                           update; format should follow the guidelines {@link
+     *                           com.gpudb.GPUdb#filter(FilterRequest) here}.
+     * @param newValuesMaps      List of new values for the matching records.  Each
+     *                           element is a map with (key, value) pairs where the
+     *                           keys are the names of the columns whose values are
+     *                           to be updated; the values are the new values.  The
+     *                           number of elements in the list should match the
+     *                           length of {@code expressions}.
+     * @param recordsToInsert    An *optional* list of new binary-avro encoded
+     *                           records to insert, one for each update.  If one
+     *                           of {@code expressions} does not yield a matching
+     *                           record to be updated, then the corresponding
+     *                           element from this list will be added to the
+     *                           table.  The default value is an empty {@link
+     *                           List}.
+     * @param recordsToInsertStr An optional list of new json-avro encoded
+     *                           objects to insert, one for each update, to be
+     *                           added to the set if the particular update did
+     *                           not affect any objects.  The default value is
+     *                           an empty {@link List}.
+     * @param recordEncoding     Identifies which of {@code recordsToInsert} and
+     *                           {@code recordsToInsertStr} should be used.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     *                           BINARY}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
+     *                           JSON}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     *                           BINARY}.
+     * @param options            Optional parameters.
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
+     *                           GLOBAL_EXPRESSION}: An optional global expression to
+     *                           reduce the search space of the predicates listed in
+     *                           {@code expressions}.  The default value is ''.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
+     *                           BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
+     *                           predicates are available for primary key updates.  Keep
+     *                           in mind that it is possible to destroy data in this
+     *                           case, since a single predicate may match multiple
+     *                           objects (potentially all of records of a table), and
+     *                           then updating all of those records to have the same
+     *                           primary key will, due to the primary key uniqueness
+     *                           constraints, effectively delete all but one of those
+     *                           updated records.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                           TRUE}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
+     *                           UPDATE_ON_EXISTING_PK}: Can be used to customize
+     *                           behavior when the updated primary key value already
+     *                           exists as described in {@link
+     *                           com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                           TRUE}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
+     *                           UPDATE_PARTITION}: Force qualifying records to be
+     *                           deleted and reinserted so their partition membership
+     *                           will be reevaluated.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                           TRUE}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
+     *                           TRUNCATE_STRINGS}: If set to {@code true}, any strings
+     *                           which are too long for their charN string fields will be
+     *                           truncated to fit.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                           TRUE}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
+     *                           USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
+     *                           true}, all new values in {@code newValuesMaps} are
+     *                           considered as expression values. When set to {@code
+     *                           false}, all new values in {@code newValuesMaps} are
+     *                           considered as constants.  NOTE:  When {@code true},
+     *                           string constants will need to be quoted to avoid being
+     *                           evaluated as expressions.
+     *                           Supported values:
+     *                           <ul>
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                           TRUE}
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}
+     *                           </ul>
+     *                           The default value is {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                           FALSE}.
+     *                                   <li> {@link
+     *                           com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
+     *                           RECORD_ID}: ID of a single record to be updated
+     *                           (returned in the call to {@link
+     *                           com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
+     *                           or {@link
+     *                           com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
+     *                           </ul>
+     *                           The default value is an empty {@link Map}.
+     */
+    public RawUpdateRecordsRequest(String tableName, List<String> expressions, List<Map<String, String>> newValuesMaps, List<ByteBuffer> recordsToInsert, List<String> recordsToInsertStr, String recordEncoding, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
+        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
+        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
+        this.recordsToInsertStr = (recordsToInsertStr == null) ? new ArrayList<String>() : recordsToInsertStr;
+        this.recordEncoding = (recordEncoding == null) ? RecordEncoding.BINARY : recordEncoding;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Table to be updated. Must be a currently existing table and not
+     * a collection or view.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Table to be updated. Must be a currently existing
+     *                  table and not a collection or view.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return A list of the actual predicates, one for each update; format
+     * should follow the guidelines {@link
+     * com.gpudb.GPUdb#filter(FilterRequest) here}.
+     */
+    public List<String> getExpressions() {
+        return expressions;
+    }
+
+    /**
+     * @param expressions A list of the actual predicates, one for each
+     *                    update; format should follow the guidelines {@link
+     *                    com.gpudb.GPUdb#filter(FilterRequest) here}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setExpressions(List<String> expressions) {
+        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
+        return this;
+    }
+
+    /**
+     * @return List of new values for the matching records.  Each element is a
+     * map with (key, value) pairs where the keys are the names of the
+     * columns whose values are to be updated; the values are the new
+     * values.  The number of elements in the list should match the
+     * length of {@code expressions}.
+     */
+    public List<Map<String, String>> getNewValuesMaps() {
+        return newValuesMaps;
+    }
+
+    /**
+     * @param newValuesMaps List of new values for the matching records.  Each
+     *                      element is a map with (key, value) pairs where the
+     *                      keys are the names of the columns whose values are
+     *                      to be updated; the values are the new values.  The
+     *                      number of elements in the list should match the
+     *                      length of {@code expressions}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setNewValuesMaps(List<Map<String, String>> newValuesMaps) {
+        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
+        return this;
+    }
+
+    /**
+     * @return An *optional* list of new binary-avro encoded records to insert,
+     * one for each update.  If one of {@code expressions} does not
+     * yield a matching record to be updated, then the corresponding
+     * element from this list will be added to the table.  The default
+     * value is an empty {@link List}.
+     */
+    public List<ByteBuffer> getRecordsToInsert() {
+        return recordsToInsert;
+    }
+
+    /**
+     * @param recordsToInsert An *optional* list of new binary-avro encoded
+     *                        records to insert, one for each update.  If one
+     *                        of {@code expressions} does not yield a matching
+     *                        record to be updated, then the corresponding
+     *                        element from this list will be added to the
+     *                        table.  The default value is an empty {@link
+     *                        List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setRecordsToInsert(List<ByteBuffer> recordsToInsert) {
+        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
+        return this;
+    }
+
+    /**
+     * @return An optional list of new json-avro encoded objects to insert, one
+     * for each update, to be added to the set if the particular update
+     * did not affect any objects.  The default value is an empty
+     * {@link List}.
+     */
+    public List<String> getRecordsToInsertStr() {
+        return recordsToInsertStr;
+    }
+
+    /**
+     * @param recordsToInsertStr An optional list of new json-avro encoded
+     *                           objects to insert, one for each update, to be
+     *                           added to the set if the particular update did
+     *                           not affect any objects.  The default value is
+     *                           an empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setRecordsToInsertStr(List<String> recordsToInsertStr) {
+        this.recordsToInsertStr = (recordsToInsertStr == null) ? new ArrayList<String>() : recordsToInsertStr;
+        return this;
+    }
+
+    /**
+     * @return Identifies which of {@code recordsToInsert} and {@code
+     * recordsToInsertStr} should be used.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     * BINARY}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
+     * JSON}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     * BINARY}.
+     */
+    public String getRecordEncoding() {
+        return recordEncoding;
+    }
+
+    /**
+     * @param recordEncoding Identifies which of {@code recordsToInsert} and
+     *                       {@code recordsToInsertStr} should be used.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     *                       BINARY}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
+     *                       JSON}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
+     *                       BINARY}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setRecordEncoding(String recordEncoding) {
+        this.recordEncoding = (recordEncoding == null) ? RecordEncoding.BINARY : recordEncoding;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
+     * GLOBAL_EXPRESSION}: An optional global expression to reduce the
+     * search space of the predicates listed in {@code expressions}.
+     * The default value is ''.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
+     * BYPASS_SAFETY_CHECKS}: When set to {@code true}, all predicates
+     * are available for primary key updates.  Keep in mind that it is
+     * possible to destroy data in this case, since a single predicate
+     * may match multiple objects (potentially all of records of a
+     * table), and then updating all of those records to have the same
+     * primary key will, due to the primary key uniqueness constraints,
+     * effectively delete all but one of those updated records.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
+     * UPDATE_ON_EXISTING_PK}: Can be used to customize behavior when
+     * the updated primary key value already exists as described in
+     * {@link
+     * com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
+     * UPDATE_PARTITION}: Force qualifying records to be deleted and
+     * reinserted so their partition membership will be reevaluated.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
+     * TRUNCATE_STRINGS}: If set to {@code true}, any strings which are
+     * too long for their charN string fields will be truncated to fit.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
+     * USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code true},
+     * all new values in {@code newValuesMaps} are considered as
+     * expression values. When set to {@code false}, all new values in
+     * {@code newValuesMaps} are considered as constants.  NOTE:  When
+     * {@code true}, string constants will need to be quoted to avoid
+     * being evaluated as expressions.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
+     * RECORD_ID}: ID of a single record to be updated (returned in the
+     * call to {@link
+     * com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)} or
+     * {@link
+     * com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
+     *                GLOBAL_EXPRESSION}: An optional global expression to
+     *                reduce the search space of the predicates listed in
+     *                {@code expressions}.  The default value is ''.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
+     *                BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
+     *                predicates are available for primary key updates.  Keep
+     *                in mind that it is possible to destroy data in this
+     *                case, since a single predicate may match multiple
+     *                objects (potentially all of records of a table), and
+     *                then updating all of those records to have the same
+     *                primary key will, due to the primary key uniqueness
+     *                constraints, effectively delete all but one of those
+     *                updated records.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
+     *                UPDATE_ON_EXISTING_PK}: Can be used to customize
+     *                behavior when the updated primary key value already
+     *                exists as described in {@link
+     *                com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
+     *                UPDATE_PARTITION}: Force qualifying records to be
+     *                deleted and reinserted so their partition membership
+     *                will be reevaluated.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
+     *                TRUNCATE_STRINGS}: If set to {@code true}, any strings
+     *                which are too long for their charN string fields will be
+     *                truncated to fit.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
+     *                USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
+     *                true}, all new values in {@code newValuesMaps} are
+     *                considered as expression values. When set to {@code
+     *                false}, all new values in {@code newValuesMaps} are
+     *                considered as constants.  NOTE:  When {@code true},
+     *                string constants will need to be quoted to avoid being
+     *                evaluated as expressions.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
+     *                RECORD_ID}: ID of a single record to be updated
+     *                (returned in the call to {@link
+     *                com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
+     *                or {@link
+     *                com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public RawUpdateRecordsRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.expressions;
+
+            case 2:
+                return this.newValuesMaps;
+
+            case 3:
+                return this.recordsToInsert;
+
+            case 4:
+                return this.recordsToInsertStr;
+
+            case 5:
+                return this.recordEncoding;
+
+            case 6:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.expressions = (List<String>) value;
+                break;
+
+            case 2:
+                this.newValuesMaps = (List<Map<String, String>>) value;
+                break;
+
+            case 3:
+                this.recordsToInsert = (List<ByteBuffer>) value;
+                break;
+
+            case 4:
+                this.recordsToInsertStr = (List<String>) value;
+                break;
+
+            case 5:
+                this.recordEncoding = (String) value;
+                break;
+
+            case 6:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        RawUpdateRecordsRequest that = (RawUpdateRecordsRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.expressions.equals(that.expressions)
+                && this.newValuesMaps.equals(that.newValuesMaps)
+                && this.recordsToInsert.equals(that.recordsToInsert)
+                && this.recordsToInsertStr.equals(that.recordsToInsertStr)
+                && this.recordEncoding.equals(that.recordEncoding)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("expressions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.expressions));
+        builder.append(", ");
+        builder.append(gd.toString("newValuesMaps"));
+        builder.append(": ");
+        builder.append(gd.toString(this.newValuesMaps));
+        builder.append(", ");
+        builder.append(gd.toString("recordsToInsert"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordsToInsert));
+        builder.append(", ");
+        builder.append(gd.toString("recordsToInsertStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordsToInsertStr));
+        builder.append(", ");
+        builder.append(gd.toString("recordEncoding"));
+        builder.append(": ");
+        builder.append(gd.toString(this.recordEncoding));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.expressions.hashCode();
+        hashCode = (31 * hashCode) + this.newValuesMaps.hashCode();
+        hashCode = (31 * hashCode) + this.recordsToInsert.hashCode();
+        hashCode = (31 * hashCode) + this.recordsToInsertStr.hashCode();
+        hashCode = (31 * hashCode) + this.recordEncoding.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Identifies which of {@code recordsToInsert} and {@code
@@ -86,9 +946,9 @@ public class RawUpdateRecordsRequest implements IndexedRecord {
         public static final String BINARY = "binary";
         public static final String JSON = "json";
 
-        private RecordEncoding() {  }
+        private RecordEncoding() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -282,917 +1142,8 @@ public class RawUpdateRecordsRequest implements IndexedRecord {
          */
         public static final String RECORD_ID = "record_id";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private List<String> expressions;
-    private List<Map<String, String>> newValuesMaps;
-    private List<ByteBuffer> recordsToInsert;
-    private List<String> recordsToInsertStr;
-    private String recordEncoding;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a RawUpdateRecordsRequest object with default parameters.
-     */
-    public RawUpdateRecordsRequest() {
-        tableName = "";
-        expressions = new ArrayList<>();
-        newValuesMaps = new ArrayList<>();
-        recordsToInsert = new ArrayList<>();
-        recordsToInsertStr = new ArrayList<>();
-        recordEncoding = RecordEncoding.BINARY;
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a RawUpdateRecordsRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Table to be updated. Must be a currently existing
-     *                   table and not a collection or view.
-     * @param expressions  A list of the actual predicates, one for each
-     *                     update; format should follow the guidelines {@link
-     *                     com.gpudb.GPUdb#filter(FilterRequest) here}.
-     * @param newValuesMaps  List of new values for the matching records.  Each
-     *                       element is a map with (key, value) pairs where the
-     *                       keys are the names of the columns whose values are
-     *                       to be updated; the values are the new values.  The
-     *                       number of elements in the list should match the
-     *                       length of {@code expressions}.
-     * @param recordsToInsert  An *optional* list of new binary-avro encoded
-     *                         records to insert, one for each update.  If one
-     *                         of {@code expressions} does not yield a matching
-     *                         record to be updated, then the corresponding
-     *                         element from this list will be added to the
-     *                         table.  The default value is an empty {@link
-     *                         List}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
-     *                 GLOBAL_EXPRESSION}: An optional global expression to
-     *                 reduce the search space of the predicates listed in
-     *                 {@code expressions}.  The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
-     *                 BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
-     *                 predicates are available for primary key updates.  Keep
-     *                 in mind that it is possible to destroy data in this
-     *                 case, since a single predicate may match multiple
-     *                 objects (potentially all of records of a table), and
-     *                 then updating all of those records to have the same
-     *                 primary key will, due to the primary key uniqueness
-     *                 constraints, effectively delete all but one of those
-     *                 updated records.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
-     *                 UPDATE_ON_EXISTING_PK}: Can be used to customize
-     *                 behavior when the updated primary key value already
-     *                 exists as described in {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
-     *                 UPDATE_PARTITION}: Force qualifying records to be
-     *                 deleted and reinserted so their partition membership
-     *                 will be reevaluated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
-     *                 TRUNCATE_STRINGS}: If set to {@code true}, any strings
-     *                 which are too long for their charN string fields will be
-     *                 truncated to fit.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
-     *                 USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
-     *                 true}, all new values in {@code newValuesMaps} are
-     *                 considered as expression values. When set to {@code
-     *                 false}, all new values in {@code newValuesMaps} are
-     *                 considered as constants.  NOTE:  When {@code true},
-     *                 string constants will need to be quoted to avoid being
-     *                 evaluated as expressions.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
-     *                 RECORD_ID}: ID of a single record to be updated
-     *                 (returned in the call to {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
-     *                 or {@link
-     *                 com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public RawUpdateRecordsRequest(String tableName, List<String> expressions, List<Map<String, String>> newValuesMaps, List<ByteBuffer> recordsToInsert, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
-        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
-        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
-        this.recordsToInsertStr = new ArrayList<String>();
-        this.recordEncoding = RecordEncoding.BINARY;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * Constructs a RawUpdateRecordsRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Table to be updated. Must be a currently existing
-     *                   table and not a collection or view.
-     * @param expressions  A list of the actual predicates, one for each
-     *                     update; format should follow the guidelines {@link
-     *                     com.gpudb.GPUdb#filter(FilterRequest) here}.
-     * @param newValuesMaps  List of new values for the matching records.  Each
-     *                       element is a map with (key, value) pairs where the
-     *                       keys are the names of the columns whose values are
-     *                       to be updated; the values are the new values.  The
-     *                       number of elements in the list should match the
-     *                       length of {@code expressions}.
-     * @param recordsToInsert  An *optional* list of new binary-avro encoded
-     *                         records to insert, one for each update.  If one
-     *                         of {@code expressions} does not yield a matching
-     *                         record to be updated, then the corresponding
-     *                         element from this list will be added to the
-     *                         table.  The default value is an empty {@link
-     *                         List}.
-     * @param recordsToInsertStr  An optional list of new json-avro encoded
-     *                            objects to insert, one for each update, to be
-     *                            added to the set if the particular update did
-     *                            not affect any objects.  The default value is
-     *                            an empty {@link List}.
-     * @param recordEncoding  Identifies which of {@code recordsToInsert} and
-     *                        {@code recordsToInsertStr} should be used.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *                        BINARY}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
-     *                        JSON}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *                        BINARY}.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
-     *                 GLOBAL_EXPRESSION}: An optional global expression to
-     *                 reduce the search space of the predicates listed in
-     *                 {@code expressions}.  The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
-     *                 BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
-     *                 predicates are available for primary key updates.  Keep
-     *                 in mind that it is possible to destroy data in this
-     *                 case, since a single predicate may match multiple
-     *                 objects (potentially all of records of a table), and
-     *                 then updating all of those records to have the same
-     *                 primary key will, due to the primary key uniqueness
-     *                 constraints, effectively delete all but one of those
-     *                 updated records.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
-     *                 UPDATE_ON_EXISTING_PK}: Can be used to customize
-     *                 behavior when the updated primary key value already
-     *                 exists as described in {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
-     *                 UPDATE_PARTITION}: Force qualifying records to be
-     *                 deleted and reinserted so their partition membership
-     *                 will be reevaluated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
-     *                 TRUNCATE_STRINGS}: If set to {@code true}, any strings
-     *                 which are too long for their charN string fields will be
-     *                 truncated to fit.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
-     *                 USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
-     *                 true}, all new values in {@code newValuesMaps} are
-     *                 considered as expression values. When set to {@code
-     *                 false}, all new values in {@code newValuesMaps} are
-     *                 considered as constants.  NOTE:  When {@code true},
-     *                 string constants will need to be quoted to avoid being
-     *                 evaluated as expressions.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
-     *                 RECORD_ID}: ID of a single record to be updated
-     *                 (returned in the call to {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
-     *                 or {@link
-     *                 com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public RawUpdateRecordsRequest(String tableName, List<String> expressions, List<Map<String, String>> newValuesMaps, List<ByteBuffer> recordsToInsert, List<String> recordsToInsertStr, String recordEncoding, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
-        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
-        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
-        this.recordsToInsertStr = (recordsToInsertStr == null) ? new ArrayList<String>() : recordsToInsertStr;
-        this.recordEncoding = (recordEncoding == null) ? RecordEncoding.BINARY : recordEncoding;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Table to be updated. Must be a currently existing table and not
-     *         a collection or view.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Table to be updated. Must be a currently existing
-     *                   table and not a collection or view.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return A list of the actual predicates, one for each update; format
-     *         should follow the guidelines {@link
-     *         com.gpudb.GPUdb#filter(FilterRequest) here}.
-     * 
-     */
-    public List<String> getExpressions() {
-        return expressions;
-    }
-
-    /**
-     * 
-     * @param expressions  A list of the actual predicates, one for each
-     *                     update; format should follow the guidelines {@link
-     *                     com.gpudb.GPUdb#filter(FilterRequest) here}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setExpressions(List<String> expressions) {
-        this.expressions = (expressions == null) ? new ArrayList<String>() : expressions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return List of new values for the matching records.  Each element is a
-     *         map with (key, value) pairs where the keys are the names of the
-     *         columns whose values are to be updated; the values are the new
-     *         values.  The number of elements in the list should match the
-     *         length of {@code expressions}.
-     * 
-     */
-    public List<Map<String, String>> getNewValuesMaps() {
-        return newValuesMaps;
-    }
-
-    /**
-     * 
-     * @param newValuesMaps  List of new values for the matching records.  Each
-     *                       element is a map with (key, value) pairs where the
-     *                       keys are the names of the columns whose values are
-     *                       to be updated; the values are the new values.  The
-     *                       number of elements in the list should match the
-     *                       length of {@code expressions}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setNewValuesMaps(List<Map<String, String>> newValuesMaps) {
-        this.newValuesMaps = (newValuesMaps == null) ? new ArrayList<Map<String, String>>() : newValuesMaps;
-        return this;
-    }
-
-    /**
-     * 
-     * @return An *optional* list of new binary-avro encoded records to insert,
-     *         one for each update.  If one of {@code expressions} does not
-     *         yield a matching record to be updated, then the corresponding
-     *         element from this list will be added to the table.  The default
-     *         value is an empty {@link List}.
-     * 
-     */
-    public List<ByteBuffer> getRecordsToInsert() {
-        return recordsToInsert;
-    }
-
-    /**
-     * 
-     * @param recordsToInsert  An *optional* list of new binary-avro encoded
-     *                         records to insert, one for each update.  If one
-     *                         of {@code expressions} does not yield a matching
-     *                         record to be updated, then the corresponding
-     *                         element from this list will be added to the
-     *                         table.  The default value is an empty {@link
-     *                         List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setRecordsToInsert(List<ByteBuffer> recordsToInsert) {
-        this.recordsToInsert = (recordsToInsert == null) ? new ArrayList<ByteBuffer>() : recordsToInsert;
-        return this;
-    }
-
-    /**
-     * 
-     * @return An optional list of new json-avro encoded objects to insert, one
-     *         for each update, to be added to the set if the particular update
-     *         did not affect any objects.  The default value is an empty
-     *         {@link List}.
-     * 
-     */
-    public List<String> getRecordsToInsertStr() {
-        return recordsToInsertStr;
-    }
-
-    /**
-     * 
-     * @param recordsToInsertStr  An optional list of new json-avro encoded
-     *                            objects to insert, one for each update, to be
-     *                            added to the set if the particular update did
-     *                            not affect any objects.  The default value is
-     *                            an empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setRecordsToInsertStr(List<String> recordsToInsertStr) {
-        this.recordsToInsertStr = (recordsToInsertStr == null) ? new ArrayList<String>() : recordsToInsertStr;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Identifies which of {@code recordsToInsert} and {@code
-     *         recordsToInsertStr} should be used.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *         BINARY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
-     *         JSON}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *         BINARY}.
-     * 
-     */
-    public String getRecordEncoding() {
-        return recordEncoding;
-    }
-
-    /**
-     * 
-     * @param recordEncoding  Identifies which of {@code recordsToInsert} and
-     *                        {@code recordsToInsertStr} should be used.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *                        BINARY}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#JSON
-     *                        JSON}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.RawUpdateRecordsRequest.RecordEncoding#BINARY
-     *                        BINARY}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setRecordEncoding(String recordEncoding) {
-        this.recordEncoding = (recordEncoding == null) ? RecordEncoding.BINARY : recordEncoding;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
-     *         GLOBAL_EXPRESSION}: An optional global expression to reduce the
-     *         search space of the predicates listed in {@code expressions}.
-     *         The default value is ''.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
-     *         BYPASS_SAFETY_CHECKS}: When set to {@code true}, all predicates
-     *         are available for primary key updates.  Keep in mind that it is
-     *         possible to destroy data in this case, since a single predicate
-     *         may match multiple objects (potentially all of records of a
-     *         table), and then updating all of those records to have the same
-     *         primary key will, due to the primary key uniqueness constraints,
-     *         effectively delete all but one of those updated records.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
-     *         UPDATE_ON_EXISTING_PK}: Can be used to customize behavior when
-     *         the updated primary key value already exists as described in
-     *         {@link
-     *         com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
-     *         UPDATE_PARTITION}: Force qualifying records to be deleted and
-     *         reinserted so their partition membership will be reevaluated.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
-     *         TRUNCATE_STRINGS}: If set to {@code true}, any strings which are
-     *         too long for their charN string fields will be truncated to fit.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
-     *         USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code true},
-     *         all new values in {@code newValuesMaps} are considered as
-     *         expression values. When set to {@code false}, all new values in
-     *         {@code newValuesMaps} are considered as constants.  NOTE:  When
-     *         {@code true}, string constants will need to be quoted to avoid
-     *         being evaluated as expressions.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
-     *         RECORD_ID}: ID of a single record to be updated (returned in the
-     *         call to {@link
-     *         com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)} or
-     *         {@link
-     *         com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#GLOBAL_EXPRESSION
-     *                 GLOBAL_EXPRESSION}: An optional global expression to
-     *                 reduce the search space of the predicates listed in
-     *                 {@code expressions}.  The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#BYPASS_SAFETY_CHECKS
-     *                 BYPASS_SAFETY_CHECKS}: When set to {@code true}, all
-     *                 predicates are available for primary key updates.  Keep
-     *                 in mind that it is possible to destroy data in this
-     *                 case, since a single predicate may match multiple
-     *                 objects (potentially all of records of a table), and
-     *                 then updating all of those records to have the same
-     *                 primary key will, due to the primary key uniqueness
-     *                 constraints, effectively delete all but one of those
-     *                 updated records.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_ON_EXISTING_PK
-     *                 UPDATE_ON_EXISTING_PK}: Can be used to customize
-     *                 behavior when the updated primary key value already
-     *                 exists as described in {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#UPDATE_PARTITION
-     *                 UPDATE_PARTITION}: Force qualifying records to be
-     *                 deleted and reinserted so their partition membership
-     *                 will be reevaluated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUNCATE_STRINGS
-     *                 TRUNCATE_STRINGS}: If set to {@code true}, any strings
-     *                 which are too long for their charN string fields will be
-     *                 truncated to fit.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#USE_EXPRESSIONS_IN_NEW_VALUES_MAPS
-     *                 USE_EXPRESSIONS_IN_NEW_VALUES_MAPS}: When set to {@code
-     *                 true}, all new values in {@code newValuesMaps} are
-     *                 considered as expression values. When set to {@code
-     *                 false}, all new values in {@code newValuesMaps} are
-     *                 considered as constants.  NOTE:  When {@code true},
-     *                 string constants will need to be quoted to avoid being
-     *                 evaluated as expressions.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.RawUpdateRecordsRequest.Options#RECORD_ID
-     *                 RECORD_ID}: ID of a single record to be updated
-     *                 (returned in the call to {@link
-     *                 com.gpudb.GPUdb#insertRecordsRaw(RawInsertRecordsRequest)}
-     *                 or {@link
-     *                 com.gpudb.GPUdb#getRecordsFromCollectionRaw(GetRecordsFromCollectionRequest)}).
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public RawUpdateRecordsRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.expressions;
-
-            case 2:
-                return this.newValuesMaps;
-
-            case 3:
-                return this.recordsToInsert;
-
-            case 4:
-                return this.recordsToInsertStr;
-
-            case 5:
-                return this.recordEncoding;
-
-            case 6:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.expressions = (List<String>)value;
-                break;
-
-            case 2:
-                this.newValuesMaps = (List<Map<String, String>>)value;
-                break;
-
-            case 3:
-                this.recordsToInsert = (List<ByteBuffer>)value;
-                break;
-
-            case 4:
-                this.recordsToInsertStr = (List<String>)value;
-                break;
-
-            case 5:
-                this.recordEncoding = (String)value;
-                break;
-
-            case 6:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        RawUpdateRecordsRequest that = (RawUpdateRecordsRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.expressions.equals( that.expressions )
-                 && this.newValuesMaps.equals( that.newValuesMaps )
-                 && this.recordsToInsert.equals( that.recordsToInsert )
-                 && this.recordsToInsertStr.equals( that.recordsToInsertStr )
-                 && this.recordEncoding.equals( that.recordEncoding )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "expressions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.expressions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "newValuesMaps" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.newValuesMaps ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "recordsToInsert" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordsToInsert ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "recordsToInsertStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordsToInsertStr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "recordEncoding" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.recordEncoding ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.expressions.hashCode();
-        hashCode = (31 * hashCode) + this.newValuesMaps.hashCode();
-        hashCode = (31 * hashCode) + this.recordsToInsert.hashCode();
-        hashCode = (31 * hashCode) + this.recordsToInsertStr.hashCode();
-        hashCode = (31 * hashCode) + this.recordEncoding.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

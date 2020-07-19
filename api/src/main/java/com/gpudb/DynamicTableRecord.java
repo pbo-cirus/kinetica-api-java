@@ -1,30 +1,38 @@
 package com.gpudb;
 
+import org.apache.avro.Schema;
+import org.apache.avro.generic.IndexedRecord;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.avro.Schema;
-import org.apache.avro.Schema.Field;
-import org.apache.avro.generic.IndexedRecord;
 
 final class DynamicTableRecord extends RecordBase implements Serializable {
     private static final long serialVersionUID = 1L;
+    private final Type type;
+    private final IndexedRecord data;
+    private final int recordIndex;
+    private DynamicTableRecord(Type type, IndexedRecord data, int recordIndex) {
+        this.type = type;
+        this.data = data;
+        this.recordIndex = recordIndex;
+    }
 
     @SuppressWarnings("unchecked")
     public static List<Record> transpose(String schemaString, ByteBuffer encodedData) throws GPUdbException {
 
         // Get the type from the schema string and the data
-        Type type = Type.fromDynamicSchema( schemaString, encodedData );
+        Type type = Type.fromDynamicSchema(schemaString, encodedData);
 
-        return DynamicTableRecord.transpose( schemaString, encodedData, type );
+        return DynamicTableRecord.transpose(schemaString, encodedData, type);
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Record> transpose( String schemaString,
-                                          ByteBuffer encodedData,
-                                          Type type ) throws GPUdbException {
+    public static List<Record> transpose(String schemaString,
+                                         ByteBuffer encodedData,
+                                         Type type) throws GPUdbException {
 
         // Get the schema to decode the data
         Schema schema;
@@ -40,7 +48,7 @@ final class DynamicTableRecord extends RecordBase implements Serializable {
 
         // Decode the data
         IndexedRecord data = Avro.decode(schema, encodedData);
-        int recordCount = ((List<?>)data.get(0)).size();
+        int recordCount = ((List<?>) data.get(0)).size();
 
         // Extract the records from the decoded data
         List<Record> result = new ArrayList<>();
@@ -50,16 +58,6 @@ final class DynamicTableRecord extends RecordBase implements Serializable {
         }
 
         return result;
-    }
-
-    private final Type type;
-    private final IndexedRecord data;
-    private final int recordIndex;
-
-    private DynamicTableRecord(Type type, IndexedRecord data, int recordIndex) {
-        this.type = type;
-        this.data = data;
-        this.recordIndex = recordIndex;
     }
 
     private Object writeReplace() throws ObjectStreamException {
@@ -80,12 +78,12 @@ final class DynamicTableRecord extends RecordBase implements Serializable {
 
     @Override
     public Object get(int index) {
-        return ((List<?>)data.get(index)).get(recordIndex);
+        return ((List<?>) data.get(index)).get(recordIndex);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
-        ((List)data.get(index)).set(recordIndex, value);
+        ((List) data.get(index)).set(recordIndex, value);
     }
 }

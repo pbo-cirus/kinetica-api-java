@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -25,26 +26,11 @@ public class ClearTableMonitorRequest implements IndexedRecord {
             .record("ClearTableMonitorRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("topicId").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("topicId").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String topicId;
     private Map<String, String> options;
-
-
     /**
      * Constructs a ClearTableMonitorRequest object with default parameters.
      */
@@ -53,15 +39,15 @@ public class ClearTableMonitorRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a ClearTableMonitorRequest object with the specified
      * parameters.
-     * 
-     * @param topicId  The topic ID returned by {@link
-     *                 com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param topicId The topic ID returned by {@link
+     *                com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      */
     public ClearTableMonitorRequest(String topicId, Map<String, String> options) {
         this.topicId = (topicId == null) ? "" : topicId;
@@ -69,22 +55,27 @@ public class ClearTableMonitorRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The topic ID returned by {@link
-     *         com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     * 
+     * com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
      */
     public String getTopicId() {
         return topicId;
     }
 
     /**
-     * 
-     * @param topicId  The topic ID returned by {@link
-     *                 com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     * 
+     * @param topicId The topic ID returned by {@link
+     *                com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearTableMonitorRequest setTopicId(String topicId) {
         this.topicId = (topicId == null) ? "" : topicId;
@@ -92,21 +83,16 @@ public class ClearTableMonitorRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearTableMonitorRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -116,9 +102,8 @@ public class ClearTableMonitorRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -128,13 +113,10 @@ public class ClearTableMonitorRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -153,23 +135,21 @@ public class ClearTableMonitorRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.topicId = (String)value;
+                this.topicId = (String) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -179,33 +159,33 @@ public class ClearTableMonitorRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ClearTableMonitorRequest that = (ClearTableMonitorRequest)obj;
+        ClearTableMonitorRequest that = (ClearTableMonitorRequest) obj;
 
-        return ( this.topicId.equals( that.topicId )
-                 && this.options.equals( that.options ) );
+        return (this.topicId.equals(that.topicId)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "topicId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.topicId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("topicId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.topicId));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

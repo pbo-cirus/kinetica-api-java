@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -26,26 +27,455 @@ public class FilterByGeometryRequest implements IndexedRecord {
             .record("FilterByGeometryRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("inputWkt").type().stringType().noDefault()
-                .name("operation").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("inputWkt").type().stringType().noDefault()
+            .name("operation").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String viewName;
+    private String columnName;
+    private String inputWkt;
+    private String operation;
+    private Map<String, String> options;
+    /**
+     * Constructs a FilterByGeometryRequest object with default parameters.
+     */
+    public FilterByGeometryRequest() {
+        tableName = "";
+        viewName = "";
+        columnName = "";
+        inputWkt = "";
+        operation = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a FilterByGeometryRequest object with the specified
+     * parameters.
+     *
+     * @param tableName  Name of the table on which the filter by geometry will
+     *                   be performed.  Must be an existing table, collection
+     *                   or view containing a geospatial geometry column.
+     * @param viewName   If provided, then this will be the name of the view
+     *                   containing the results. Has the same naming
+     *                   restrictions as <a
+     *                   href="../../../../../concepts/tables.html"
+     *                   target="_top">tables</a>.  The default value is ''.
+     * @param columnName Name of the column to be used in the filter. Must be
+     *                   a geospatial geometry column.
+     * @param inputWkt   A geometry in WKT format that will be used to filter
+     *                   the objects in {@code tableName}.  The default value is
+     *                   ''.
+     * @param operation  The geometric filtering operation to perform
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
+     *                   CONTAINS}: Matches records that contain the given WKT
+     *                   in {@code inputWkt}, i.e. the given WKT is within the
+     *                   bounds of a record's geometry.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
+     *                   CROSSES}: Matches records that cross the given WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
+     *                   DISJOINT}: Matches records that are disjoint from the
+     *                   given WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
+     *                   EQUALS}: Matches records that are the same as the
+     *                   given WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
+     *                   INTERSECTS}: Matches records that intersect the given
+     *                   WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
+     *                   OVERLAPS}: Matches records that overlap the given WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
+     *                   TOUCHES}: Matches records that touch the given WKT.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
+     *                   WITHIN}: Matches records that are within the given
+     *                   WKT.
+     *                   </ul>
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
+     *                   COLLECTION_NAME}: Name of a collection which is to
+     *                   contain the newly created view. If the collection
+     *                   provided is non-existent, the collection will be
+     *                   automatically created. If empty, then the newly created
+     *                   view will be top-level.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
+     */
+    public FilterByGeometryRequest(String tableName, String viewName, String columnName, String inputWkt, String operation, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.viewName = (viewName == null) ? "" : viewName;
+        this.columnName = (columnName == null) ? "" : columnName;
+        this.inputWkt = (inputWkt == null) ? "" : inputWkt;
+        this.operation = (operation == null) ? "" : operation;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table on which the filter by geometry will be
+     * performed.  Must be an existing table, collection or view
+     * containing a geospatial geometry column.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table on which the filter by geometry will
+     *                  be performed.  Must be an existing table, collection
+     *                  or view containing a geospatial geometry column.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return If provided, then this will be the name of the view containing
+     * the results. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>.  The default value is ''.
+     */
+    public String getViewName() {
+        return viewName;
+    }
+
+    /**
+     * @param viewName If provided, then this will be the name of the view
+     *                 containing the results. Has the same naming
+     *                 restrictions as <a
+     *                 href="../../../../../concepts/tables.html"
+     *                 target="_top">tables</a>.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setViewName(String viewName) {
+        this.viewName = (viewName == null) ? "" : viewName;
+        return this;
+    }
+
+    /**
+     * @return Name of the column to be used in the filter. Must be a
+     * geospatial geometry column.
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * @param columnName Name of the column to be used in the filter. Must be
+     *                   a geospatial geometry column.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setColumnName(String columnName) {
+        this.columnName = (columnName == null) ? "" : columnName;
+        return this;
+    }
+
+    /**
+     * @return A geometry in WKT format that will be used to filter the objects
+     * in {@code tableName}.  The default value is ''.
+     */
+    public String getInputWkt() {
+        return inputWkt;
+    }
+
+    /**
+     * @param inputWkt A geometry in WKT format that will be used to filter
+     *                 the objects in {@code tableName}.  The default value is
+     *                 ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setInputWkt(String inputWkt) {
+        this.inputWkt = (inputWkt == null) ? "" : inputWkt;
+        return this;
+    }
+
+    /**
+     * @return The geometric filtering operation to perform
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
+     * CONTAINS}: Matches records that contain the given WKT in {@code
+     * inputWkt}, i.e. the given WKT is within the bounds of a record's
+     * geometry.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
+     * CROSSES}: Matches records that cross the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
+     * DISJOINT}: Matches records that are disjoint from the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
+     * EQUALS}: Matches records that are the same as the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
+     * INTERSECTS}: Matches records that intersect the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
+     * OVERLAPS}: Matches records that overlap the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
+     * TOUCHES}: Matches records that touch the given WKT.
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
+     * WITHIN}: Matches records that are within the given WKT.
+     * </ul>
+     */
+    public String getOperation() {
+        return operation;
+    }
+
+    /**
+     * @param operation The geometric filtering operation to perform
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
+     *                  CONTAINS}: Matches records that contain the given WKT
+     *                  in {@code inputWkt}, i.e. the given WKT is within the
+     *                  bounds of a record's geometry.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
+     *                  CROSSES}: Matches records that cross the given WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
+     *                  DISJOINT}: Matches records that are disjoint from the
+     *                  given WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
+     *                  EQUALS}: Matches records that are the same as the
+     *                  given WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
+     *                  INTERSECTS}: Matches records that intersect the given
+     *                  WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
+     *                  OVERLAPS}: Matches records that overlap the given WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
+     *                  TOUCHES}: Matches records that touch the given WKT.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
+     *                  WITHIN}: Matches records that are within the given
+     *                  WKT.
+     *                  </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setOperation(String operation) {
+        this.operation = (operation == null) ? "" : operation;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public FilterByGeometryRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.viewName;
+
+            case 2:
+                return this.columnName;
+
+            case 3:
+                return this.inputWkt;
+
+            case 4:
+                return this.operation;
+
+            case 5:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.viewName = (String) value;
+                break;
+
+            case 2:
+                this.columnName = (String) value;
+                break;
+
+            case 3:
+                this.inputWkt = (String) value;
+                break;
+
+            case 4:
+                this.operation = (String) value;
+                break;
+
+            case 5:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        FilterByGeometryRequest that = (FilterByGeometryRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && this.columnName.equals(that.columnName)
+                && this.inputWkt.equals(that.inputWkt)
+                && this.operation.equals(that.operation)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("inputWkt"));
+        builder.append(": ");
+        builder.append(gd.toString(this.inputWkt));
+        builder.append(", ");
+        builder.append(gd.toString("operation"));
+        builder.append(": ");
+        builder.append(gd.toString(this.operation));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.viewName.hashCode();
+        hashCode = (31 * hashCode) + this.columnName.hashCode();
+        hashCode = (31 * hashCode) + this.inputWkt.hashCode();
+        hashCode = (31 * hashCode) + this.operation.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * The geometric filtering operation to perform
@@ -122,9 +552,9 @@ public class FilterByGeometryRequest implements IndexedRecord {
          */
         public static final String WITHIN = "within";
 
-        private Operation() {  }
+        private Operation() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -149,480 +579,8 @@ public class FilterByGeometryRequest implements IndexedRecord {
          */
         public static final String COLLECTION_NAME = "collection_name";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String viewName;
-    private String columnName;
-    private String inputWkt;
-    private String operation;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a FilterByGeometryRequest object with default parameters.
-     */
-    public FilterByGeometryRequest() {
-        tableName = "";
-        viewName = "";
-        columnName = "";
-        inputWkt = "";
-        operation = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a FilterByGeometryRequest object with the specified
-     * parameters.
-     * 
-     * @param tableName  Name of the table on which the filter by geometry will
-     *                   be performed.  Must be an existing table, collection
-     *                   or view containing a geospatial geometry column.
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * @param columnName  Name of the column to be used in the filter. Must be
-     *                    a geospatial geometry column.
-     * @param inputWkt  A geometry in WKT format that will be used to filter
-     *                  the objects in {@code tableName}.  The default value is
-     *                  ''.
-     * @param operation  The geometric filtering operation to perform
-     *                   Supported values:
-     *                   <ul>
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
-     *                   CONTAINS}: Matches records that contain the given WKT
-     *                   in {@code inputWkt}, i.e. the given WKT is within the
-     *                   bounds of a record's geometry.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
-     *                   CROSSES}: Matches records that cross the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
-     *                   DISJOINT}: Matches records that are disjoint from the
-     *                   given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
-     *                   EQUALS}: Matches records that are the same as the
-     *                   given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
-     *                   INTERSECTS}: Matches records that intersect the given
-     *                   WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
-     *                   OVERLAPS}: Matches records that overlap the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
-     *                   TOUCHES}: Matches records that touch the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
-     *                   WITHIN}: Matches records that are within the given
-     *                   WKT.
-     *                   </ul>
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public FilterByGeometryRequest(String tableName, String viewName, String columnName, String inputWkt, String operation, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.viewName = (viewName == null) ? "" : viewName;
-        this.columnName = (columnName == null) ? "" : columnName;
-        this.inputWkt = (inputWkt == null) ? "" : inputWkt;
-        this.operation = (operation == null) ? "" : operation;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table on which the filter by geometry will be
-     *         performed.  Must be an existing table, collection or view
-     *         containing a geospatial geometry column.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table on which the filter by geometry will
-     *                   be performed.  Must be an existing table, collection
-     *                   or view containing a geospatial geometry column.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return If provided, then this will be the name of the view containing
-     *         the results. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>.  The default value is ''.
-     * 
-     */
-    public String getViewName() {
-        return viewName;
-    }
-
-    /**
-     * 
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Has the same naming
-     *                  restrictions as <a
-     *                  href="../../../../../concepts/tables.html"
-     *                  target="_top">tables</a>.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setViewName(String viewName) {
-        this.viewName = (viewName == null) ? "" : viewName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the column to be used in the filter. Must be a
-     *         geospatial geometry column.
-     * 
-     */
-    public String getColumnName() {
-        return columnName;
-    }
-
-    /**
-     * 
-     * @param columnName  Name of the column to be used in the filter. Must be
-     *                    a geospatial geometry column.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setColumnName(String columnName) {
-        this.columnName = (columnName == null) ? "" : columnName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return A geometry in WKT format that will be used to filter the objects
-     *         in {@code tableName}.  The default value is ''.
-     * 
-     */
-    public String getInputWkt() {
-        return inputWkt;
-    }
-
-    /**
-     * 
-     * @param inputWkt  A geometry in WKT format that will be used to filter
-     *                  the objects in {@code tableName}.  The default value is
-     *                  ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setInputWkt(String inputWkt) {
-        this.inputWkt = (inputWkt == null) ? "" : inputWkt;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The geometric filtering operation to perform
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
-     *         CONTAINS}: Matches records that contain the given WKT in {@code
-     *         inputWkt}, i.e. the given WKT is within the bounds of a record's
-     *         geometry.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
-     *         CROSSES}: Matches records that cross the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
-     *         DISJOINT}: Matches records that are disjoint from the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
-     *         EQUALS}: Matches records that are the same as the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
-     *         INTERSECTS}: Matches records that intersect the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
-     *         OVERLAPS}: Matches records that overlap the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
-     *         TOUCHES}: Matches records that touch the given WKT.
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
-     *         WITHIN}: Matches records that are within the given WKT.
-     *         </ul>
-     * 
-     */
-    public String getOperation() {
-        return operation;
-    }
-
-    /**
-     * 
-     * @param operation  The geometric filtering operation to perform
-     *                   Supported values:
-     *                   <ul>
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CONTAINS
-     *                   CONTAINS}: Matches records that contain the given WKT
-     *                   in {@code inputWkt}, i.e. the given WKT is within the
-     *                   bounds of a record's geometry.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#CROSSES
-     *                   CROSSES}: Matches records that cross the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#DISJOINT
-     *                   DISJOINT}: Matches records that are disjoint from the
-     *                   given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#EQUALS
-     *                   EQUALS}: Matches records that are the same as the
-     *                   given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#INTERSECTS
-     *                   INTERSECTS}: Matches records that intersect the given
-     *                   WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#OVERLAPS
-     *                   OVERLAPS}: Matches records that overlap the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#TOUCHES
-     *                   TOUCHES}: Matches records that touch the given WKT.
-     *                           <li> {@link
-     *                   com.gpudb.protocol.FilterByGeometryRequest.Operation#WITHIN
-     *                   WITHIN}: Matches records that are within the given
-     *                   WKT.
-     *                   </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setOperation(String operation) {
-        this.operation = (operation == null) ? "" : operation;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public FilterByGeometryRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.viewName;
-
-            case 2:
-                return this.columnName;
-
-            case 3:
-                return this.inputWkt;
-
-            case 4:
-                return this.operation;
-
-            case 5:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.viewName = (String)value;
-                break;
-
-            case 2:
-                this.columnName = (String)value;
-                break;
-
-            case 3:
-                this.inputWkt = (String)value;
-                break;
-
-            case 4:
-                this.operation = (String)value;
-                break;
-
-            case 5:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        FilterByGeometryRequest that = (FilterByGeometryRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && this.columnName.equals( that.columnName )
-                 && this.inputWkt.equals( that.inputWkt )
-                 && this.operation.equals( that.operation )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "inputWkt" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.inputWkt ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "operation" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.operation ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.viewName.hashCode();
-        hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + this.inputWkt.hashCode();
-        hashCode = (31 * hashCode) + this.operation.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

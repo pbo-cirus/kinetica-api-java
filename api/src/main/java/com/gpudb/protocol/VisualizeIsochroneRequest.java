@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,32 +32,2220 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
             .record("VisualizeIsochroneRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("sourceNode").type().stringType().noDefault()
-                .name("maxSolutionRadius").type().doubleType().noDefault()
-                .name("weightsOnEdges").type().array().items().stringType().noDefault()
-                .name("restrictions").type().array().items().stringType().noDefault()
-                .name("numLevels").type().intType().noDefault()
-                .name("generateImage").type().booleanType().noDefault()
-                .name("levelsTable").type().stringType().noDefault()
-                .name("styleOptions").type().map().values().stringType().noDefault()
-                .name("solveOptions").type().map().values().stringType().noDefault()
-                .name("contourOptions").type().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("sourceNode").type().stringType().noDefault()
+            .name("maxSolutionRadius").type().doubleType().noDefault()
+            .name("weightsOnEdges").type().array().items().stringType().noDefault()
+            .name("restrictions").type().array().items().stringType().noDefault()
+            .name("numLevels").type().intType().noDefault()
+            .name("generateImage").type().booleanType().noDefault()
+            .name("levelsTable").type().stringType().noDefault()
+            .name("styleOptions").type().map().values().stringType().noDefault()
+            .name("solveOptions").type().map().values().stringType().noDefault()
+            .name("contourOptions").type().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String graphName;
+    private String sourceNode;
+    private double maxSolutionRadius;
+    private List<String> weightsOnEdges;
+    private List<String> restrictions;
+    private int numLevels;
+    private boolean generateImage;
+    private String levelsTable;
+    private Map<String, String> styleOptions;
+    private Map<String, String> solveOptions;
+    private Map<String, String> contourOptions;
+    private Map<String, String> options;
+    /**
+     * Constructs a VisualizeIsochroneRequest object with default parameters.
+     */
+    public VisualizeIsochroneRequest() {
+        graphName = "";
+        sourceNode = "";
+        weightsOnEdges = new ArrayList<>();
+        restrictions = new ArrayList<>();
+        levelsTable = "";
+        styleOptions = new LinkedHashMap<>();
+        solveOptions = new LinkedHashMap<>();
+        contourOptions = new LinkedHashMap<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a VisualizeIsochroneRequest object with the specified
+     * parameters.
+     *
+     * @param graphName         Name of the graph on which the isochrone is to be
+     *                          computed.
+     * @param sourceNode        Starting vertex on the underlying graph from/to which
+     *                          the isochrones are created.
+     * @param maxSolutionRadius Extent of the search radius around {@code
+     *                          sourceNode}. Set to '-1.0' for unrestricted
+     *                          search radius.  The default value is -1.0.
+     * @param weightsOnEdges    Additional weights to apply to the edges of an
+     *                          existing graph. Weights must be specified using
+     *                          <a
+     *                          href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                          target="_top">identifiers</a>; identifiers are
+     *                          grouped as <a
+     *                          href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                          target="_top">combinations</a>. Identifiers can
+     *                          be used with existing column names, e.g.,
+     *                          'table.column AS WEIGHTS_EDGE_ID', or
+     *                          expressions, e.g., 'ST_LENGTH(wkt) AS
+     *                          WEIGHTS_VALUESPECIFIED'. Any provided weights
+     *                          will be added (in the case of
+     *                          'WEIGHTS_VALUESPECIFIED') to or multiplied with
+     *                          (in the case of 'WEIGHTS_FACTORSPECIFIED') the
+     *                          existing weight(s).  The default value is an
+     *                          empty {@link List}.
+     * @param restrictions      Additional restrictions to apply to the nodes/edges
+     *                          of an existing graph. Restrictions must be
+     *                          specified using <a
+     *                          href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                          target="_top">identifiers</a>; identifiers are
+     *                          grouped as <a
+     *                          href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                          target="_top">combinations</a>. Identifiers can be
+     *                          used with existing column names, e.g.,
+     *                          'table.column AS RESTRICTIONS_EDGE_ID', or
+     *                          expressions, e.g., 'column/2 AS
+     *                          RESTRICTIONS_VALUECOMPARED'. If {@code
+     *                          remove_previous_restrictions} is set to {@code
+     *                          true}, any provided restrictions will replace the
+     *                          existing restrictions. If {@code
+     *                          remove_previous_restrictions} is set to {@code
+     *                          false}, any provided restrictions will be added (in
+     *                          the case of 'RESTRICTIONS_VALUECOMPARED') to or
+     *                          replaced (in the case of
+     *                          'RESTRICTIONS_ONOFFCOMPARED').  The default value
+     *                          is an empty {@link List}.
+     * @param numLevels         Number of equally-separated isochrones to compute.
+     *                          The default value is 1.
+     * @param generateImage     If set to {@code true}, generates a PNG image of
+     *                          the isochrones in the response.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     *                          TRUE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
+     *                          FALSE}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     *                          TRUE}.
+     * @param levelsTable       Name of the table to output the isochrones,
+     *                          containing levels and their corresponding WKT
+     *                          geometry. If no value is provided, the table is not
+     *                          generated.  The default value is ''.
+     * @param styleOptions      Various style related options of the isochrone
+     *                          image.
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
+     *                          LINE_SIZE}: The width of the contour lines in
+     *                          pixels.  The default value is '3'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
+     *                          COLOR}: Color of generated isolines. All color
+     *                          values must be in the format RRGGBB or AARRGGBB (to
+     *                          specify the alpha value). If alpha is specified and
+     *                          flooded contours are enabled, it will be used for
+     *                          as the transparency of the latter.  The default
+     *                          value is 'FF696969'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
+     *                          BG_COLOR}: When {@code generateImage} is set to
+     *                          {@code true}, background color of the generated
+     *                          image. All color values must be in the format
+     *                          RRGGBB or AARRGGBB (to specify the alpha value).
+     *                          The default value is '00000000'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
+     *                          TEXT_COLOR}: When {@code add_labels} is set to
+     *                          {@code true}, color for the labels. All color
+     *                          values must be in the format RRGGBB or AARRGGBB (to
+     *                          specify the alpha value).  The default value is
+     *                          'FF000000'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
+     *                          COLORMAP}: Colormap for contours or fill-in regions
+     *                          when applicable. All color values must be in the
+     *                          format RRGGBB or AARRGGBB (to specify the alpha
+     *                          value)
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     *                          JET}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
+     *                          ACCENT}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
+     *                          AFMHOT}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
+     *                          AUTUMN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
+     *                          BINARY}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
+     *                          BLUES}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
+     *                          BONE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
+     *                          BRBG}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
+     *                          BRG}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
+     *                          BUGN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
+     *                          BUPU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
+     *                          BWR}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
+     *                          CMRMAP}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
+     *                          COOL}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
+     *                          COOLWARM}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
+     *                          COPPER}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
+     *                          CUBEHELIX}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
+     *                          DARK2}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
+     *                          FLAG}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
+     *                          GIST_EARTH}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
+     *                          GIST_GRAY}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
+     *                          GIST_HEAT}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
+     *                          GIST_NCAR}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
+     *                          GIST_RAINBOW}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
+     *                          GIST_STERN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
+     *                          GIST_YARG}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
+     *                          GNBU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
+     *                          GNUPLOT2}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
+     *                          GNUPLOT}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
+     *                          GRAY}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
+     *                          GREENS}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
+     *                          GREYS}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
+     *                          HOT}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
+     *                          HSV}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
+     *                          INFERNO}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
+     *                          MAGMA}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
+     *                          NIPY_SPECTRAL}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
+     *                          OCEAN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
+     *                          ORANGES}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
+     *                          ORRD}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
+     *                          PAIRED}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
+     *                          PASTEL1}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
+     *                          PASTEL2}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
+     *                          PINK}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
+     *                          PIYG}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
+     *                          PLASMA}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
+     *                          PRGN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
+     *                          PRISM}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
+     *                          PUBU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
+     *                          PUBUGN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
+     *                          PUOR}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
+     *                          PURD}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
+     *                          PURPLES}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
+     *                          RAINBOW}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
+     *                          RDBU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
+     *                          RDGY}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
+     *                          RDPU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
+     *                          RDYLBU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
+     *                          RDYLGN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
+     *                          REDS}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
+     *                          SEISMIC}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
+     *                          SET1}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
+     *                          SET2}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
+     *                          SET3}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
+     *                          SPECTRAL}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
+     *                          SPRING}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
+     *                          SUMMER}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
+     *                          TERRAIN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
+     *                          VIRIDIS}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
+     *                          WINTER}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
+     *                          WISTIA}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
+     *                          YLGN}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
+     *                          YLGNBU}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
+     *                          YLORBR}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
+     *                          YLORRD}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     *                          JET}.
+     *                          </ul>
+     * @param solveOptions      Solver specific parameters
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
+     *                          REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the
+     *                          restrictions applied to the graph during the
+     *                          creation stage and only use the restrictions
+     *                          specified in this request if set to {@code true}.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
+     *                          TRUE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     *                          FALSE}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     *                          FALSE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
+     *                          RESTRICTION_THRESHOLD_VALUE}: Value-based
+     *                          restriction comparison. Any node or edge with a
+     *                          'RESTRICTIONS_VALUECOMPARED' value greater than the
+     *                          {@code restriction_threshold_value} will not be
+     *                          included in the solution.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
+     *                          UNIFORM_WEIGHTS}: When specified, assigns the given
+     *                          value to all the edges in the graph. Note that
+     *                          weights provided in {@code weightsOnEdges} will
+     *                          override this value.
+     *                          </ul>
+     *                          The default value is an empty {@link Map}.
+     * @param contourOptions    Solver specific parameters
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
+     *                          PROJECTION}: Spatial Reference System (i.e. EPSG
+     *                          Code).
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
+     *                          _3857}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
+     *                          _102100}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
+     *                          _900913}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
+     *                          EPSG_4326}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     *                          PLATE_CARREE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
+     *                          EPSG_900913}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
+     *                          EPSG_102100}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
+     *                          EPSG_3857}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
+     *                          WEB_MERCATOR}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     *                          PLATE_CARREE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
+     *                          WIDTH}: When {@code generateImage} is set to
+     *                          {@code true}, width of the generated image.  The
+     *                          default value is '512'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
+     *                          HEIGHT}: When {@code generateImage} is set to
+     *                          {@code true}, height of the generated image. If
+     *                          the default value is used, the {@code height} is
+     *                          set to the value resulting from multiplying the
+     *                          aspect ratio by the {@code width}.  The default
+     *                          value is '-1'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
+     *                          SEARCH_RADIUS}: When interpolating the graph
+     *                          solution to generate the isochrone, neighborhood
+     *                          of influence of sample data (in percent of the
+     *                          image/grid).  The default value is '20'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
+     *                          GRID_SIZE}: When interpolating the graph solution
+     *                          to generate the isochrone, number of subdivisions
+     *                          along the x axis when building the grid (the y is
+     *                          computed using the aspect ratio of the output
+     *                          image).  The default value is '100'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
+     *                          COLOR_ISOLINES}: Color each isoline according to
+     *                          the colormap; otherwise, use the foreground
+     *                          color.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                          TRUE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                          FALSE}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                          TRUE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
+     *                          ADD_LABELS}: If set to {@code true}, add labels
+     *                          to the isolines.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                          TRUE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                          FALSE}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                          FALSE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
+     *                          LABELS_FONT_SIZE}: When {@code add_labels} is set
+     *                          to {@code true}, size of the font (in pixels) to
+     *                          use for labels.  The default value is '12'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
+     *                          LABELS_FONT_FAMILY}: When {@code add_labels} is
+     *                          set to {@code true}, font name to be used when
+     *                          adding labels.  The default value is 'arial'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
+     *                          LABELS_SEARCH_WINDOW}: When {@code add_labels} is
+     *                          set to {@code true}, a search window is used to
+     *                          rate the local quality of each isoline. Smooth,
+     *                          continuous, long stretches with relatively flat
+     *                          angles are favored. The provided value is
+     *                          multiplied by the {@code labels_font_size} to
+     *                          calculate the final window size.  The default
+     *                          value is '4'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
+     *                          LABELS_INTRALEVEL_SEPARATION}: When {@code
+     *                          add_labels} is set to {@code true}, this value
+     *                          determines the  distance (in multiples of the
+     *                          {@code labels_font_size}) to use when separating
+     *                          labels of different values.  The default value is
+     *                          '4'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
+     *                          LABELS_INTERLEVEL_SEPARATION}: When {@code
+     *                          add_labels} is set to {@code true}, this value
+     *                          determines the distance (in percent of the total
+     *                          window size) to use when separating labels of the
+     *                          same value.  The default value is '20'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
+     *                          LABELS_MAX_ANGLE}: When {@code add_labels} is set
+     *                          to {@code true}, maximum angle (in degrees) from
+     *                          the vertical to use when adding labels.  The
+     *                          default value is '60'.
+     *                          </ul>
+     *                          The default value is an empty {@link Map}.
+     * @param options           Additional parameters
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
+     *                          SOLVE_TABLE}: Name of the table to host intermediate
+     *                          solve results containing the position and cost for each
+     *                          vertex in the graph. If the default value is used, a
+     *                          temporary table is created and deleted once the solution
+     *                          is calculated.  The default value is ''.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
+     *                          IS_REPLICATED}: If set to {@code true}, replicate the
+     *                          {@code solve_table}.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                          TRUE}
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                          FALSE}
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                          TRUE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
+     *                          DATA_MIN_X}: Lower bound for the x values. If not
+     *                          provided, it will be computed from the bounds of the
+     *                          input data.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
+     *                          DATA_MAX_X}: Upper bound for the x values. If not
+     *                          provided, it will be computed from the bounds of the
+     *                          input data.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
+     *                          DATA_MIN_Y}: Lower bound for the y values. If not
+     *                          provided, it will be computed from the bounds of the
+     *                          input data.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
+     *                          DATA_MAX_Y}: Upper bound for the y values. If not
+     *                          provided, it will be computed from the bounds of the
+     *                          input data.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
+     *                          CONCAVITY_LEVEL}: Factor to qualify the concavity of the
+     *                          isochrone curves. The lower the value, the more convex
+     *                          (with '0' being completely convex and '1' being the most
+     *                          concave).  The default value is '0.5'.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
+     *                          USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods
+     *                          explicitly if true
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                          TRUE}: uses the solvers scheduled for 'shortest_path'
+     *                          and 'inverse_shortest_path' based on solve_direction
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                          FALSE}: uses the solvers 'priority_queue' and
+     *                          'inverse_priority_queue' based on solve_direction
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                          FALSE}.
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
+     *                          SOLVE_DIRECTION}: Specify whether we are going to the
+     *                          source node, or starting from it.
+     *                          Supported values:
+     *                          <ul>
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     *                          FROM_SOURCE}: Shortest path to get to the source
+     *                          (inverse Dijkstra)
+     *                                  <li> {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
+     *                          TO_SOURCE}: Shortest path to source (Dijkstra)
+     *                          </ul>
+     *                          The default value is {@link
+     *                          com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     *                          FROM_SOURCE}.
+     *                          </ul>
+     *                          The default value is an empty {@link Map}.
+     */
+    public VisualizeIsochroneRequest(String graphName, String sourceNode, double maxSolutionRadius, List<String> weightsOnEdges, List<String> restrictions, int numLevels, boolean generateImage, String levelsTable, Map<String, String> styleOptions, Map<String, String> solveOptions, Map<String, String> contourOptions, Map<String, String> options) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        this.sourceNode = (sourceNode == null) ? "" : sourceNode;
+        this.maxSolutionRadius = maxSolutionRadius;
+        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        this.numLevels = numLevels;
+        this.generateImage = generateImage;
+        this.levelsTable = (levelsTable == null) ? "" : levelsTable;
+        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, String>() : styleOptions;
+        this.solveOptions = (solveOptions == null) ? new LinkedHashMap<String, String>() : solveOptions;
+        this.contourOptions = (contourOptions == null) ? new LinkedHashMap<String, String>() : contourOptions;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the graph on which the isochrone is to be computed.
+     */
+    public String getGraphName() {
+        return graphName;
+    }
+
+    /**
+     * @param graphName Name of the graph on which the isochrone is to be
+     *                  computed.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setGraphName(String graphName) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        return this;
+    }
+
+    /**
+     * @return Starting vertex on the underlying graph from/to which the
+     * isochrones are created.
+     */
+    public String getSourceNode() {
+        return sourceNode;
+    }
+
+    /**
+     * @param sourceNode Starting vertex on the underlying graph from/to which
+     *                   the isochrones are created.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setSourceNode(String sourceNode) {
+        this.sourceNode = (sourceNode == null) ? "" : sourceNode;
+        return this;
+    }
+
+    /**
+     * @return Extent of the search radius around {@code sourceNode}. Set to
+     * '-1.0' for unrestricted search radius.  The default value is
+     * -1.0.
+     */
+    public double getMaxSolutionRadius() {
+        return maxSolutionRadius;
+    }
+
+    /**
+     * @param maxSolutionRadius Extent of the search radius around {@code
+     *                          sourceNode}. Set to '-1.0' for unrestricted
+     *                          search radius.  The default value is -1.0.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setMaxSolutionRadius(double maxSolutionRadius) {
+        this.maxSolutionRadius = maxSolutionRadius;
+        return this;
+    }
+
+    /**
+     * @return Additional weights to apply to the edges of an existing graph.
+     * Weights must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
+     * or expressions, e.g., 'ST_LENGTH(wkt) AS
+     * WEIGHTS_VALUESPECIFIED'. Any provided weights will be added (in
+     * the case of 'WEIGHTS_VALUESPECIFIED') to or multiplied with (in
+     * the case of 'WEIGHTS_FACTORSPECIFIED') the existing weight(s).
+     * The default value is an empty {@link List}.
+     */
+    public List<String> getWeightsOnEdges() {
+        return weightsOnEdges;
+    }
+
+    /**
+     * @param weightsOnEdges Additional weights to apply to the edges of an
+     *                       existing graph. Weights must be specified using
+     *                       <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                       target="_top">identifiers</a>; identifiers are
+     *                       grouped as <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                       target="_top">combinations</a>. Identifiers can
+     *                       be used with existing column names, e.g.,
+     *                       'table.column AS WEIGHTS_EDGE_ID', or
+     *                       expressions, e.g., 'ST_LENGTH(wkt) AS
+     *                       WEIGHTS_VALUESPECIFIED'. Any provided weights
+     *                       will be added (in the case of
+     *                       'WEIGHTS_VALUESPECIFIED') to or multiplied with
+     *                       (in the case of 'WEIGHTS_FACTORSPECIFIED') the
+     *                       existing weight(s).  The default value is an
+     *                       empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setWeightsOnEdges(List<String> weightsOnEdges) {
+        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
+        return this;
+    }
+
+    /**
+     * @return Additional restrictions to apply to the nodes/edges of an
+     * existing graph. Restrictions must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS
+     * RESTRICTIONS_EDGE_ID', or expressions, e.g., 'column/2 AS
+     * RESTRICTIONS_VALUECOMPARED'. If {@code
+     * remove_previous_restrictions} is set to {@code true}, any
+     * provided restrictions will replace the existing restrictions. If
+     * {@code remove_previous_restrictions} is set to {@code false},
+     * any provided restrictions will be added (in the case of
+     * 'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of
+     * 'RESTRICTIONS_ONOFFCOMPARED').  The default value is an empty
+     * {@link List}.
+     */
+    public List<String> getRestrictions() {
+        return restrictions;
+    }
+
+    /**
+     * @param restrictions Additional restrictions to apply to the nodes/edges
+     *                     of an existing graph. Restrictions must be
+     *                     specified using <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                     target="_top">identifiers</a>; identifiers are
+     *                     grouped as <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                     target="_top">combinations</a>. Identifiers can be
+     *                     used with existing column names, e.g.,
+     *                     'table.column AS RESTRICTIONS_EDGE_ID', or
+     *                     expressions, e.g., 'column/2 AS
+     *                     RESTRICTIONS_VALUECOMPARED'. If {@code
+     *                     remove_previous_restrictions} is set to {@code
+     *                     true}, any provided restrictions will replace the
+     *                     existing restrictions. If {@code
+     *                     remove_previous_restrictions} is set to {@code
+     *                     false}, any provided restrictions will be added (in
+     *                     the case of 'RESTRICTIONS_VALUECOMPARED') to or
+     *                     replaced (in the case of
+     *                     'RESTRICTIONS_ONOFFCOMPARED').  The default value
+     *                     is an empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setRestrictions(List<String> restrictions) {
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        return this;
+    }
+
+    /**
+     * @return Number of equally-separated isochrones to compute.  The default
+     * value is 1.
+     */
+    public int getNumLevels() {
+        return numLevels;
+    }
+
+    /**
+     * @param numLevels Number of equally-separated isochrones to compute.
+     *                  The default value is 1.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setNumLevels(int numLevels) {
+        this.numLevels = numLevels;
+        return this;
+    }
+
+    /**
+     * @return If set to {@code true}, generates a PNG image of the isochrones
+     * in the response.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     * TRUE}.
+     */
+    public boolean getGenerateImage() {
+        return generateImage;
+    }
+
+    /**
+     * @param generateImage If set to {@code true}, generates a PNG image of
+     *                      the isochrones in the response.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     *                      TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
+     *                      TRUE}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setGenerateImage(boolean generateImage) {
+        this.generateImage = generateImage;
+        return this;
+    }
+
+    /**
+     * @return Name of the table to output the isochrones, containing levels
+     * and their corresponding WKT geometry. If no value is provided,
+     * the table is not generated.  The default value is ''.
+     */
+    public String getLevelsTable() {
+        return levelsTable;
+    }
+
+    /**
+     * @param levelsTable Name of the table to output the isochrones,
+     *                    containing levels and their corresponding WKT
+     *                    geometry. If no value is provided, the table is not
+     *                    generated.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setLevelsTable(String levelsTable) {
+        this.levelsTable = (levelsTable == null) ? "" : levelsTable;
+        return this;
+    }
+
+    /**
+     * @return Various style related options of the isochrone image.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
+     * LINE_SIZE}: The width of the contour lines in pixels.  The
+     * default value is '3'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
+     * COLOR}: Color of generated isolines. All color values must be in
+     * the format RRGGBB or AARRGGBB (to specify the alpha value). If
+     * alpha is specified and flooded contours are enabled, it will be
+     * used for as the transparency of the latter.  The default value
+     * is 'FF696969'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
+     * BG_COLOR}: When {@code generateImage} is set to {@code true},
+     * background color of the generated image. All color values must
+     * be in the format RRGGBB or AARRGGBB (to specify the alpha
+     * value).  The default value is '00000000'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
+     * TEXT_COLOR}: When {@code add_labels} is set to {@code true},
+     * color for the labels. All color values must be in the format
+     * RRGGBB or AARRGGBB (to specify the alpha value).  The default
+     * value is 'FF000000'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
+     * COLORMAP}: Colormap for contours or fill-in regions when
+     * applicable. All color values must be in the format RRGGBB or
+     * AARRGGBB (to specify the alpha value)
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     * JET}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
+     * ACCENT}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
+     * AFMHOT}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
+     * AUTUMN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
+     * BINARY}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
+     * BLUES}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
+     * BONE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
+     * BRBG}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
+     * BRG}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
+     * BUGN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
+     * BUPU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
+     * BWR}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
+     * CMRMAP}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
+     * COOL}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
+     * COOLWARM}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
+     * COPPER}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
+     * CUBEHELIX}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
+     * DARK2}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
+     * FLAG}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
+     * GIST_EARTH}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
+     * GIST_GRAY}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
+     * GIST_HEAT}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
+     * GIST_NCAR}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
+     * GIST_RAINBOW}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
+     * GIST_STERN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
+     * GIST_YARG}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
+     * GNBU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
+     * GNUPLOT2}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
+     * GNUPLOT}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
+     * GRAY}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
+     * GREENS}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
+     * GREYS}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
+     * HOT}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
+     * HSV}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
+     * INFERNO}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
+     * MAGMA}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
+     * NIPY_SPECTRAL}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
+     * OCEAN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
+     * ORANGES}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
+     * ORRD}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
+     * PAIRED}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
+     * PASTEL1}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
+     * PASTEL2}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
+     * PINK}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
+     * PIYG}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
+     * PLASMA}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
+     * PRGN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
+     * PRISM}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
+     * PUBU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
+     * PUBUGN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
+     * PUOR}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
+     * PURD}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
+     * PURPLES}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
+     * RAINBOW}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
+     * RDBU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
+     * RDGY}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
+     * RDPU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
+     * RDYLBU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
+     * RDYLGN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
+     * REDS}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
+     * SEISMIC}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
+     * SET1}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
+     * SET2}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
+     * SET3}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
+     * SPECTRAL}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
+     * SPRING}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
+     * SUMMER}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
+     * TERRAIN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
+     * VIRIDIS}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
+     * WINTER}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
+     * WISTIA}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
+     * YLGN}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
+     * YLGNBU}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
+     * YLORBR}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
+     * YLORRD}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     * JET}.
+     * </ul>
+     */
+    public Map<String, String> getStyleOptions() {
+        return styleOptions;
+    }
+
+    /**
+     * @param styleOptions Various style related options of the isochrone
+     *                     image.
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
+     *                     LINE_SIZE}: The width of the contour lines in
+     *                     pixels.  The default value is '3'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
+     *                     COLOR}: Color of generated isolines. All color
+     *                     values must be in the format RRGGBB or AARRGGBB (to
+     *                     specify the alpha value). If alpha is specified and
+     *                     flooded contours are enabled, it will be used for
+     *                     as the transparency of the latter.  The default
+     *                     value is 'FF696969'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
+     *                     BG_COLOR}: When {@code generateImage} is set to
+     *                     {@code true}, background color of the generated
+     *                     image. All color values must be in the format
+     *                     RRGGBB or AARRGGBB (to specify the alpha value).
+     *                     The default value is '00000000'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
+     *                     TEXT_COLOR}: When {@code add_labels} is set to
+     *                     {@code true}, color for the labels. All color
+     *                     values must be in the format RRGGBB or AARRGGBB (to
+     *                     specify the alpha value).  The default value is
+     *                     'FF000000'.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
+     *                     COLORMAP}: Colormap for contours or fill-in regions
+     *                     when applicable. All color values must be in the
+     *                     format RRGGBB or AARRGGBB (to specify the alpha
+     *                     value)
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     *                     JET}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
+     *                     ACCENT}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
+     *                     AFMHOT}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
+     *                     AUTUMN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
+     *                     BINARY}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
+     *                     BLUES}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
+     *                     BONE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
+     *                     BRBG}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
+     *                     BRG}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
+     *                     BUGN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
+     *                     BUPU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
+     *                     BWR}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
+     *                     CMRMAP}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
+     *                     COOL}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
+     *                     COOLWARM}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
+     *                     COPPER}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
+     *                     CUBEHELIX}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
+     *                     DARK2}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
+     *                     FLAG}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
+     *                     GIST_EARTH}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
+     *                     GIST_GRAY}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
+     *                     GIST_HEAT}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
+     *                     GIST_NCAR}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
+     *                     GIST_RAINBOW}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
+     *                     GIST_STERN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
+     *                     GIST_YARG}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
+     *                     GNBU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
+     *                     GNUPLOT2}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
+     *                     GNUPLOT}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
+     *                     GRAY}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
+     *                     GREENS}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
+     *                     GREYS}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
+     *                     HOT}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
+     *                     HSV}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
+     *                     INFERNO}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
+     *                     MAGMA}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
+     *                     NIPY_SPECTRAL}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
+     *                     OCEAN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
+     *                     ORANGES}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
+     *                     ORRD}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
+     *                     PAIRED}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
+     *                     PASTEL1}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
+     *                     PASTEL2}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
+     *                     PINK}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
+     *                     PIYG}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
+     *                     PLASMA}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
+     *                     PRGN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
+     *                     PRISM}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
+     *                     PUBU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
+     *                     PUBUGN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
+     *                     PUOR}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
+     *                     PURD}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
+     *                     PURPLES}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
+     *                     RAINBOW}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
+     *                     RDBU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
+     *                     RDGY}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
+     *                     RDPU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
+     *                     RDYLBU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
+     *                     RDYLGN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
+     *                     REDS}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
+     *                     SEISMIC}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
+     *                     SET1}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
+     *                     SET2}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
+     *                     SET3}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
+     *                     SPECTRAL}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
+     *                     SPRING}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
+     *                     SUMMER}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
+     *                     TERRAIN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
+     *                     VIRIDIS}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
+     *                     WINTER}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
+     *                     WISTIA}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
+     *                     YLGN}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
+     *                     YLGNBU}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
+     *                     YLORBR}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
+     *                     YLORRD}
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
+     *                     JET}.
+     *                     </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setStyleOptions(Map<String, String> styleOptions) {
+        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, String>() : styleOptions;
+        return this;
+    }
+
+    /**
+     * @return Solver specific parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
+     * REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions applied
+     * to the graph during the creation stage and only use the
+     * restrictions specified in this request if set to {@code true}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     * FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
+     * RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     * comparison. Any node or edge with a 'RESTRICTIONS_VALUECOMPARED'
+     * value greater than the {@code restriction_threshold_value} will
+     * not be included in the solution.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
+     * UNIFORM_WEIGHTS}: When specified, assigns the given value to all
+     * the edges in the graph. Note that weights provided in {@code
+     * weightsOnEdges} will override this value.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getSolveOptions() {
+        return solveOptions;
+    }
+
+    /**
+     * @param solveOptions Solver specific parameters
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
+     *                     REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the
+     *                     restrictions applied to the graph during the
+     *                     creation stage and only use the restrictions
+     *                     specified in this request if set to {@code true}.
+     *                     Supported values:
+     *                     <ul>
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
+     *                     TRUE}
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     *                     FALSE}
+     *                     </ul>
+     *                     The default value is {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
+     *                     FALSE}.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
+     *                     RESTRICTION_THRESHOLD_VALUE}: Value-based
+     *                     restriction comparison. Any node or edge with a
+     *                     'RESTRICTIONS_VALUECOMPARED' value greater than the
+     *                     {@code restriction_threshold_value} will not be
+     *                     included in the solution.
+     *                             <li> {@link
+     *                     com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
+     *                     UNIFORM_WEIGHTS}: When specified, assigns the given
+     *                     value to all the edges in the graph. Note that
+     *                     weights provided in {@code weightsOnEdges} will
+     *                     override this value.
+     *                     </ul>
+     *                     The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setSolveOptions(Map<String, String> solveOptions) {
+        this.solveOptions = (solveOptions == null) ? new LinkedHashMap<String, String>() : solveOptions;
+        return this;
+    }
+
+    /**
+     * @return Solver specific parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
+     * PROJECTION}: Spatial Reference System (i.e. EPSG Code).
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
+     * _3857}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
+     * _102100}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
+     * _900913}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
+     * EPSG_4326}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     * PLATE_CARREE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
+     * EPSG_900913}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
+     * EPSG_102100}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
+     * EPSG_3857}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
+     * WEB_MERCATOR}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     * PLATE_CARREE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
+     * WIDTH}: When {@code generateImage} is set to {@code true}, width
+     * of the generated image.  The default value is '512'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
+     * HEIGHT}: When {@code generateImage} is set to {@code true},
+     * height of the generated image. If the default value is used, the
+     * {@code height} is set to the value resulting from multiplying
+     * the aspect ratio by the {@code width}.  The default value is
+     * '-1'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
+     * SEARCH_RADIUS}: When interpolating the graph solution to
+     * generate the isochrone, neighborhood of influence of sample data
+     * (in percent of the image/grid).  The default value is '20'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
+     * GRID_SIZE}: When interpolating the graph solution to generate
+     * the isochrone, number of subdivisions along the x axis when
+     * building the grid (the y is computed using the aspect ratio of
+     * the output image).  The default value is '100'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
+     * COLOR_ISOLINES}: Color each isoline according to the colormap;
+     * otherwise, use the foreground color.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     * TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
+     * ADD_LABELS}: If set to {@code true}, add labels to the isolines.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     * TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     * FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
+     * LABELS_FONT_SIZE}: When {@code add_labels} is set to {@code
+     * true}, size of the font (in pixels) to use for labels.  The
+     * default value is '12'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
+     * LABELS_FONT_FAMILY}: When {@code add_labels} is set to {@code
+     * true}, font name to be used when adding labels.  The default
+     * value is 'arial'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
+     * LABELS_SEARCH_WINDOW}: When {@code add_labels} is set to {@code
+     * true}, a search window is used to rate the local quality of each
+     * isoline. Smooth, continuous, long stretches with relatively flat
+     * angles are favored. The provided value is multiplied by the
+     * {@code labels_font_size} to calculate the final window size.
+     * The default value is '4'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
+     * LABELS_INTRALEVEL_SEPARATION}: When {@code add_labels} is set to
+     * {@code true}, this value determines the  distance (in multiples
+     * of the {@code labels_font_size}) to use when separating labels
+     * of different values.  The default value is '4'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
+     * LABELS_INTERLEVEL_SEPARATION}: When {@code add_labels} is set to
+     * {@code true}, this value determines the distance (in percent of
+     * the total window size) to use when separating labels of the same
+     * value.  The default value is '20'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
+     * LABELS_MAX_ANGLE}: When {@code add_labels} is set to {@code
+     * true}, maximum angle (in degrees) from the vertical to use when
+     * adding labels.  The default value is '60'.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getContourOptions() {
+        return contourOptions;
+    }
+
+    /**
+     * @param contourOptions Solver specific parameters
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
+     *                       PROJECTION}: Spatial Reference System (i.e. EPSG
+     *                       Code).
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
+     *                       _3857}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
+     *                       _102100}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
+     *                       _900913}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
+     *                       EPSG_4326}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     *                       PLATE_CARREE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
+     *                       EPSG_900913}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
+     *                       EPSG_102100}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
+     *                       EPSG_3857}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
+     *                       WEB_MERCATOR}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
+     *                       PLATE_CARREE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
+     *                       WIDTH}: When {@code generateImage} is set to
+     *                       {@code true}, width of the generated image.  The
+     *                       default value is '512'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
+     *                       HEIGHT}: When {@code generateImage} is set to
+     *                       {@code true}, height of the generated image. If
+     *                       the default value is used, the {@code height} is
+     *                       set to the value resulting from multiplying the
+     *                       aspect ratio by the {@code width}.  The default
+     *                       value is '-1'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
+     *                       SEARCH_RADIUS}: When interpolating the graph
+     *                       solution to generate the isochrone, neighborhood
+     *                       of influence of sample data (in percent of the
+     *                       image/grid).  The default value is '20'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
+     *                       GRID_SIZE}: When interpolating the graph solution
+     *                       to generate the isochrone, number of subdivisions
+     *                       along the x axis when building the grid (the y is
+     *                       computed using the aspect ratio of the output
+     *                       image).  The default value is '100'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
+     *                       COLOR_ISOLINES}: Color each isoline according to
+     *                       the colormap; otherwise, use the foreground
+     *                       color.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                       TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                       TRUE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
+     *                       ADD_LABELS}: If set to {@code true}, add labels
+     *                       to the isolines.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
+     *                       TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
+     *                       FALSE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
+     *                       LABELS_FONT_SIZE}: When {@code add_labels} is set
+     *                       to {@code true}, size of the font (in pixels) to
+     *                       use for labels.  The default value is '12'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
+     *                       LABELS_FONT_FAMILY}: When {@code add_labels} is
+     *                       set to {@code true}, font name to be used when
+     *                       adding labels.  The default value is 'arial'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
+     *                       LABELS_SEARCH_WINDOW}: When {@code add_labels} is
+     *                       set to {@code true}, a search window is used to
+     *                       rate the local quality of each isoline. Smooth,
+     *                       continuous, long stretches with relatively flat
+     *                       angles are favored. The provided value is
+     *                       multiplied by the {@code labels_font_size} to
+     *                       calculate the final window size.  The default
+     *                       value is '4'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
+     *                       LABELS_INTRALEVEL_SEPARATION}: When {@code
+     *                       add_labels} is set to {@code true}, this value
+     *                       determines the  distance (in multiples of the
+     *                       {@code labels_font_size}) to use when separating
+     *                       labels of different values.  The default value is
+     *                       '4'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
+     *                       LABELS_INTERLEVEL_SEPARATION}: When {@code
+     *                       add_labels} is set to {@code true}, this value
+     *                       determines the distance (in percent of the total
+     *                       window size) to use when separating labels of the
+     *                       same value.  The default value is '20'.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
+     *                       LABELS_MAX_ANGLE}: When {@code add_labels} is set
+     *                       to {@code true}, maximum angle (in degrees) from
+     *                       the vertical to use when adding labels.  The
+     *                       default value is '60'.
+     *                       </ul>
+     *                       The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setContourOptions(Map<String, String> contourOptions) {
+        this.contourOptions = (contourOptions == null) ? new LinkedHashMap<String, String>() : contourOptions;
+        return this;
+    }
+
+    /**
+     * @return Additional parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
+     * SOLVE_TABLE}: Name of the table to host intermediate solve
+     * results containing the position and cost for each vertex in the
+     * graph. If the default value is used, a temporary table is
+     * created and deleted once the solution is calculated.  The
+     * default value is ''.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
+     * IS_REPLICATED}: If set to {@code true}, replicate the {@code
+     * solve_table}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     * FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
+     * DATA_MIN_X}: Lower bound for the x values. If not provided, it
+     * will be computed from the bounds of the input data.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
+     * DATA_MAX_X}: Upper bound for the x values. If not provided, it
+     * will be computed from the bounds of the input data.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
+     * DATA_MIN_Y}: Lower bound for the y values. If not provided, it
+     * will be computed from the bounds of the input data.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
+     * DATA_MAX_Y}: Upper bound for the y values. If not provided, it
+     * will be computed from the bounds of the input data.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
+     * CONCAVITY_LEVEL}: Factor to qualify the concavity of the
+     * isochrone curves. The lower the value, the more convex (with '0'
+     * being completely convex and '1' being the most concave).  The
+     * default value is '0.5'.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
+     * USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods explicitly
+     * if true
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}:
+     * uses the solvers scheduled for 'shortest_path' and
+     * 'inverse_shortest_path' based on solve_direction
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     * FALSE}: uses the solvers 'priority_queue' and
+     * 'inverse_priority_queue' based on solve_direction
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     * FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
+     * SOLVE_DIRECTION}: Specify whether we are going to the source
+     * node, or starting from it.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     * FROM_SOURCE}: Shortest path to get to the source (inverse
+     * Dijkstra)
+     *         <li> {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
+     * TO_SOURCE}: Shortest path to source (Dijkstra)
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     * FROM_SOURCE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Additional parameters
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
+     *                SOLVE_TABLE}: Name of the table to host intermediate
+     *                solve results containing the position and cost for each
+     *                vertex in the graph. If the default value is used, a
+     *                temporary table is created and deleted once the solution
+     *                is calculated.  The default value is ''.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
+     *                IS_REPLICATED}: If set to {@code true}, replicate the
+     *                {@code solve_table}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
+     *                DATA_MIN_X}: Lower bound for the x values. If not
+     *                provided, it will be computed from the bounds of the
+     *                input data.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
+     *                DATA_MAX_X}: Upper bound for the x values. If not
+     *                provided, it will be computed from the bounds of the
+     *                input data.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
+     *                DATA_MIN_Y}: Lower bound for the y values. If not
+     *                provided, it will be computed from the bounds of the
+     *                input data.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
+     *                DATA_MAX_Y}: Upper bound for the y values. If not
+     *                provided, it will be computed from the bounds of the
+     *                input data.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
+     *                CONCAVITY_LEVEL}: Factor to qualify the concavity of the
+     *                isochrone curves. The lower the value, the more convex
+     *                (with '0' being completely convex and '1' being the most
+     *                concave).  The default value is '0.5'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
+     *                USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods
+     *                explicitly if true
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
+     *                TRUE}: uses the solvers scheduled for 'shortest_path'
+     *                and 'inverse_shortest_path' based on solve_direction
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                FALSE}: uses the solvers 'priority_queue' and
+     *                'inverse_priority_queue' based on solve_direction
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
+     *                SOLVE_DIRECTION}: Specify whether we are going to the
+     *                source node, or starting from it.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     *                FROM_SOURCE}: Shortest path to get to the source
+     *                (inverse Dijkstra)
+     *                        <li> {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
+     *                TO_SOURCE}: Shortest path to source (Dijkstra)
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
+     *                FROM_SOURCE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public VisualizeIsochroneRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.graphName;
+
+            case 1:
+                return this.sourceNode;
+
+            case 2:
+                return this.maxSolutionRadius;
+
+            case 3:
+                return this.weightsOnEdges;
+
+            case 4:
+                return this.restrictions;
+
+            case 5:
+                return this.numLevels;
+
+            case 6:
+                return this.generateImage;
+
+            case 7:
+                return this.levelsTable;
+
+            case 8:
+                return this.styleOptions;
+
+            case 9:
+                return this.solveOptions;
+
+            case 10:
+                return this.contourOptions;
+
+            case 11:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.graphName = (String) value;
+                break;
+
+            case 1:
+                this.sourceNode = (String) value;
+                break;
+
+            case 2:
+                this.maxSolutionRadius = (Double) value;
+                break;
+
+            case 3:
+                this.weightsOnEdges = (List<String>) value;
+                break;
+
+            case 4:
+                this.restrictions = (List<String>) value;
+                break;
+
+            case 5:
+                this.numLevels = (Integer) value;
+                break;
+
+            case 6:
+                this.generateImage = (Boolean) value;
+                break;
+
+            case 7:
+                this.levelsTable = (String) value;
+                break;
+
+            case 8:
+                this.styleOptions = (Map<String, String>) value;
+                break;
+
+            case 9:
+                this.solveOptions = (Map<String, String>) value;
+                break;
+
+            case 10:
+                this.contourOptions = (Map<String, String>) value;
+                break;
+
+            case 11:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        VisualizeIsochroneRequest that = (VisualizeIsochroneRequest) obj;
+
+        return (this.graphName.equals(that.graphName)
+                && this.sourceNode.equals(that.sourceNode)
+                && ((Double) this.maxSolutionRadius).equals((Double) that.maxSolutionRadius)
+                && this.weightsOnEdges.equals(that.weightsOnEdges)
+                && this.restrictions.equals(that.restrictions)
+                && (this.numLevels == that.numLevels)
+                && (this.generateImage == that.generateImage)
+                && this.levelsTable.equals(that.levelsTable)
+                && this.styleOptions.equals(that.styleOptions)
+                && this.solveOptions.equals(that.solveOptions)
+                && this.contourOptions.equals(that.contourOptions)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("sourceNode"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sourceNode));
+        builder.append(", ");
+        builder.append(gd.toString("maxSolutionRadius"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxSolutionRadius));
+        builder.append(", ");
+        builder.append(gd.toString("weightsOnEdges"));
+        builder.append(": ");
+        builder.append(gd.toString(this.weightsOnEdges));
+        builder.append(", ");
+        builder.append(gd.toString("restrictions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.restrictions));
+        builder.append(", ");
+        builder.append(gd.toString("numLevels"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numLevels));
+        builder.append(", ");
+        builder.append(gd.toString("generateImage"));
+        builder.append(": ");
+        builder.append(gd.toString(this.generateImage));
+        builder.append(", ");
+        builder.append(gd.toString("levelsTable"));
+        builder.append(": ");
+        builder.append(gd.toString(this.levelsTable));
+        builder.append(", ");
+        builder.append(gd.toString("styleOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.styleOptions));
+        builder.append(", ");
+        builder.append(gd.toString("solveOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solveOptions));
+        builder.append(", ");
+        builder.append(gd.toString("contourOptions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.contourOptions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.graphName.hashCode();
+        hashCode = (31 * hashCode) + this.sourceNode.hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxSolutionRadius).hashCode();
+        hashCode = (31 * hashCode) + this.weightsOnEdges.hashCode();
+        hashCode = (31 * hashCode) + this.restrictions.hashCode();
+        hashCode = (31 * hashCode) + this.numLevels;
+        hashCode = (31 * hashCode) + ((Boolean) this.generateImage).hashCode();
+        hashCode = (31 * hashCode) + this.levelsTable.hashCode();
+        hashCode = (31 * hashCode) + this.styleOptions.hashCode();
+        hashCode = (31 * hashCode) + this.solveOptions.hashCode();
+        hashCode = (31 * hashCode) + this.contourOptions.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * If set to {@code true}, generates a PNG image of the isochrones in the
@@ -76,9 +2265,9 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private GenerateImage() {  }
+        private GenerateImage() {
+        }
     }
-
 
     /**
      * Various style related options of the isochrone image.
@@ -603,9 +2792,9 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
         public static final String YLORBR = "ylorbr";
         public static final String YLORRD = "ylorrd";
 
-        private StyleOptions() {  }
+        private StyleOptions() {
+        }
     }
-
 
     /**
      * Solver specific parameters
@@ -675,9 +2864,9 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
          */
         public static final String UNIFORM_WEIGHTS = "uniform_weights";
 
-        private SolveOptions() {  }
+        private SolveOptions() {
+        }
     }
-
 
     /**
      * Solver specific parameters
@@ -959,9 +3148,9 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
          */
         public static final String LABELS_MAX_ANGLE = "labels_max_angle";
 
-        private ContourOptions() {  }
+        private ContourOptions() {
+        }
     }
-
 
     /**
      * Additional parameters
@@ -1155,2269 +3344,8 @@ public class VisualizeIsochroneRequest implements IndexedRecord {
          */
         public static final String TO_SOURCE = "to_source";
 
-        private Options() {  }
-    }
-
-    private String graphName;
-    private String sourceNode;
-    private double maxSolutionRadius;
-    private List<String> weightsOnEdges;
-    private List<String> restrictions;
-    private int numLevels;
-    private boolean generateImage;
-    private String levelsTable;
-    private Map<String, String> styleOptions;
-    private Map<String, String> solveOptions;
-    private Map<String, String> contourOptions;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a VisualizeIsochroneRequest object with default parameters.
-     */
-    public VisualizeIsochroneRequest() {
-        graphName = "";
-        sourceNode = "";
-        weightsOnEdges = new ArrayList<>();
-        restrictions = new ArrayList<>();
-        levelsTable = "";
-        styleOptions = new LinkedHashMap<>();
-        solveOptions = new LinkedHashMap<>();
-        contourOptions = new LinkedHashMap<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a VisualizeIsochroneRequest object with the specified
-     * parameters.
-     * 
-     * @param graphName  Name of the graph on which the isochrone is to be
-     *                   computed.
-     * @param sourceNode  Starting vertex on the underlying graph from/to which
-     *                    the isochrones are created.
-     * @param maxSolutionRadius  Extent of the search radius around {@code
-     *                           sourceNode}. Set to '-1.0' for unrestricted
-     *                           search radius.  The default value is -1.0.
-     * @param weightsOnEdges  Additional weights to apply to the edges of an
-     *                        existing graph. Weights must be specified using
-     *                        <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                        target="_top">identifiers</a>; identifiers are
-     *                        grouped as <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                        target="_top">combinations</a>. Identifiers can
-     *                        be used with existing column names, e.g.,
-     *                        'table.column AS WEIGHTS_EDGE_ID', or
-     *                        expressions, e.g., 'ST_LENGTH(wkt) AS
-     *                        WEIGHTS_VALUESPECIFIED'. Any provided weights
-     *                        will be added (in the case of
-     *                        'WEIGHTS_VALUESPECIFIED') to or multiplied with
-     *                        (in the case of 'WEIGHTS_FACTORSPECIFIED') the
-     *                        existing weight(s).  The default value is an
-     *                        empty {@link List}.
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID', or
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED'. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      true}, any provided restrictions will replace the
-     *                      existing restrictions. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      false}, any provided restrictions will be added (in
-     *                      the case of 'RESTRICTIONS_VALUECOMPARED') to or
-     *                      replaced (in the case of
-     *                      'RESTRICTIONS_ONOFFCOMPARED').  The default value
-     *                      is an empty {@link List}.
-     * @param numLevels  Number of equally-separated isochrones to compute.
-     *                   The default value is 1.
-     * @param generateImage  If set to {@code true}, generates a PNG image of
-     *                       the isochrones in the response.
-     *                       Supported values:
-     *                       <ul>
-     *                               <li> {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *                       TRUE}
-     *                               <li> {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
-     *                       FALSE}
-     *                       </ul>
-     *                       The default value is {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *                       TRUE}.
-     * @param levelsTable  Name of the table to output the isochrones,
-     *                     containing levels and their corresponding WKT
-     *                     geometry. If no value is provided, the table is not
-     *                     generated.  The default value is ''.
-     * @param styleOptions  Various style related options of the isochrone
-     *                      image.
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
-     *                      LINE_SIZE}: The width of the contour lines in
-     *                      pixels.  The default value is '3'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
-     *                      COLOR}: Color of generated isolines. All color
-     *                      values must be in the format RRGGBB or AARRGGBB (to
-     *                      specify the alpha value). If alpha is specified and
-     *                      flooded contours are enabled, it will be used for
-     *                      as the transparency of the latter.  The default
-     *                      value is 'FF696969'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
-     *                      BG_COLOR}: When {@code generateImage} is set to
-     *                      {@code true}, background color of the generated
-     *                      image. All color values must be in the format
-     *                      RRGGBB or AARRGGBB (to specify the alpha value).
-     *                      The default value is '00000000'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
-     *                      TEXT_COLOR}: When {@code add_labels} is set to
-     *                      {@code true}, color for the labels. All color
-     *                      values must be in the format RRGGBB or AARRGGBB (to
-     *                      specify the alpha value).  The default value is
-     *                      'FF000000'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
-     *                      COLORMAP}: Colormap for contours or fill-in regions
-     *                      when applicable. All color values must be in the
-     *                      format RRGGBB or AARRGGBB (to specify the alpha
-     *                      value)
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *                      JET}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
-     *                      ACCENT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
-     *                      AFMHOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
-     *                      AUTUMN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
-     *                      BINARY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
-     *                      BLUES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
-     *                      BONE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
-     *                      BRBG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
-     *                      BRG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
-     *                      BUGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
-     *                      BUPU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
-     *                      BWR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
-     *                      CMRMAP}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
-     *                      COOL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
-     *                      COOLWARM}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
-     *                      COPPER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
-     *                      CUBEHELIX}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
-     *                      DARK2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
-     *                      FLAG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
-     *                      GIST_EARTH}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
-     *                      GIST_GRAY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
-     *                      GIST_HEAT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
-     *                      GIST_NCAR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
-     *                      GIST_RAINBOW}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
-     *                      GIST_STERN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
-     *                      GIST_YARG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
-     *                      GNBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
-     *                      GNUPLOT2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
-     *                      GNUPLOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
-     *                      GRAY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
-     *                      GREENS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
-     *                      GREYS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
-     *                      HOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
-     *                      HSV}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
-     *                      INFERNO}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
-     *                      MAGMA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
-     *                      NIPY_SPECTRAL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
-     *                      OCEAN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
-     *                      ORANGES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
-     *                      ORRD}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
-     *                      PAIRED}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
-     *                      PASTEL1}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
-     *                      PASTEL2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
-     *                      PINK}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
-     *                      PIYG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
-     *                      PLASMA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
-     *                      PRGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
-     *                      PRISM}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
-     *                      PUBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
-     *                      PUBUGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
-     *                      PUOR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
-     *                      PURD}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
-     *                      PURPLES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
-     *                      RAINBOW}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
-     *                      RDBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
-     *                      RDGY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
-     *                      RDPU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
-     *                      RDYLBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
-     *                      RDYLGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
-     *                      REDS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
-     *                      SEISMIC}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
-     *                      SET1}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
-     *                      SET2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
-     *                      SET3}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
-     *                      SPECTRAL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
-     *                      SPRING}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
-     *                      SUMMER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
-     *                      TERRAIN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
-     *                      VIRIDIS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
-     *                      WINTER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
-     *                      WISTIA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
-     *                      YLGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
-     *                      YLGNBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
-     *                      YLORBR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
-     *                      YLORRD}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *                      JET}.
-     *                      </ul>
-     * @param solveOptions  Solver specific parameters
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
-     *                      REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the
-     *                      restrictions applied to the graph during the
-     *                      creation stage and only use the restrictions
-     *                      specified in this request if set to {@code true}.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
-     *                      TRUE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *                      FALSE}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *                      FALSE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
-     *                      RESTRICTION_THRESHOLD_VALUE}: Value-based
-     *                      restriction comparison. Any node or edge with a
-     *                      'RESTRICTIONS_VALUECOMPARED' value greater than the
-     *                      {@code restriction_threshold_value} will not be
-     *                      included in the solution.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
-     *                      UNIFORM_WEIGHTS}: When specified, assigns the given
-     *                      value to all the edges in the graph. Note that
-     *                      weights provided in {@code weightsOnEdges} will
-     *                      override this value.
-     *                      </ul>
-     *                      The default value is an empty {@link Map}.
-     * @param contourOptions  Solver specific parameters
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
-     *                        PROJECTION}: Spatial Reference System (i.e. EPSG
-     *                        Code).
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
-     *                        _3857}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
-     *                        _102100}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
-     *                        _900913}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
-     *                        EPSG_4326}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *                        PLATE_CARREE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
-     *                        EPSG_900913}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
-     *                        EPSG_102100}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
-     *                        EPSG_3857}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
-     *                        WEB_MERCATOR}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *                        PLATE_CARREE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
-     *                        WIDTH}: When {@code generateImage} is set to
-     *                        {@code true}, width of the generated image.  The
-     *                        default value is '512'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
-     *                        HEIGHT}: When {@code generateImage} is set to
-     *                        {@code true}, height of the generated image. If
-     *                        the default value is used, the {@code height} is
-     *                        set to the value resulting from multiplying the
-     *                        aspect ratio by the {@code width}.  The default
-     *                        value is '-1'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
-     *                        SEARCH_RADIUS}: When interpolating the graph
-     *                        solution to generate the isochrone, neighborhood
-     *                        of influence of sample data (in percent of the
-     *                        image/grid).  The default value is '20'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
-     *                        GRID_SIZE}: When interpolating the graph solution
-     *                        to generate the isochrone, number of subdivisions
-     *                        along the x axis when building the grid (the y is
-     *                        computed using the aspect ratio of the output
-     *                        image).  The default value is '100'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
-     *                        COLOR_ISOLINES}: Color each isoline according to
-     *                        the colormap; otherwise, use the foreground
-     *                        color.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
-     *                        ADD_LABELS}: If set to {@code true}, add labels
-     *                        to the isolines.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
-     *                        LABELS_FONT_SIZE}: When {@code add_labels} is set
-     *                        to {@code true}, size of the font (in pixels) to
-     *                        use for labels.  The default value is '12'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
-     *                        LABELS_FONT_FAMILY}: When {@code add_labels} is
-     *                        set to {@code true}, font name to be used when
-     *                        adding labels.  The default value is 'arial'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
-     *                        LABELS_SEARCH_WINDOW}: When {@code add_labels} is
-     *                        set to {@code true}, a search window is used to
-     *                        rate the local quality of each isoline. Smooth,
-     *                        continuous, long stretches with relatively flat
-     *                        angles are favored. The provided value is
-     *                        multiplied by the {@code labels_font_size} to
-     *                        calculate the final window size.  The default
-     *                        value is '4'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
-     *                        LABELS_INTRALEVEL_SEPARATION}: When {@code
-     *                        add_labels} is set to {@code true}, this value
-     *                        determines the  distance (in multiples of the
-     *                        {@code labels_font_size}) to use when separating
-     *                        labels of different values.  The default value is
-     *                        '4'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
-     *                        LABELS_INTERLEVEL_SEPARATION}: When {@code
-     *                        add_labels} is set to {@code true}, this value
-     *                        determines the distance (in percent of the total
-     *                        window size) to use when separating labels of the
-     *                        same value.  The default value is '20'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
-     *                        LABELS_MAX_ANGLE}: When {@code add_labels} is set
-     *                        to {@code true}, maximum angle (in degrees) from
-     *                        the vertical to use when adding labels.  The
-     *                        default value is '60'.
-     *                        </ul>
-     *                        The default value is an empty {@link Map}.
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
-     *                 SOLVE_TABLE}: Name of the table to host intermediate
-     *                 solve results containing the position and cost for each
-     *                 vertex in the graph. If the default value is used, a
-     *                 temporary table is created and deleted once the solution
-     *                 is calculated.  The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: If set to {@code true}, replicate the
-     *                 {@code solve_table}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
-     *                 DATA_MIN_X}: Lower bound for the x values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
-     *                 DATA_MAX_X}: Upper bound for the x values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
-     *                 DATA_MIN_Y}: Lower bound for the y values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
-     *                 DATA_MAX_Y}: Upper bound for the y values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
-     *                 CONCAVITY_LEVEL}: Factor to qualify the concavity of the
-     *                 isochrone curves. The lower the value, the more convex
-     *                 (with '0' being completely convex and '1' being the most
-     *                 concave).  The default value is '0.5'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
-     *                 USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods
-     *                 explicitly if true
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}: uses the solvers scheduled for 'shortest_path'
-     *                 and 'inverse_shortest_path' based on solve_direction
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}: uses the solvers 'priority_queue' and
-     *                 'inverse_priority_queue' based on solve_direction
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
-     *                 SOLVE_DIRECTION}: Specify whether we are going to the
-     *                 source node, or starting from it.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *                 FROM_SOURCE}: Shortest path to get to the source
-     *                 (inverse Dijkstra)
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
-     *                 TO_SOURCE}: Shortest path to source (Dijkstra)
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *                 FROM_SOURCE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public VisualizeIsochroneRequest(String graphName, String sourceNode, double maxSolutionRadius, List<String> weightsOnEdges, List<String> restrictions, int numLevels, boolean generateImage, String levelsTable, Map<String, String> styleOptions, Map<String, String> solveOptions, Map<String, String> contourOptions, Map<String, String> options) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        this.sourceNode = (sourceNode == null) ? "" : sourceNode;
-        this.maxSolutionRadius = maxSolutionRadius;
-        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        this.numLevels = numLevels;
-        this.generateImage = generateImage;
-        this.levelsTable = (levelsTable == null) ? "" : levelsTable;
-        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, String>() : styleOptions;
-        this.solveOptions = (solveOptions == null) ? new LinkedHashMap<String, String>() : solveOptions;
-        this.contourOptions = (contourOptions == null) ? new LinkedHashMap<String, String>() : contourOptions;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the graph on which the isochrone is to be computed.
-     * 
-     */
-    public String getGraphName() {
-        return graphName;
-    }
-
-    /**
-     * 
-     * @param graphName  Name of the graph on which the isochrone is to be
-     *                   computed.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setGraphName(String graphName) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Starting vertex on the underlying graph from/to which the
-     *         isochrones are created.
-     * 
-     */
-    public String getSourceNode() {
-        return sourceNode;
-    }
-
-    /**
-     * 
-     * @param sourceNode  Starting vertex on the underlying graph from/to which
-     *                    the isochrones are created.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setSourceNode(String sourceNode) {
-        this.sourceNode = (sourceNode == null) ? "" : sourceNode;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Extent of the search radius around {@code sourceNode}. Set to
-     *         '-1.0' for unrestricted search radius.  The default value is
-     *         -1.0.
-     * 
-     */
-    public double getMaxSolutionRadius() {
-        return maxSolutionRadius;
-    }
-
-    /**
-     * 
-     * @param maxSolutionRadius  Extent of the search radius around {@code
-     *                           sourceNode}. Set to '-1.0' for unrestricted
-     *                           search radius.  The default value is -1.0.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setMaxSolutionRadius(double maxSolutionRadius) {
-        this.maxSolutionRadius = maxSolutionRadius;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional weights to apply to the edges of an existing graph.
-     *         Weights must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
-     *         or expressions, e.g., 'ST_LENGTH(wkt) AS
-     *         WEIGHTS_VALUESPECIFIED'. Any provided weights will be added (in
-     *         the case of 'WEIGHTS_VALUESPECIFIED') to or multiplied with (in
-     *         the case of 'WEIGHTS_FACTORSPECIFIED') the existing weight(s).
-     *         The default value is an empty {@link List}.
-     * 
-     */
-    public List<String> getWeightsOnEdges() {
-        return weightsOnEdges;
-    }
-
-    /**
-     * 
-     * @param weightsOnEdges  Additional weights to apply to the edges of an
-     *                        existing graph. Weights must be specified using
-     *                        <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                        target="_top">identifiers</a>; identifiers are
-     *                        grouped as <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                        target="_top">combinations</a>. Identifiers can
-     *                        be used with existing column names, e.g.,
-     *                        'table.column AS WEIGHTS_EDGE_ID', or
-     *                        expressions, e.g., 'ST_LENGTH(wkt) AS
-     *                        WEIGHTS_VALUESPECIFIED'. Any provided weights
-     *                        will be added (in the case of
-     *                        'WEIGHTS_VALUESPECIFIED') to or multiplied with
-     *                        (in the case of 'WEIGHTS_FACTORSPECIFIED') the
-     *                        existing weight(s).  The default value is an
-     *                        empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setWeightsOnEdges(List<String> weightsOnEdges) {
-        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional restrictions to apply to the nodes/edges of an
-     *         existing graph. Restrictions must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS
-     *         RESTRICTIONS_EDGE_ID', or expressions, e.g., 'column/2 AS
-     *         RESTRICTIONS_VALUECOMPARED'. If {@code
-     *         remove_previous_restrictions} is set to {@code true}, any
-     *         provided restrictions will replace the existing restrictions. If
-     *         {@code remove_previous_restrictions} is set to {@code false},
-     *         any provided restrictions will be added (in the case of
-     *         'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of
-     *         'RESTRICTIONS_ONOFFCOMPARED').  The default value is an empty
-     *         {@link List}.
-     * 
-     */
-    public List<String> getRestrictions() {
-        return restrictions;
-    }
-
-    /**
-     * 
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID', or
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED'. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      true}, any provided restrictions will replace the
-     *                      existing restrictions. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      false}, any provided restrictions will be added (in
-     *                      the case of 'RESTRICTIONS_VALUECOMPARED') to or
-     *                      replaced (in the case of
-     *                      'RESTRICTIONS_ONOFFCOMPARED').  The default value
-     *                      is an empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setRestrictions(List<String> restrictions) {
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Number of equally-separated isochrones to compute.  The default
-     *         value is 1.
-     * 
-     */
-    public int getNumLevels() {
-        return numLevels;
-    }
-
-    /**
-     * 
-     * @param numLevels  Number of equally-separated isochrones to compute.
-     *                   The default value is 1.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setNumLevels(int numLevels) {
-        this.numLevels = numLevels;
-        return this;
-    }
-
-    /**
-     * 
-     * @return If set to {@code true}, generates a PNG image of the isochrones
-     *         in the response.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *         TRUE}.
-     * 
-     */
-    public boolean getGenerateImage() {
-        return generateImage;
-    }
-
-    /**
-     * 
-     * @param generateImage  If set to {@code true}, generates a PNG image of
-     *                       the isochrones in the response.
-     *                       Supported values:
-     *                       <ul>
-     *                               <li> {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *                       TRUE}
-     *                               <li> {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#FALSE
-     *                       FALSE}
-     *                       </ul>
-     *                       The default value is {@link
-     *                       com.gpudb.protocol.VisualizeIsochroneRequest.GenerateImage#TRUE
-     *                       TRUE}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setGenerateImage(boolean generateImage) {
-        this.generateImage = generateImage;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the table to output the isochrones, containing levels
-     *         and their corresponding WKT geometry. If no value is provided,
-     *         the table is not generated.  The default value is ''.
-     * 
-     */
-    public String getLevelsTable() {
-        return levelsTable;
-    }
-
-    /**
-     * 
-     * @param levelsTable  Name of the table to output the isochrones,
-     *                     containing levels and their corresponding WKT
-     *                     geometry. If no value is provided, the table is not
-     *                     generated.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setLevelsTable(String levelsTable) {
-        this.levelsTable = (levelsTable == null) ? "" : levelsTable;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Various style related options of the isochrone image.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
-     *         LINE_SIZE}: The width of the contour lines in pixels.  The
-     *         default value is '3'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
-     *         COLOR}: Color of generated isolines. All color values must be in
-     *         the format RRGGBB or AARRGGBB (to specify the alpha value). If
-     *         alpha is specified and flooded contours are enabled, it will be
-     *         used for as the transparency of the latter.  The default value
-     *         is 'FF696969'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
-     *         BG_COLOR}: When {@code generateImage} is set to {@code true},
-     *         background color of the generated image. All color values must
-     *         be in the format RRGGBB or AARRGGBB (to specify the alpha
-     *         value).  The default value is '00000000'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
-     *         TEXT_COLOR}: When {@code add_labels} is set to {@code true},
-     *         color for the labels. All color values must be in the format
-     *         RRGGBB or AARRGGBB (to specify the alpha value).  The default
-     *         value is 'FF000000'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
-     *         COLORMAP}: Colormap for contours or fill-in regions when
-     *         applicable. All color values must be in the format RRGGBB or
-     *         AARRGGBB (to specify the alpha value)
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *         JET}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
-     *         ACCENT}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
-     *         AFMHOT}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
-     *         AUTUMN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
-     *         BINARY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
-     *         BLUES}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
-     *         BONE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
-     *         BRBG}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
-     *         BRG}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
-     *         BUGN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
-     *         BUPU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
-     *         BWR}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
-     *         CMRMAP}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
-     *         COOL}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
-     *         COOLWARM}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
-     *         COPPER}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
-     *         CUBEHELIX}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
-     *         DARK2}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
-     *         FLAG}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
-     *         GIST_EARTH}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
-     *         GIST_GRAY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
-     *         GIST_HEAT}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
-     *         GIST_NCAR}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
-     *         GIST_RAINBOW}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
-     *         GIST_STERN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
-     *         GIST_YARG}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
-     *         GNBU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
-     *         GNUPLOT2}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
-     *         GNUPLOT}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
-     *         GRAY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
-     *         GREENS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
-     *         GREYS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
-     *         HOT}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
-     *         HSV}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
-     *         INFERNO}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
-     *         MAGMA}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
-     *         NIPY_SPECTRAL}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
-     *         OCEAN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
-     *         ORANGES}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
-     *         ORRD}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
-     *         PAIRED}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
-     *         PASTEL1}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
-     *         PASTEL2}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
-     *         PINK}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
-     *         PIYG}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
-     *         PLASMA}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
-     *         PRGN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
-     *         PRISM}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
-     *         PUBU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
-     *         PUBUGN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
-     *         PUOR}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
-     *         PURD}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
-     *         PURPLES}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
-     *         RAINBOW}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
-     *         RDBU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
-     *         RDGY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
-     *         RDPU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
-     *         RDYLBU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
-     *         RDYLGN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
-     *         REDS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
-     *         SEISMIC}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
-     *         SET1}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
-     *         SET2}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
-     *         SET3}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
-     *         SPECTRAL}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
-     *         SPRING}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
-     *         SUMMER}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
-     *         TERRAIN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
-     *         VIRIDIS}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
-     *         WINTER}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
-     *         WISTIA}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
-     *         YLGN}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
-     *         YLGNBU}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
-     *         YLORBR}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
-     *         YLORRD}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *         JET}.
-     *         </ul>
-     * 
-     */
-    public Map<String, String> getStyleOptions() {
-        return styleOptions;
-    }
-
-    /**
-     * 
-     * @param styleOptions  Various style related options of the isochrone
-     *                      image.
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#LINE_SIZE
-     *                      LINE_SIZE}: The width of the contour lines in
-     *                      pixels.  The default value is '3'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLOR
-     *                      COLOR}: Color of generated isolines. All color
-     *                      values must be in the format RRGGBB or AARRGGBB (to
-     *                      specify the alpha value). If alpha is specified and
-     *                      flooded contours are enabled, it will be used for
-     *                      as the transparency of the latter.  The default
-     *                      value is 'FF696969'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BG_COLOR
-     *                      BG_COLOR}: When {@code generateImage} is set to
-     *                      {@code true}, background color of the generated
-     *                      image. All color values must be in the format
-     *                      RRGGBB or AARRGGBB (to specify the alpha value).
-     *                      The default value is '00000000'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TEXT_COLOR
-     *                      TEXT_COLOR}: When {@code add_labels} is set to
-     *                      {@code true}, color for the labels. All color
-     *                      values must be in the format RRGGBB or AARRGGBB (to
-     *                      specify the alpha value).  The default value is
-     *                      'FF000000'.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COLORMAP
-     *                      COLORMAP}: Colormap for contours or fill-in regions
-     *                      when applicable. All color values must be in the
-     *                      format RRGGBB or AARRGGBB (to specify the alpha
-     *                      value)
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *                      JET}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ACCENT
-     *                      ACCENT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AFMHOT
-     *                      AFMHOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#AUTUMN
-     *                      AUTUMN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BINARY
-     *                      BINARY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BLUES
-     *                      BLUES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BONE
-     *                      BONE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRBG
-     *                      BRBG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BRG
-     *                      BRG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUGN
-     *                      BUGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BUPU
-     *                      BUPU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#BWR
-     *                      BWR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CMRMAP
-     *                      CMRMAP}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOL
-     *                      COOL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COOLWARM
-     *                      COOLWARM}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#COPPER
-     *                      COPPER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#CUBEHELIX
-     *                      CUBEHELIX}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#DARK2
-     *                      DARK2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#FLAG
-     *                      FLAG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_EARTH
-     *                      GIST_EARTH}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_GRAY
-     *                      GIST_GRAY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_HEAT
-     *                      GIST_HEAT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_NCAR
-     *                      GIST_NCAR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_RAINBOW
-     *                      GIST_RAINBOW}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_STERN
-     *                      GIST_STERN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GIST_YARG
-     *                      GIST_YARG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNBU
-     *                      GNBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT2
-     *                      GNUPLOT2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GNUPLOT
-     *                      GNUPLOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GRAY
-     *                      GRAY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREENS
-     *                      GREENS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#GREYS
-     *                      GREYS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HOT
-     *                      HOT}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#HSV
-     *                      HSV}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#INFERNO
-     *                      INFERNO}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#MAGMA
-     *                      MAGMA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#NIPY_SPECTRAL
-     *                      NIPY_SPECTRAL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#OCEAN
-     *                      OCEAN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORANGES
-     *                      ORANGES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#ORRD
-     *                      ORRD}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PAIRED
-     *                      PAIRED}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL1
-     *                      PASTEL1}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PASTEL2
-     *                      PASTEL2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PINK
-     *                      PINK}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PIYG
-     *                      PIYG}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PLASMA
-     *                      PLASMA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRGN
-     *                      PRGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PRISM
-     *                      PRISM}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBU
-     *                      PUBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUBUGN
-     *                      PUBUGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PUOR
-     *                      PUOR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURD
-     *                      PURD}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#PURPLES
-     *                      PURPLES}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RAINBOW
-     *                      RAINBOW}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDBU
-     *                      RDBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDGY
-     *                      RDGY}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDPU
-     *                      RDPU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLBU
-     *                      RDYLBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#RDYLGN
-     *                      RDYLGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#REDS
-     *                      REDS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SEISMIC
-     *                      SEISMIC}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET1
-     *                      SET1}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET2
-     *                      SET2}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SET3
-     *                      SET3}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPECTRAL
-     *                      SPECTRAL}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SPRING
-     *                      SPRING}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#SUMMER
-     *                      SUMMER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#TERRAIN
-     *                      TERRAIN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#VIRIDIS
-     *                      VIRIDIS}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WINTER
-     *                      WINTER}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#WISTIA
-     *                      WISTIA}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGN
-     *                      YLGN}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLGNBU
-     *                      YLGNBU}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORBR
-     *                      YLORBR}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#YLORRD
-     *                      YLORRD}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.StyleOptions#JET
-     *                      JET}.
-     *                      </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setStyleOptions(Map<String, String> styleOptions) {
-        this.styleOptions = (styleOptions == null) ? new LinkedHashMap<String, String>() : styleOptions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Solver specific parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
-     *         REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions applied
-     *         to the graph during the creation stage and only use the
-     *         restrictions specified in this request if set to {@code true}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *         FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
-     *         RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *         comparison. Any node or edge with a 'RESTRICTIONS_VALUECOMPARED'
-     *         value greater than the {@code restriction_threshold_value} will
-     *         not be included in the solution.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
-     *         UNIFORM_WEIGHTS}: When specified, assigns the given value to all
-     *         the edges in the graph. Note that weights provided in {@code
-     *         weightsOnEdges} will override this value.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getSolveOptions() {
-        return solveOptions;
-    }
-
-    /**
-     * 
-     * @param solveOptions  Solver specific parameters
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#REMOVE_PREVIOUS_RESTRICTIONS
-     *                      REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the
-     *                      restrictions applied to the graph during the
-     *                      creation stage and only use the restrictions
-     *                      specified in this request if set to {@code true}.
-     *                      Supported values:
-     *                      <ul>
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#TRUE
-     *                      TRUE}
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *                      FALSE}
-     *                      </ul>
-     *                      The default value is {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#FALSE
-     *                      FALSE}.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#RESTRICTION_THRESHOLD_VALUE
-     *                      RESTRICTION_THRESHOLD_VALUE}: Value-based
-     *                      restriction comparison. Any node or edge with a
-     *                      'RESTRICTIONS_VALUECOMPARED' value greater than the
-     *                      {@code restriction_threshold_value} will not be
-     *                      included in the solution.
-     *                              <li> {@link
-     *                      com.gpudb.protocol.VisualizeIsochroneRequest.SolveOptions#UNIFORM_WEIGHTS
-     *                      UNIFORM_WEIGHTS}: When specified, assigns the given
-     *                      value to all the edges in the graph. Note that
-     *                      weights provided in {@code weightsOnEdges} will
-     *                      override this value.
-     *                      </ul>
-     *                      The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setSolveOptions(Map<String, String> solveOptions) {
-        this.solveOptions = (solveOptions == null) ? new LinkedHashMap<String, String>() : solveOptions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Solver specific parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
-     *         PROJECTION}: Spatial Reference System (i.e. EPSG Code).
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
-     *         _3857}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
-     *         _102100}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
-     *         _900913}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
-     *         EPSG_4326}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *         PLATE_CARREE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
-     *         EPSG_900913}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
-     *         EPSG_102100}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
-     *         EPSG_3857}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
-     *         WEB_MERCATOR}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *         PLATE_CARREE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
-     *         WIDTH}: When {@code generateImage} is set to {@code true}, width
-     *         of the generated image.  The default value is '512'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
-     *         HEIGHT}: When {@code generateImage} is set to {@code true},
-     *         height of the generated image. If the default value is used, the
-     *         {@code height} is set to the value resulting from multiplying
-     *         the aspect ratio by the {@code width}.  The default value is
-     *         '-1'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
-     *         SEARCH_RADIUS}: When interpolating the graph solution to
-     *         generate the isochrone, neighborhood of influence of sample data
-     *         (in percent of the image/grid).  The default value is '20'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
-     *         GRID_SIZE}: When interpolating the graph solution to generate
-     *         the isochrone, number of subdivisions along the x axis when
-     *         building the grid (the y is computed using the aspect ratio of
-     *         the output image).  The default value is '100'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
-     *         COLOR_ISOLINES}: Color each isoline according to the colormap;
-     *         otherwise, use the foreground color.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *         TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
-     *         ADD_LABELS}: If set to {@code true}, add labels to the isolines.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *         TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *         FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
-     *         LABELS_FONT_SIZE}: When {@code add_labels} is set to {@code
-     *         true}, size of the font (in pixels) to use for labels.  The
-     *         default value is '12'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
-     *         LABELS_FONT_FAMILY}: When {@code add_labels} is set to {@code
-     *         true}, font name to be used when adding labels.  The default
-     *         value is 'arial'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
-     *         LABELS_SEARCH_WINDOW}: When {@code add_labels} is set to {@code
-     *         true}, a search window is used to rate the local quality of each
-     *         isoline. Smooth, continuous, long stretches with relatively flat
-     *         angles are favored. The provided value is multiplied by the
-     *         {@code labels_font_size} to calculate the final window size.
-     *         The default value is '4'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
-     *         LABELS_INTRALEVEL_SEPARATION}: When {@code add_labels} is set to
-     *         {@code true}, this value determines the  distance (in multiples
-     *         of the {@code labels_font_size}) to use when separating labels
-     *         of different values.  The default value is '4'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
-     *         LABELS_INTERLEVEL_SEPARATION}: When {@code add_labels} is set to
-     *         {@code true}, this value determines the distance (in percent of
-     *         the total window size) to use when separating labels of the same
-     *         value.  The default value is '20'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
-     *         LABELS_MAX_ANGLE}: When {@code add_labels} is set to {@code
-     *         true}, maximum angle (in degrees) from the vertical to use when
-     *         adding labels.  The default value is '60'.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getContourOptions() {
-        return contourOptions;
-    }
-
-    /**
-     * 
-     * @param contourOptions  Solver specific parameters
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PROJECTION
-     *                        PROJECTION}: Spatial Reference System (i.e. EPSG
-     *                        Code).
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_3857
-     *                        _3857}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_102100
-     *                        _102100}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#_900913
-     *                        _900913}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_4326
-     *                        EPSG_4326}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *                        PLATE_CARREE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_900913
-     *                        EPSG_900913}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_102100
-     *                        EPSG_102100}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#EPSG_3857
-     *                        EPSG_3857}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WEB_MERCATOR
-     *                        WEB_MERCATOR}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#PLATE_CARREE
-     *                        PLATE_CARREE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#WIDTH
-     *                        WIDTH}: When {@code generateImage} is set to
-     *                        {@code true}, width of the generated image.  The
-     *                        default value is '512'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#HEIGHT
-     *                        HEIGHT}: When {@code generateImage} is set to
-     *                        {@code true}, height of the generated image. If
-     *                        the default value is used, the {@code height} is
-     *                        set to the value resulting from multiplying the
-     *                        aspect ratio by the {@code width}.  The default
-     *                        value is '-1'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#SEARCH_RADIUS
-     *                        SEARCH_RADIUS}: When interpolating the graph
-     *                        solution to generate the isochrone, neighborhood
-     *                        of influence of sample data (in percent of the
-     *                        image/grid).  The default value is '20'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#GRID_SIZE
-     *                        GRID_SIZE}: When interpolating the graph solution
-     *                        to generate the isochrone, number of subdivisions
-     *                        along the x axis when building the grid (the y is
-     *                        computed using the aspect ratio of the output
-     *                        image).  The default value is '100'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#COLOR_ISOLINES
-     *                        COLOR_ISOLINES}: Color each isoline according to
-     *                        the colormap; otherwise, use the foreground
-     *                        color.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#ADD_LABELS
-     *                        ADD_LABELS}: If set to {@code true}, add labels
-     *                        to the isolines.
-     *                        Supported values:
-     *                        <ul>
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#TRUE
-     *                        TRUE}
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}
-     *                        </ul>
-     *                        The default value is {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#FALSE
-     *                        FALSE}.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_SIZE
-     *                        LABELS_FONT_SIZE}: When {@code add_labels} is set
-     *                        to {@code true}, size of the font (in pixels) to
-     *                        use for labels.  The default value is '12'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_FONT_FAMILY
-     *                        LABELS_FONT_FAMILY}: When {@code add_labels} is
-     *                        set to {@code true}, font name to be used when
-     *                        adding labels.  The default value is 'arial'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_SEARCH_WINDOW
-     *                        LABELS_SEARCH_WINDOW}: When {@code add_labels} is
-     *                        set to {@code true}, a search window is used to
-     *                        rate the local quality of each isoline. Smooth,
-     *                        continuous, long stretches with relatively flat
-     *                        angles are favored. The provided value is
-     *                        multiplied by the {@code labels_font_size} to
-     *                        calculate the final window size.  The default
-     *                        value is '4'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTRALEVEL_SEPARATION
-     *                        LABELS_INTRALEVEL_SEPARATION}: When {@code
-     *                        add_labels} is set to {@code true}, this value
-     *                        determines the  distance (in multiples of the
-     *                        {@code labels_font_size}) to use when separating
-     *                        labels of different values.  The default value is
-     *                        '4'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_INTERLEVEL_SEPARATION
-     *                        LABELS_INTERLEVEL_SEPARATION}: When {@code
-     *                        add_labels} is set to {@code true}, this value
-     *                        determines the distance (in percent of the total
-     *                        window size) to use when separating labels of the
-     *                        same value.  The default value is '20'.
-     *                                <li> {@link
-     *                        com.gpudb.protocol.VisualizeIsochroneRequest.ContourOptions#LABELS_MAX_ANGLE
-     *                        LABELS_MAX_ANGLE}: When {@code add_labels} is set
-     *                        to {@code true}, maximum angle (in degrees) from
-     *                        the vertical to use when adding labels.  The
-     *                        default value is '60'.
-     *                        </ul>
-     *                        The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setContourOptions(Map<String, String> contourOptions) {
-        this.contourOptions = (contourOptions == null) ? new LinkedHashMap<String, String>() : contourOptions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
-     *         SOLVE_TABLE}: Name of the table to host intermediate solve
-     *         results containing the position and cost for each vertex in the
-     *         graph. If the default value is used, a temporary table is
-     *         created and deleted once the solution is calculated.  The
-     *         default value is ''.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
-     *         IS_REPLICATED}: If set to {@code true}, replicate the {@code
-     *         solve_table}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *         FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
-     *         DATA_MIN_X}: Lower bound for the x values. If not provided, it
-     *         will be computed from the bounds of the input data.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
-     *         DATA_MAX_X}: Upper bound for the x values. If not provided, it
-     *         will be computed from the bounds of the input data.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
-     *         DATA_MIN_Y}: Lower bound for the y values. If not provided, it
-     *         will be computed from the bounds of the input data.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
-     *         DATA_MAX_Y}: Upper bound for the y values. If not provided, it
-     *         will be computed from the bounds of the input data.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
-     *         CONCAVITY_LEVEL}: Factor to qualify the concavity of the
-     *         isochrone curves. The lower the value, the more convex (with '0'
-     *         being completely convex and '1' being the most concave).  The
-     *         default value is '0.5'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
-     *         USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods explicitly
-     *         if true
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE TRUE}:
-     *         uses the solvers scheduled for 'shortest_path' and
-     *         'inverse_shortest_path' based on solve_direction
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *         FALSE}: uses the solvers 'priority_queue' and
-     *         'inverse_priority_queue' based on solve_direction
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *         FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
-     *         SOLVE_DIRECTION}: Specify whether we are going to the source
-     *         node, or starting from it.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *         FROM_SOURCE}: Shortest path to get to the source (inverse
-     *         Dijkstra)
-     *                 <li> {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
-     *         TO_SOURCE}: Shortest path to source (Dijkstra)
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *         FROM_SOURCE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_TABLE
-     *                 SOLVE_TABLE}: Name of the table to host intermediate
-     *                 solve results containing the position and cost for each
-     *                 vertex in the graph. If the default value is used, a
-     *                 temporary table is created and deleted once the solution
-     *                 is calculated.  The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#IS_REPLICATED
-     *                 IS_REPLICATED}: If set to {@code true}, replicate the
-     *                 {@code solve_table}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_X
-     *                 DATA_MIN_X}: Lower bound for the x values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_X
-     *                 DATA_MAX_X}: Upper bound for the x values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MIN_Y
-     *                 DATA_MIN_Y}: Lower bound for the y values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#DATA_MAX_Y
-     *                 DATA_MAX_Y}: Upper bound for the y values. If not
-     *                 provided, it will be computed from the bounds of the
-     *                 input data.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#CONCAVITY_LEVEL
-     *                 CONCAVITY_LEVEL}: Factor to qualify the concavity of the
-     *                 isochrone curves. The lower the value, the more convex
-     *                 (with '0' being completely convex and '1' being the most
-     *                 concave).  The default value is '0.5'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#USE_PRIORITY_QUEUE_SOLVERS
-     *                 USE_PRIORITY_QUEUE_SOLVERS}: sets the solver methods
-     *                 explicitly if true
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TRUE
-     *                 TRUE}: uses the solvers scheduled for 'shortest_path'
-     *                 and 'inverse_shortest_path' based on solve_direction
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}: uses the solvers 'priority_queue' and
-     *                 'inverse_priority_queue' based on solve_direction
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#SOLVE_DIRECTION
-     *                 SOLVE_DIRECTION}: Specify whether we are going to the
-     *                 source node, or starting from it.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *                 FROM_SOURCE}: Shortest path to get to the source
-     *                 (inverse Dijkstra)
-     *                         <li> {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#TO_SOURCE
-     *                 TO_SOURCE}: Shortest path to source (Dijkstra)
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.VisualizeIsochroneRequest.Options#FROM_SOURCE
-     *                 FROM_SOURCE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public VisualizeIsochroneRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.graphName;
-
-            case 1:
-                return this.sourceNode;
-
-            case 2:
-                return this.maxSolutionRadius;
-
-            case 3:
-                return this.weightsOnEdges;
-
-            case 4:
-                return this.restrictions;
-
-            case 5:
-                return this.numLevels;
-
-            case 6:
-                return this.generateImage;
-
-            case 7:
-                return this.levelsTable;
-
-            case 8:
-                return this.styleOptions;
-
-            case 9:
-                return this.solveOptions;
-
-            case 10:
-                return this.contourOptions;
-
-            case 11:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.graphName = (String)value;
-                break;
-
-            case 1:
-                this.sourceNode = (String)value;
-                break;
-
-            case 2:
-                this.maxSolutionRadius = (Double)value;
-                break;
-
-            case 3:
-                this.weightsOnEdges = (List<String>)value;
-                break;
-
-            case 4:
-                this.restrictions = (List<String>)value;
-                break;
-
-            case 5:
-                this.numLevels = (Integer)value;
-                break;
-
-            case 6:
-                this.generateImage = (Boolean)value;
-                break;
-
-            case 7:
-                this.levelsTable = (String)value;
-                break;
-
-            case 8:
-                this.styleOptions = (Map<String, String>)value;
-                break;
-
-            case 9:
-                this.solveOptions = (Map<String, String>)value;
-                break;
-
-            case 10:
-                this.contourOptions = (Map<String, String>)value;
-                break;
-
-            case 11:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        VisualizeIsochroneRequest that = (VisualizeIsochroneRequest)obj;
-
-        return ( this.graphName.equals( that.graphName )
-                 && this.sourceNode.equals( that.sourceNode )
-                 && ( (Double)this.maxSolutionRadius ).equals( (Double)that.maxSolutionRadius )
-                 && this.weightsOnEdges.equals( that.weightsOnEdges )
-                 && this.restrictions.equals( that.restrictions )
-                 && ( this.numLevels == that.numLevels )
-                 && ( this.generateImage == that.generateImage )
-                 && this.levelsTable.equals( that.levelsTable )
-                 && this.styleOptions.equals( that.styleOptions )
-                 && this.solveOptions.equals( that.solveOptions )
-                 && this.contourOptions.equals( that.contourOptions )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sourceNode" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sourceNode ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxSolutionRadius" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxSolutionRadius ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "weightsOnEdges" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.weightsOnEdges ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "restrictions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.restrictions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "numLevels" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numLevels ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "generateImage" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.generateImage ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "levelsTable" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.levelsTable ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "styleOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.styleOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solveOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solveOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "contourOptions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.contourOptions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.graphName.hashCode();
-        hashCode = (31 * hashCode) + this.sourceNode.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxSolutionRadius).hashCode();
-        hashCode = (31 * hashCode) + this.weightsOnEdges.hashCode();
-        hashCode = (31 * hashCode) + this.restrictions.hashCode();
-        hashCode = (31 * hashCode) + this.numLevels;
-        hashCode = (31 * hashCode) + ((Boolean)this.generateImage).hashCode();
-        hashCode = (31 * hashCode) + this.levelsTable.hashCode();
-        hashCode = (31 * hashCode) + this.styleOptions.hashCode();
-        hashCode = (31 * hashCode) + this.solveOptions.hashCode();
-        hashCode = (31 * hashCode) + this.contourOptions.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

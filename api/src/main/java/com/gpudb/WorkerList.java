@@ -37,14 +37,13 @@ public class WorkerList extends ArrayList<URL> {
      * accepts an {@link #WorkerList(GPUdb, Pattern) IP regex} or an {@link
      * #WorkerList(GPUdb, String) IP prefix}.
      *
-     * @param gpudb    the {@link GPUdb} instance from which to obtain the
-     *                 worker URLs
-     *
+     * @param gpudb the {@link GPUdb} instance from which to obtain the
+     *              worker URLs
      * @throws GPUdbException if an error occurs during the request for
-     * worker URLs
+     *                        worker URLs
      */
     public WorkerList(GPUdb gpudb) throws GPUdbException {
-        this(gpudb, (Pattern)null);
+        this(gpudb, (Pattern) null);
     }
 
     /**
@@ -59,18 +58,17 @@ public class WorkerList extends ArrayList<URL> {
      * {@code "192\.168\..*"} will use worker IP addresses in the 192.168.*
      * range.
      *
-     * @param gpudb    the {@link GPUdb} instance from which to obtain the
-     *                 worker URLs
-     * @param ipRegex  optional IP regex to match
-     *
+     * @param gpudb   the {@link GPUdb} instance from which to obtain the
+     *                worker URLs
+     * @param ipRegex optional IP regex to match
      * @throws GPUdbException if an error occurs during the request for
-     * worker URLs or no IP addresses matching the IP regex could be found
-     * for one or more workers
+     *                        worker URLs or no IP addresses matching the IP regex could be found
+     *                        for one or more workers
      */
     public WorkerList(GPUdb gpudb, Pattern ipRegex) throws GPUdbException {
 
         this.ipRegex = ipRegex;
-        
+
         Map<String, String> systemProperties = gpudb.showSystemProperties(GPUdb.options()).getPropertyMap();
 
         String s = systemProperties.get("conf.enable_worker_http_servers");
@@ -93,11 +91,11 @@ public class WorkerList extends ArrayList<URL> {
             for (int i = 1; i < urlLists.length; i++) {
 
                 // Handle removed ranks
-                if ( urlLists[i].isEmpty() ) {
-                    add( null );
+                if (urlLists[i].isEmpty()) {
+                    add(null);
                     continue;
                 }
-                
+
                 String[] urls = urlLists[i].split(",");
                 boolean found = false;
 
@@ -153,8 +151,8 @@ public class WorkerList extends ArrayList<URL> {
 
             for (int i = 1; i < ipLists.length; i++) {
                 // Handle removed ranks
-                if ( ipLists[i].isEmpty() ) {
-                    add( null );
+                if (ipLists[i].isEmpty()) {
+                    add(null);
                     continue;
                 }
 
@@ -205,13 +203,12 @@ public class WorkerList extends ArrayList<URL> {
      * {@code "192.168."} will use worker IP addresses in the 192.168.*
      * range.
      *
-     * @param gpudb     the {@link GPUdb} instance from which to obtain the
-     *                  worker URLs
-     * @param ipPrefix  optional IP prefix to match
-     *
+     * @param gpudb    the {@link GPUdb} instance from which to obtain the
+     *                 worker URLs
+     * @param ipPrefix optional IP prefix to match
      * @throws GPUdbException if an error occurs during the request for
-     * worker URLs or no IP addresses matching the IP prefix could be found
-     * for one or more workers
+     *                        worker URLs or no IP addresses matching the IP prefix could be found
+     *                        for one or more workers
      */
     public WorkerList(GPUdb gpudb, String ipPrefix) throws GPUdbException {
         this(gpudb, (ipPrefix == null) ? null
@@ -220,8 +217,7 @@ public class WorkerList extends ArrayList<URL> {
 
 
     /**
-     * @return  the IP regular expression used to create this worker list.
-     *
+     * @return the IP regular expression used to create this worker list.
      */
     public Pattern getIpRegex() {
         return this.ipRegex;

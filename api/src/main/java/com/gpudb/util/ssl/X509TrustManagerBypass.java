@@ -1,10 +1,6 @@
 package com.gpudb.util.ssl;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509ExtendedTrustManager;
+import javax.net.ssl.*;
 import java.net.Socket;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
@@ -14,7 +10,7 @@ public class X509TrustManagerBypass extends X509ExtendedTrustManager {
 
     public static void install() throws GeneralSecurityException {
 
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManagerBypass() };
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManagerBypass()};
         SSLContext sslContext = SSLContext.getInstance("SSL");
         sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());

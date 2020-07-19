@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,47 +23,13 @@ public class HasTypeResponse implements IndexedRecord {
             .record("HasTypeResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("typeId").type().stringType().noDefault()
-                .name("typeExists").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("typeExists").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Indicates whether the type exists or not.
-     * Supported values:
-     * <ul>
-     *         <li> {@link com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE
-     * TRUE}
-     *         <li> {@link com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE
-     * FALSE}
-     * </ul>
-     * A set of string constants for the parameter {@code typeExists}.
-     */
-    public static final class TypeExists {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-
-        private TypeExists() {  }
-    }
-
     private String typeId;
     private boolean typeExists;
     private Map<String, String> info;
-
-
     /**
      * Constructs a HasTypeResponse object with default parameters.
      */
@@ -70,20 +37,25 @@ public class HasTypeResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code typeId}.
-     * 
      */
     public String getTypeId() {
         return typeId;
     }
 
     /**
-     * 
-     * @param typeId  Value of {@code typeId}.
-     * 
+     * @param typeId Value of {@code typeId}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasTypeResponse setTypeId(String typeId) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -91,36 +63,31 @@ public class HasTypeResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Indicates whether the type exists or not.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE FALSE}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE FALSE}
+     * </ul>
      */
     public boolean getTypeExists() {
         return typeExists;
     }
 
     /**
-     * 
-     * @param typeExists  Indicates whether the type exists or not.
-     *                    Supported values:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE
-     *                    TRUE}
-     *                            <li> {@link
-     *                    com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE
-     *                    FALSE}
-     *                    </ul>
-     * 
+     * @param typeExists Indicates whether the type exists or not.
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE
+     *                   TRUE}
+     *                           <li> {@link
+     *                   com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE
+     *                   FALSE}
+     *                   </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasTypeResponse setTypeExists(boolean typeExists) {
         this.typeExists = typeExists;
@@ -128,20 +95,15 @@ public class HasTypeResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasTypeResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -151,9 +113,8 @@ public class HasTypeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -163,13 +124,10 @@ public class HasTypeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -191,27 +149,25 @@ public class HasTypeResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.typeId = (String)value;
+                this.typeId = (String) value;
                 break;
 
             case 1:
-                this.typeExists = (Boolean)value;
+                this.typeExists = (Boolean) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -221,38 +177,38 @@ public class HasTypeResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        HasTypeResponse that = (HasTypeResponse)obj;
+        HasTypeResponse that = (HasTypeResponse) obj;
 
-        return ( this.typeId.equals( that.typeId )
-                 && ( this.typeExists == that.typeExists )
-                 && this.info.equals( that.info ) );
+        return (this.typeId.equals(that.typeId)
+                && (this.typeExists == that.typeExists)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeExists" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeExists ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("typeExists"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeExists));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -261,9 +217,28 @@ public class HasTypeResponse implements IndexedRecord {
     public int hashCode() {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.typeId.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.typeExists).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.typeExists).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Indicates whether the type exists or not.
+     * Supported values:
+     * <ul>
+     *         <li> {@link com.gpudb.protocol.HasTypeResponse.TypeExists#TRUE
+     * TRUE}
+     *         <li> {@link com.gpudb.protocol.HasTypeResponse.TypeExists#FALSE
+     * FALSE}
+     * </ul>
+     * A set of string constants for the parameter {@code typeExists}.
+     */
+    public static final class TypeExists {
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
+
+        private TypeExists() {
+        }
     }
 
 }

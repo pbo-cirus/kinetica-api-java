@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -24,28 +25,13 @@ public class AdminShutdownRequest implements IndexedRecord {
             .record("AdminShutdownRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("exitType").type().stringType().noDefault()
-                .name("authorization").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("exitType").type().stringType().noDefault()
+            .name("authorization").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String exitType;
     private String authorization;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AdminShutdownRequest object with default parameters.
      */
@@ -55,14 +41,14 @@ public class AdminShutdownRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs an AdminShutdownRequest object with the specified parameters.
-     * 
-     * @param exitType  Reserved for future use. User can pass an empty string.
-     * @param authorization  No longer used. User can pass an empty string.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param exitType      Reserved for future use. User can pass an empty string.
+     * @param authorization No longer used. User can pass an empty string.
+     * @param options       Optional parameters.  The default value is an empty
+     *                      {@link Map}.
      */
     public AdminShutdownRequest(String exitType, String authorization, Map<String, String> options) {
         this.exitType = (exitType == null) ? "" : exitType;
@@ -71,20 +57,25 @@ public class AdminShutdownRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Reserved for future use. User can pass an empty string.
-     * 
      */
     public String getExitType() {
         return exitType;
     }
 
     /**
-     * 
-     * @param exitType  Reserved for future use. User can pass an empty string.
-     * 
+     * @param exitType Reserved for future use. User can pass an empty string.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShutdownRequest setExitType(String exitType) {
         this.exitType = (exitType == null) ? "" : exitType;
@@ -92,20 +83,15 @@ public class AdminShutdownRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return No longer used. User can pass an empty string.
-     * 
      */
     public String getAuthorization() {
         return authorization;
     }
 
     /**
-     * 
-     * @param authorization  No longer used. User can pass an empty string.
-     * 
+     * @param authorization No longer used. User can pass an empty string.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShutdownRequest setAuthorization(String authorization) {
         this.authorization = (authorization == null) ? "" : authorization;
@@ -113,21 +99,16 @@ public class AdminShutdownRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShutdownRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -137,9 +118,8 @@ public class AdminShutdownRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -149,13 +129,10 @@ public class AdminShutdownRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -177,27 +154,25 @@ public class AdminShutdownRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.exitType = (String)value;
+                this.exitType = (String) value;
                 break;
 
             case 1:
-                this.authorization = (String)value;
+                this.authorization = (String) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -207,38 +182,38 @@ public class AdminShutdownRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminShutdownRequest that = (AdminShutdownRequest)obj;
+        AdminShutdownRequest that = (AdminShutdownRequest) obj;
 
-        return ( this.exitType.equals( that.exitType )
-                 && this.authorization.equals( that.authorization )
-                 && this.options.equals( that.options ) );
+        return (this.exitType.equals(that.exitType)
+                && this.authorization.equals(that.authorization)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "exitType" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.exitType ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "authorization" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.authorization ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("exitType"));
+        builder.append(": ");
+        builder.append(gd.toString(this.exitType));
+        builder.append(", ");
+        builder.append(gd.toString("authorization"));
+        builder.append(": ");
+        builder.append(gd.toString(this.authorization));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

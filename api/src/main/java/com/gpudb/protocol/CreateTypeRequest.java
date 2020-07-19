@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,46 +43,883 @@ import org.apache.avro.generic.IndexedRecord;
  * <p>
  * Example of a type definition with some of the parameters::
  * <p>
- *         {"type":"record",
- *         "name":"point",
- *         "fields":[{"name":"msg_id","type":"string"},
- *                         {"name":"x","type":"double"},
- *                         {"name":"y","type":"double"},
- *                         {"name":"TIMESTAMP","type":"double"},
- *                         {"name":"source","type":"string"},
- *                         {"name":"group_id","type":"string"},
- *                         {"name":"OBJECT_ID","type":"string"}]
- *         }
+ * {"type":"record",
+ * "name":"point",
+ * "fields":[{"name":"msg_id","type":"string"},
+ * {"name":"x","type":"double"},
+ * {"name":"y","type":"double"},
+ * {"name":"TIMESTAMP","type":"double"},
+ * {"name":"source","type":"string"},
+ * {"name":"group_id","type":"string"},
+ * {"name":"OBJECT_ID","type":"string"}]
+ * }
  * <p>
  * Properties::
  * <p>
- *         {"group_id":["store_only"],
- *         "msg_id":["store_only","text_search"]
- *         }
+ * {"group_id":["store_only"],
+ * "msg_id":["store_only","text_search"]
+ * }
  */
 public class CreateTypeRequest implements IndexedRecord {
     private static final Schema schema$ = SchemaBuilder
             .record("CreateTypeRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("typeDefinition").type().stringType().noDefault()
-                .name("label").type().stringType().noDefault()
-                .name("properties").type().map().values().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("typeDefinition").type().stringType().noDefault()
+            .name("label").type().stringType().noDefault()
+            .name("properties").type().map().values().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String typeDefinition;
+    private String label;
+    private Map<String, List<String>> properties;
+    private Map<String, String> options;
+    /**
+     * Constructs a CreateTypeRequest object with default parameters.
+     */
+    public CreateTypeRequest() {
+        typeDefinition = "";
+        label = "";
+        properties = new LinkedHashMap<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a CreateTypeRequest object with the specified parameters.
+     *
+     * @param typeDefinition a JSON string describing the columns of the type
+     *                       to be registered.
+     * @param label          A user-defined description string which can be used to
+     *                       differentiate between tables and types with otherwise
+     *                       identical schemas.
+     * @param properties     Each key-value pair specifies the properties to use
+     *                       for a given column where the key is the column name.
+     *                       All keys used must be relevant column names for the
+     *                       given table.  Specifying any property overrides the
+     *                       default properties for that column (which is based on
+     *                       the column's data type).
+     *                       Valid values are:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DATA
+     *                       DATA}: Default property for all numeric and string
+     *                       type columns; makes the column available for GPU
+     *                       queries.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
+     *                       TEXT_SEARCH}: Valid only for 'string' columns.
+     *                       Enables full text search for string columns. Can be
+     *                       set independently of {@code data} and {@code
+     *                       store_only}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
+     *                       STORE_ONLY}: Persist the column value but do not make
+     *                       it available to queries (e.g. {@link
+     *                       com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is
+     *                       mutually exclusive to the {@code data} property. Any
+     *                       'bytes' type column must have a {@code store_only}
+     *                       property. This property reduces system memory usage.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
+     *                       DISK_OPTIMIZED}: Works in conjunction with the {@code
+     *                       data} property for string columns. This property
+     *                       reduces system disk usage by disabling reverse string
+     *                       lookups. Queries like {@link
+     *                       com.gpudb.GPUdb#filter(FilterRequest)}, {@link
+     *                       com.gpudb.GPUdb#filterByList(FilterByListRequest)},
+     *                       and {@link
+     *                       com.gpudb.GPUdb#filterByValue(FilterByValueRequest)}
+     *                       work as usual but {@link
+     *                       com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)}
+     *                       and {@link
+     *                       com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
+     *                       are not allowed on columns with this property.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
+     *                       TIMESTAMP}: Valid only for 'long' columns. Indicates
+     *                       that this field represents a timestamp and will be
+     *                       provided in milliseconds since the Unix epoch:
+     *                       00:00:00 Jan 1 1970.  Dates represented by a
+     *                       timestamp must fall between the year 1000 and the
+     *                       year 2900.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#ULONG
+     *                       ULONG}: Valid only for 'string' columns.  It
+     *                       represents an unsigned long integer data type. The
+     *                       string can only be interpreted as an unsigned long
+     *                       data type with minimum value of zero, and maximum
+     *                       value of 18446744073709551615.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
+     *                       DECIMAL}: Valid only for 'string' columns.  It
+     *                       represents a SQL type NUMERIC(19, 4) data type.
+     *                       There can be up to 15 digits before the decimal point
+     *                       and up to four digits in the fractional part.  The
+     *                       value can be positive or negative (indicated by a
+     *                       minus sign at the beginning).  This property is
+     *                       mutually exclusive with the {@code text_search}
+     *                       property.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DATE
+     *                       DATE}: Valid only for 'string' columns.  Indicates
+     *                       that this field represents a date and will be
+     *                       provided in the format 'YYYY-MM-DD'.  The allowable
+     *                       range is 1000-01-01 through 2900-01-01.  This
+     *                       property is mutually exclusive with the {@code
+     *                       text_search} property.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#TIME
+     *                       TIME}: Valid only for 'string' columns.  Indicates
+     *                       that this field represents a time-of-day and will be
+     *                       provided in the format 'HH:MM:SS.mmm'.  The allowable
+     *                       range is 00:00:00.000 through 23:59:59.999.  This
+     *                       property is mutually exclusive with the {@code
+     *                       text_search} property.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
+     *                       DATETIME}: Valid only for 'string' columns.
+     *                       Indicates that this field represents a datetime and
+     *                       will be provided in the format 'YYYY-MM-DD
+     *                       HH:MM:SS.mmm'.  The allowable range is 1000-01-01
+     *                       00:00:00.000 through 2900-01-01 23:59:59.999.  This
+     *                       property is mutually exclusive with the {@code
+     *                       text_search} property.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1
+     *                       CHAR1}: This property provides optimized memory, disk
+     *                       and query performance for string columns. Strings
+     *                       with this property must be no longer than 1
+     *                       character.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2
+     *                       CHAR2}: This property provides optimized memory, disk
+     *                       and query performance for string columns. Strings
+     *                       with this property must be no longer than 2
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4
+     *                       CHAR4}: This property provides optimized memory, disk
+     *                       and query performance for string columns. Strings
+     *                       with this property must be no longer than 4
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8
+     *                       CHAR8}: This property provides optimized memory, disk
+     *                       and query performance for string columns. Strings
+     *                       with this property must be no longer than 8
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16
+     *                       CHAR16}: This property provides optimized memory,
+     *                       disk and query performance for string columns.
+     *                       Strings with this property must be no longer than 16
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32
+     *                       CHAR32}: This property provides optimized memory,
+     *                       disk and query performance for string columns.
+     *                       Strings with this property must be no longer than 32
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64
+     *                       CHAR64}: This property provides optimized memory,
+     *                       disk and query performance for string columns.
+     *                       Strings with this property must be no longer than 64
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
+     *                       CHAR128}: This property provides optimized memory,
+     *                       disk and query performance for string columns.
+     *                       Strings with this property must be no longer than 128
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
+     *                       CHAR256}: This property provides optimized memory,
+     *                       disk and query performance for string columns.
+     *                       Strings with this property must be no longer than 256
+     *                       characters.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#INT8
+     *                       INT8}: This property provides optimized memory and
+     *                       query performance for int columns. Ints with this
+     *                       property must be between -128 and +127 (inclusive)
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#INT16
+     *                       INT16}: This property provides optimized memory and
+     *                       query performance for int columns. Ints with this
+     *                       property must be between -32768 and +32767
+     *                       (inclusive)
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#IPV4
+     *                       IPV4}: This property provides optimized memory, disk
+     *                       and query performance for string columns representing
+     *                       IPv4 addresses (i.e. 192.168.1.1). Strings with this
+     *                       property must be of the form: A.B.C.D where A, B, C
+     *                       and D are in the range of 0-255.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#WKT
+     *                       WKT}: Valid only for 'string' and 'bytes' columns.
+     *                       Indicates that this field contains geospatial
+     *                       geometry objects in Well-Known Text (WKT) or
+     *                       Well-Known Binary (WKB) format.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
+     *                       PRIMARY_KEY}: This property indicates that this
+     *                       column will be part of (or the entire) <a
+     *                       href="../../../../../concepts/tables.html#primary-keys"
+     *                       target="_top">primary key</a>.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
+     *                       SHARD_KEY}: This property indicates that this column
+     *                       will be part of (or the entire) <a
+     *                       href="../../../../../concepts/tables.html#shard-keys"
+     *                       target="_top">shard key</a>.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
+     *                       NULLABLE}: This property indicates that this column
+     *                       is nullable.  However, setting this property is
+     *                       insufficient for making the column nullable.  The
+     *                       user must declare the type of the column as a union
+     *                       between its regular type and 'null' in the avro
+     *                       schema for the record type in {@code typeDefinition}.
+     *                       For example, if a column is of type integer and is
+     *                       nullable, then the entry for the column in the avro
+     *                       schema must be: ['int', 'null'].
+     *                       The C++, C#, Java, and Python APIs have built-in
+     *                       convenience for bypassing setting the avro schema by
+     *                       hand.  For those languages, one can use this property
+     *                       as usual and not have to worry about the avro schema
+     *                       for the record.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#DICT
+     *                       DICT}: This property indicates that this column
+     *                       should be <a
+     *                       href="../../../../../concepts/dictionary_encoding.html"
+     *                       target="_top">dictionary encoded</a>. It can only be
+     *                       used in conjunction with restricted string (charN),
+     *                       int, long or date columns. Dictionary encoding is
+     *                       best for columns where the cardinality (the number of
+     *                       unique values) is expected to be low. This property
+     *                       can save a large amount of memory.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
+     *                       INIT_WITH_NOW}: For 'date', 'time', 'datetime', or
+     *                       'timestamp' column types, replace empty strings and
+     *                       invalid timestamps with 'NOW()' upon insert.
+     *                       </ul>
+     * @param options        Optional parameters.  The default value is an empty
+     *                       {@link Map}.
+     */
+    public CreateTypeRequest(String typeDefinition, String label, Map<String, List<String>> properties, Map<String, String> options) {
+        this.typeDefinition = (typeDefinition == null) ? "" : typeDefinition;
+        this.label = (label == null) ? "" : label;
+        this.properties = (properties == null) ? new LinkedHashMap<String, List<String>>() : properties;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return a JSON string describing the columns of the type to be
+     * registered.
+     */
+    public String getTypeDefinition() {
+        return typeDefinition;
+    }
+
+    /**
+     * @param typeDefinition a JSON string describing the columns of the type
+     *                       to be registered.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTypeRequest setTypeDefinition(String typeDefinition) {
+        this.typeDefinition = (typeDefinition == null) ? "" : typeDefinition;
+        return this;
+    }
+
+    /**
+     * @return A user-defined description string which can be used to
+     * differentiate between tables and types with otherwise identical
+     * schemas.
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * @param label A user-defined description string which can be used to
+     *              differentiate between tables and types with otherwise
+     *              identical schemas.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTypeRequest setLabel(String label) {
+        this.label = (label == null) ? "" : label;
+        return this;
+    }
+
+    /**
+     * @return Each key-value pair specifies the properties to use for a given
+     * column where the key is the column name.  All keys used must be
+     * relevant column names for the given table.  Specifying any
+     * property overrides the default properties for that column (which
+     * is based on the column's data type).
+     * Valid values are:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DATA DATA}:
+     * Default property for all numeric and string type columns; makes
+     * the column available for GPU queries.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
+     * TEXT_SEARCH}: Valid only for 'string' columns. Enables full text
+     * search for string columns. Can be set independently of {@code
+     * data} and {@code store_only}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
+     * STORE_ONLY}: Persist the column value but do not make it
+     * available to queries (e.g. {@link
+     * com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is mutually
+     * exclusive to the {@code data} property. Any 'bytes' type column
+     * must have a {@code store_only} property. This property reduces
+     * system memory usage.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
+     * DISK_OPTIMIZED}: Works in conjunction with the {@code data}
+     * property for string columns. This property reduces system disk
+     * usage by disabling reverse string lookups. Queries like {@link
+     * com.gpudb.GPUdb#filter(FilterRequest)}, {@link
+     * com.gpudb.GPUdb#filterByList(FilterByListRequest)}, and {@link
+     * com.gpudb.GPUdb#filterByValue(FilterByValueRequest)} work as
+     * usual but {@link
+     * com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)} and
+     * {@link
+     * com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
+     * are not allowed on columns with this property.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
+     * TIMESTAMP}: Valid only for 'long' columns. Indicates that this
+     * field represents a timestamp and will be provided in
+     * milliseconds since the Unix epoch: 00:00:00 Jan 1 1970.  Dates
+     * represented by a timestamp must fall between the year 1000 and
+     * the year 2900.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#ULONG ULONG}:
+     * Valid only for 'string' columns.  It represents an unsigned long
+     * integer data type. The string can only be interpreted as an
+     * unsigned long data type with minimum value of zero, and maximum
+     * value of 18446744073709551615.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
+     * DECIMAL}: Valid only for 'string' columns.  It represents a SQL
+     * type NUMERIC(19, 4) data type.  There can be up to 15 digits
+     * before the decimal point and up to four digits in the fractional
+     * part.  The value can be positive or negative (indicated by a
+     * minus sign at the beginning).  This property is mutually
+     * exclusive with the {@code text_search} property.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DATE DATE}:
+     * Valid only for 'string' columns.  Indicates that this field
+     * represents a date and will be provided in the format
+     * 'YYYY-MM-DD'.  The allowable range is 1000-01-01 through
+     * 2900-01-01.  This property is mutually exclusive with the {@code
+     * text_search} property.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#TIME TIME}:
+     * Valid only for 'string' columns.  Indicates that this field
+     * represents a time-of-day and will be provided in the format
+     * 'HH:MM:SS.mmm'.  The allowable range is 00:00:00.000 through
+     * 23:59:59.999.  This property is mutually exclusive with the
+     * {@code text_search} property.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
+     * DATETIME}: Valid only for 'string' columns.  Indicates that this
+     * field represents a datetime and will be provided in the format
+     * 'YYYY-MM-DD HH:MM:SS.mmm'.  The allowable range is 1000-01-01
+     * 00:00:00.000 through 2900-01-01 23:59:59.999.  This property is
+     * mutually exclusive with the {@code text_search} property.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1 CHAR1}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 1 character.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2 CHAR2}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 2 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4 CHAR4}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 4 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8 CHAR8}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 8 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16 CHAR16}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 16 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32 CHAR32}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 32 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64 CHAR64}:
+     * This property provides optimized memory, disk and query
+     * performance for string columns. Strings with this property must
+     * be no longer than 64 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
+     * CHAR128}: This property provides optimized memory, disk and
+     * query performance for string columns. Strings with this property
+     * must be no longer than 128 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
+     * CHAR256}: This property provides optimized memory, disk and
+     * query performance for string columns. Strings with this property
+     * must be no longer than 256 characters.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#INT8 INT8}: This
+     * property provides optimized memory and query performance for int
+     * columns. Ints with this property must be between -128 and +127
+     * (inclusive)
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#INT16 INT16}:
+     * This property provides optimized memory and query performance
+     * for int columns. Ints with this property must be between -32768
+     * and +32767 (inclusive)
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#IPV4 IPV4}: This
+     * property provides optimized memory, disk and query performance
+     * for string columns representing IPv4 addresses (i.e.
+     * 192.168.1.1). Strings with this property must be of the form:
+     * A.B.C.D where A, B, C and D are in the range of 0-255.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#WKT WKT}: Valid
+     * only for 'string' and 'bytes' columns. Indicates that this field
+     * contains geospatial geometry objects in Well-Known Text (WKT) or
+     * Well-Known Binary (WKB) format.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
+     * PRIMARY_KEY}: This property indicates that this column will be
+     * part of (or the entire) <a
+     * href="../../../../../concepts/tables.html#primary-keys"
+     * target="_top">primary key</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
+     * SHARD_KEY}: This property indicates that this column will be
+     * part of (or the entire) <a
+     * href="../../../../../concepts/tables.html#shard-keys"
+     * target="_top">shard key</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
+     * NULLABLE}: This property indicates that this column is nullable.
+     * However, setting this property is insufficient for making the
+     * column nullable.  The user must declare the type of the column
+     * as a union between its regular type and 'null' in the avro
+     * schema for the record type in {@code typeDefinition}.  For
+     * example, if a column is of type integer and is nullable, then
+     * the entry for the column in the avro schema must be: ['int',
+     * 'null'].
+     * The C++, C#, Java, and Python APIs have built-in convenience for
+     * bypassing setting the avro schema by hand.  For those languages,
+     * one can use this property as usual and not have to worry about
+     * the avro schema for the record.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#DICT DICT}: This
+     * property indicates that this column should be <a
+     * href="../../../../../concepts/dictionary_encoding.html"
+     * target="_top">dictionary encoded</a>. It can only be used in
+     * conjunction with restricted string (charN), int, long or date
+     * columns. Dictionary encoding is best for columns where the
+     * cardinality (the number of unique values) is expected to be low.
+     * This property can save a large amount of memory.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
+     * INIT_WITH_NOW}: For 'date', 'time', 'datetime', or 'timestamp'
+     * column types, replace empty strings and invalid timestamps with
+     * 'NOW()' upon insert.
+     * </ul>
+     */
+    public Map<String, List<String>> getProperties() {
+        return properties;
+    }
+
+    /**
+     * @param properties Each key-value pair specifies the properties to use
+     *                   for a given column where the key is the column name.
+     *                   All keys used must be relevant column names for the
+     *                   given table.  Specifying any property overrides the
+     *                   default properties for that column (which is based on
+     *                   the column's data type).
+     *                   Valid values are:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DATA
+     *                   DATA}: Default property for all numeric and string
+     *                   type columns; makes the column available for GPU
+     *                   queries.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
+     *                   TEXT_SEARCH}: Valid only for 'string' columns.
+     *                   Enables full text search for string columns. Can be
+     *                   set independently of {@code data} and {@code
+     *                   store_only}.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
+     *                   STORE_ONLY}: Persist the column value but do not make
+     *                   it available to queries (e.g. {@link
+     *                   com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is
+     *                   mutually exclusive to the {@code data} property. Any
+     *                   'bytes' type column must have a {@code store_only}
+     *                   property. This property reduces system memory usage.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
+     *                   DISK_OPTIMIZED}: Works in conjunction with the {@code
+     *                   data} property for string columns. This property
+     *                   reduces system disk usage by disabling reverse string
+     *                   lookups. Queries like {@link
+     *                   com.gpudb.GPUdb#filter(FilterRequest)}, {@link
+     *                   com.gpudb.GPUdb#filterByList(FilterByListRequest)},
+     *                   and {@link
+     *                   com.gpudb.GPUdb#filterByValue(FilterByValueRequest)}
+     *                   work as usual but {@link
+     *                   com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)}
+     *                   and {@link
+     *                   com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
+     *                   are not allowed on columns with this property.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
+     *                   TIMESTAMP}: Valid only for 'long' columns. Indicates
+     *                   that this field represents a timestamp and will be
+     *                   provided in milliseconds since the Unix epoch:
+     *                   00:00:00 Jan 1 1970.  Dates represented by a
+     *                   timestamp must fall between the year 1000 and the
+     *                   year 2900.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#ULONG
+     *                   ULONG}: Valid only for 'string' columns.  It
+     *                   represents an unsigned long integer data type. The
+     *                   string can only be interpreted as an unsigned long
+     *                   data type with minimum value of zero, and maximum
+     *                   value of 18446744073709551615.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
+     *                   DECIMAL}: Valid only for 'string' columns.  It
+     *                   represents a SQL type NUMERIC(19, 4) data type.
+     *                   There can be up to 15 digits before the decimal point
+     *                   and up to four digits in the fractional part.  The
+     *                   value can be positive or negative (indicated by a
+     *                   minus sign at the beginning).  This property is
+     *                   mutually exclusive with the {@code text_search}
+     *                   property.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DATE
+     *                   DATE}: Valid only for 'string' columns.  Indicates
+     *                   that this field represents a date and will be
+     *                   provided in the format 'YYYY-MM-DD'.  The allowable
+     *                   range is 1000-01-01 through 2900-01-01.  This
+     *                   property is mutually exclusive with the {@code
+     *                   text_search} property.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#TIME
+     *                   TIME}: Valid only for 'string' columns.  Indicates
+     *                   that this field represents a time-of-day and will be
+     *                   provided in the format 'HH:MM:SS.mmm'.  The allowable
+     *                   range is 00:00:00.000 through 23:59:59.999.  This
+     *                   property is mutually exclusive with the {@code
+     *                   text_search} property.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
+     *                   DATETIME}: Valid only for 'string' columns.
+     *                   Indicates that this field represents a datetime and
+     *                   will be provided in the format 'YYYY-MM-DD
+     *                   HH:MM:SS.mmm'.  The allowable range is 1000-01-01
+     *                   00:00:00.000 through 2900-01-01 23:59:59.999.  This
+     *                   property is mutually exclusive with the {@code
+     *                   text_search} property.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1
+     *                   CHAR1}: This property provides optimized memory, disk
+     *                   and query performance for string columns. Strings
+     *                   with this property must be no longer than 1
+     *                   character.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2
+     *                   CHAR2}: This property provides optimized memory, disk
+     *                   and query performance for string columns. Strings
+     *                   with this property must be no longer than 2
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4
+     *                   CHAR4}: This property provides optimized memory, disk
+     *                   and query performance for string columns. Strings
+     *                   with this property must be no longer than 4
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8
+     *                   CHAR8}: This property provides optimized memory, disk
+     *                   and query performance for string columns. Strings
+     *                   with this property must be no longer than 8
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16
+     *                   CHAR16}: This property provides optimized memory,
+     *                   disk and query performance for string columns.
+     *                   Strings with this property must be no longer than 16
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32
+     *                   CHAR32}: This property provides optimized memory,
+     *                   disk and query performance for string columns.
+     *                   Strings with this property must be no longer than 32
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64
+     *                   CHAR64}: This property provides optimized memory,
+     *                   disk and query performance for string columns.
+     *                   Strings with this property must be no longer than 64
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
+     *                   CHAR128}: This property provides optimized memory,
+     *                   disk and query performance for string columns.
+     *                   Strings with this property must be no longer than 128
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
+     *                   CHAR256}: This property provides optimized memory,
+     *                   disk and query performance for string columns.
+     *                   Strings with this property must be no longer than 256
+     *                   characters.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#INT8
+     *                   INT8}: This property provides optimized memory and
+     *                   query performance for int columns. Ints with this
+     *                   property must be between -128 and +127 (inclusive)
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#INT16
+     *                   INT16}: This property provides optimized memory and
+     *                   query performance for int columns. Ints with this
+     *                   property must be between -32768 and +32767
+     *                   (inclusive)
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#IPV4
+     *                   IPV4}: This property provides optimized memory, disk
+     *                   and query performance for string columns representing
+     *                   IPv4 addresses (i.e. 192.168.1.1). Strings with this
+     *                   property must be of the form: A.B.C.D where A, B, C
+     *                   and D are in the range of 0-255.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#WKT
+     *                   WKT}: Valid only for 'string' and 'bytes' columns.
+     *                   Indicates that this field contains geospatial
+     *                   geometry objects in Well-Known Text (WKT) or
+     *                   Well-Known Binary (WKB) format.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
+     *                   PRIMARY_KEY}: This property indicates that this
+     *                   column will be part of (or the entire) <a
+     *                   href="../../../../../concepts/tables.html#primary-keys"
+     *                   target="_top">primary key</a>.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
+     *                   SHARD_KEY}: This property indicates that this column
+     *                   will be part of (or the entire) <a
+     *                   href="../../../../../concepts/tables.html#shard-keys"
+     *                   target="_top">shard key</a>.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
+     *                   NULLABLE}: This property indicates that this column
+     *                   is nullable.  However, setting this property is
+     *                   insufficient for making the column nullable.  The
+     *                   user must declare the type of the column as a union
+     *                   between its regular type and 'null' in the avro
+     *                   schema for the record type in {@code typeDefinition}.
+     *                   For example, if a column is of type integer and is
+     *                   nullable, then the entry for the column in the avro
+     *                   schema must be: ['int', 'null'].
+     *                   The C++, C#, Java, and Python APIs have built-in
+     *                   convenience for bypassing setting the avro schema by
+     *                   hand.  For those languages, one can use this property
+     *                   as usual and not have to worry about the avro schema
+     *                   for the record.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#DICT
+     *                   DICT}: This property indicates that this column
+     *                   should be <a
+     *                   href="../../../../../concepts/dictionary_encoding.html"
+     *                   target="_top">dictionary encoded</a>. It can only be
+     *                   used in conjunction with restricted string (charN),
+     *                   int, long or date columns. Dictionary encoding is
+     *                   best for columns where the cardinality (the number of
+     *                   unique values) is expected to be low. This property
+     *                   can save a large amount of memory.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
+     *                   INIT_WITH_NOW}: For 'date', 'time', 'datetime', or
+     *                   'timestamp' column types, replace empty strings and
+     *                   invalid timestamps with 'NOW()' upon insert.
+     *                   </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTypeRequest setProperties(Map<String, List<String>> properties) {
+        this.properties = (properties == null) ? new LinkedHashMap<String, List<String>>() : properties;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.  The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateTypeRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.typeDefinition;
+
+            case 1:
+                return this.label;
+
+            case 2:
+                return this.properties;
+
+            case 3:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.typeDefinition = (String) value;
+                break;
+
+            case 1:
+                this.label = (String) value;
+                break;
+
+            case 2:
+                this.properties = (Map<String, List<String>>) value;
+                break;
+
+            case 3:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        CreateTypeRequest that = (CreateTypeRequest) obj;
+
+        return (this.typeDefinition.equals(that.typeDefinition)
+                && this.label.equals(that.label)
+                && this.properties.equals(that.properties)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("typeDefinition"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeDefinition));
+        builder.append(", ");
+        builder.append(gd.toString("label"));
+        builder.append(": ");
+        builder.append(gd.toString(this.label));
+        builder.append(", ");
+        builder.append(gd.toString("properties"));
+        builder.append(": ");
+        builder.append(gd.toString(this.properties));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.typeDefinition.hashCode();
+        hashCode = (31 * hashCode) + this.label.hashCode();
+        hashCode = (31 * hashCode) + this.properties.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Each key-value pair specifies the properties to use for a given column
@@ -485,878 +1323,8 @@ public class CreateTypeRequest implements IndexedRecord {
          */
         public static final String INIT_WITH_NOW = "init_with_now";
 
-        private Properties() {  }
-    }
-
-    private String typeDefinition;
-    private String label;
-    private Map<String, List<String>> properties;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a CreateTypeRequest object with default parameters.
-     */
-    public CreateTypeRequest() {
-        typeDefinition = "";
-        label = "";
-        properties = new LinkedHashMap<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a CreateTypeRequest object with the specified parameters.
-     * 
-     * @param typeDefinition  a JSON string describing the columns of the type
-     *                        to be registered.
-     * @param label  A user-defined description string which can be used to
-     *               differentiate between tables and types with otherwise
-     *               identical schemas.
-     * @param properties  Each key-value pair specifies the properties to use
-     *                    for a given column where the key is the column name.
-     *                    All keys used must be relevant column names for the
-     *                    given table.  Specifying any property overrides the
-     *                    default properties for that column (which is based on
-     *                    the column's data type).
-     *                    Valid values are:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATA
-     *                    DATA}: Default property for all numeric and string
-     *                    type columns; makes the column available for GPU
-     *                    queries.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
-     *                    TEXT_SEARCH}: Valid only for 'string' columns.
-     *                    Enables full text search for string columns. Can be
-     *                    set independently of {@code data} and {@code
-     *                    store_only}.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
-     *                    STORE_ONLY}: Persist the column value but do not make
-     *                    it available to queries (e.g. {@link
-     *                    com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is
-     *                    mutually exclusive to the {@code data} property. Any
-     *                    'bytes' type column must have a {@code store_only}
-     *                    property. This property reduces system memory usage.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
-     *                    DISK_OPTIMIZED}: Works in conjunction with the {@code
-     *                    data} property for string columns. This property
-     *                    reduces system disk usage by disabling reverse string
-     *                    lookups. Queries like {@link
-     *                    com.gpudb.GPUdb#filter(FilterRequest)}, {@link
-     *                    com.gpudb.GPUdb#filterByList(FilterByListRequest)},
-     *                    and {@link
-     *                    com.gpudb.GPUdb#filterByValue(FilterByValueRequest)}
-     *                    work as usual but {@link
-     *                    com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)}
-     *                    and {@link
-     *                    com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
-     *                    are not allowed on columns with this property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
-     *                    TIMESTAMP}: Valid only for 'long' columns. Indicates
-     *                    that this field represents a timestamp and will be
-     *                    provided in milliseconds since the Unix epoch:
-     *                    00:00:00 Jan 1 1970.  Dates represented by a
-     *                    timestamp must fall between the year 1000 and the
-     *                    year 2900.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#ULONG
-     *                    ULONG}: Valid only for 'string' columns.  It
-     *                    represents an unsigned long integer data type. The
-     *                    string can only be interpreted as an unsigned long
-     *                    data type with minimum value of zero, and maximum
-     *                    value of 18446744073709551615.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
-     *                    DECIMAL}: Valid only for 'string' columns.  It
-     *                    represents a SQL type NUMERIC(19, 4) data type.
-     *                    There can be up to 15 digits before the decimal point
-     *                    and up to four digits in the fractional part.  The
-     *                    value can be positive or negative (indicated by a
-     *                    minus sign at the beginning).  This property is
-     *                    mutually exclusive with the {@code text_search}
-     *                    property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATE
-     *                    DATE}: Valid only for 'string' columns.  Indicates
-     *                    that this field represents a date and will be
-     *                    provided in the format 'YYYY-MM-DD'.  The allowable
-     *                    range is 1000-01-01 through 2900-01-01.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TIME
-     *                    TIME}: Valid only for 'string' columns.  Indicates
-     *                    that this field represents a time-of-day and will be
-     *                    provided in the format 'HH:MM:SS.mmm'.  The allowable
-     *                    range is 00:00:00.000 through 23:59:59.999.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
-     *                    DATETIME}: Valid only for 'string' columns.
-     *                    Indicates that this field represents a datetime and
-     *                    will be provided in the format 'YYYY-MM-DD
-     *                    HH:MM:SS.mmm'.  The allowable range is 1000-01-01
-     *                    00:00:00.000 through 2900-01-01 23:59:59.999.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1
-     *                    CHAR1}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 1
-     *                    character.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2
-     *                    CHAR2}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 2
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4
-     *                    CHAR4}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 4
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8
-     *                    CHAR8}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 8
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16
-     *                    CHAR16}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 16
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32
-     *                    CHAR32}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 32
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64
-     *                    CHAR64}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 64
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
-     *                    CHAR128}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 128
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
-     *                    CHAR256}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 256
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INT8
-     *                    INT8}: This property provides optimized memory and
-     *                    query performance for int columns. Ints with this
-     *                    property must be between -128 and +127 (inclusive)
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INT16
-     *                    INT16}: This property provides optimized memory and
-     *                    query performance for int columns. Ints with this
-     *                    property must be between -32768 and +32767
-     *                    (inclusive)
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#IPV4
-     *                    IPV4}: This property provides optimized memory, disk
-     *                    and query performance for string columns representing
-     *                    IPv4 addresses (i.e. 192.168.1.1). Strings with this
-     *                    property must be of the form: A.B.C.D where A, B, C
-     *                    and D are in the range of 0-255.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#WKT
-     *                    WKT}: Valid only for 'string' and 'bytes' columns.
-     *                    Indicates that this field contains geospatial
-     *                    geometry objects in Well-Known Text (WKT) or
-     *                    Well-Known Binary (WKB) format.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
-     *                    PRIMARY_KEY}: This property indicates that this
-     *                    column will be part of (or the entire) <a
-     *                    href="../../../../../concepts/tables.html#primary-keys"
-     *                    target="_top">primary key</a>.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
-     *                    SHARD_KEY}: This property indicates that this column
-     *                    will be part of (or the entire) <a
-     *                    href="../../../../../concepts/tables.html#shard-keys"
-     *                    target="_top">shard key</a>.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
-     *                    NULLABLE}: This property indicates that this column
-     *                    is nullable.  However, setting this property is
-     *                    insufficient for making the column nullable.  The
-     *                    user must declare the type of the column as a union
-     *                    between its regular type and 'null' in the avro
-     *                    schema for the record type in {@code typeDefinition}.
-     *                    For example, if a column is of type integer and is
-     *                    nullable, then the entry for the column in the avro
-     *                    schema must be: ['int', 'null'].
-     *                    The C++, C#, Java, and Python APIs have built-in
-     *                    convenience for bypassing setting the avro schema by
-     *                    hand.  For those languages, one can use this property
-     *                    as usual and not have to worry about the avro schema
-     *                    for the record.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DICT
-     *                    DICT}: This property indicates that this column
-     *                    should be <a
-     *                    href="../../../../../concepts/dictionary_encoding.html"
-     *                    target="_top">dictionary encoded</a>. It can only be
-     *                    used in conjunction with restricted string (charN),
-     *                    int, long or date columns. Dictionary encoding is
-     *                    best for columns where the cardinality (the number of
-     *                    unique values) is expected to be low. This property
-     *                    can save a large amount of memory.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
-     *                    INIT_WITH_NOW}: For 'date', 'time', 'datetime', or
-     *                    'timestamp' column types, replace empty strings and
-     *                    invalid timestamps with 'NOW()' upon insert.
-     *                    </ul>
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
-     */
-    public CreateTypeRequest(String typeDefinition, String label, Map<String, List<String>> properties, Map<String, String> options) {
-        this.typeDefinition = (typeDefinition == null) ? "" : typeDefinition;
-        this.label = (label == null) ? "" : label;
-        this.properties = (properties == null) ? new LinkedHashMap<String, List<String>>() : properties;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return a JSON string describing the columns of the type to be
-     *         registered.
-     * 
-     */
-    public String getTypeDefinition() {
-        return typeDefinition;
-    }
-
-    /**
-     * 
-     * @param typeDefinition  a JSON string describing the columns of the type
-     *                        to be registered.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTypeRequest setTypeDefinition(String typeDefinition) {
-        this.typeDefinition = (typeDefinition == null) ? "" : typeDefinition;
-        return this;
-    }
-
-    /**
-     * 
-     * @return A user-defined description string which can be used to
-     *         differentiate between tables and types with otherwise identical
-     *         schemas.
-     * 
-     */
-    public String getLabel() {
-        return label;
-    }
-
-    /**
-     * 
-     * @param label  A user-defined description string which can be used to
-     *               differentiate between tables and types with otherwise
-     *               identical schemas.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTypeRequest setLabel(String label) {
-        this.label = (label == null) ? "" : label;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Each key-value pair specifies the properties to use for a given
-     *         column where the key is the column name.  All keys used must be
-     *         relevant column names for the given table.  Specifying any
-     *         property overrides the default properties for that column (which
-     *         is based on the column's data type).
-     *         Valid values are:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DATA DATA}:
-     *         Default property for all numeric and string type columns; makes
-     *         the column available for GPU queries.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
-     *         TEXT_SEARCH}: Valid only for 'string' columns. Enables full text
-     *         search for string columns. Can be set independently of {@code
-     *         data} and {@code store_only}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
-     *         STORE_ONLY}: Persist the column value but do not make it
-     *         available to queries (e.g. {@link
-     *         com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is mutually
-     *         exclusive to the {@code data} property. Any 'bytes' type column
-     *         must have a {@code store_only} property. This property reduces
-     *         system memory usage.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
-     *         DISK_OPTIMIZED}: Works in conjunction with the {@code data}
-     *         property for string columns. This property reduces system disk
-     *         usage by disabling reverse string lookups. Queries like {@link
-     *         com.gpudb.GPUdb#filter(FilterRequest)}, {@link
-     *         com.gpudb.GPUdb#filterByList(FilterByListRequest)}, and {@link
-     *         com.gpudb.GPUdb#filterByValue(FilterByValueRequest)} work as
-     *         usual but {@link
-     *         com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)} and
-     *         {@link
-     *         com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
-     *         are not allowed on columns with this property.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
-     *         TIMESTAMP}: Valid only for 'long' columns. Indicates that this
-     *         field represents a timestamp and will be provided in
-     *         milliseconds since the Unix epoch: 00:00:00 Jan 1 1970.  Dates
-     *         represented by a timestamp must fall between the year 1000 and
-     *         the year 2900.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#ULONG ULONG}:
-     *         Valid only for 'string' columns.  It represents an unsigned long
-     *         integer data type. The string can only be interpreted as an
-     *         unsigned long data type with minimum value of zero, and maximum
-     *         value of 18446744073709551615.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
-     *         DECIMAL}: Valid only for 'string' columns.  It represents a SQL
-     *         type NUMERIC(19, 4) data type.  There can be up to 15 digits
-     *         before the decimal point and up to four digits in the fractional
-     *         part.  The value can be positive or negative (indicated by a
-     *         minus sign at the beginning).  This property is mutually
-     *         exclusive with the {@code text_search} property.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DATE DATE}:
-     *         Valid only for 'string' columns.  Indicates that this field
-     *         represents a date and will be provided in the format
-     *         'YYYY-MM-DD'.  The allowable range is 1000-01-01 through
-     *         2900-01-01.  This property is mutually exclusive with the {@code
-     *         text_search} property.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#TIME TIME}:
-     *         Valid only for 'string' columns.  Indicates that this field
-     *         represents a time-of-day and will be provided in the format
-     *         'HH:MM:SS.mmm'.  The allowable range is 00:00:00.000 through
-     *         23:59:59.999.  This property is mutually exclusive with the
-     *         {@code text_search} property.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
-     *         DATETIME}: Valid only for 'string' columns.  Indicates that this
-     *         field represents a datetime and will be provided in the format
-     *         'YYYY-MM-DD HH:MM:SS.mmm'.  The allowable range is 1000-01-01
-     *         00:00:00.000 through 2900-01-01 23:59:59.999.  This property is
-     *         mutually exclusive with the {@code text_search} property.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1 CHAR1}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 1 character.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2 CHAR2}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 2 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4 CHAR4}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 4 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8 CHAR8}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 8 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16 CHAR16}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 16 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32 CHAR32}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 32 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64 CHAR64}:
-     *         This property provides optimized memory, disk and query
-     *         performance for string columns. Strings with this property must
-     *         be no longer than 64 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
-     *         CHAR128}: This property provides optimized memory, disk and
-     *         query performance for string columns. Strings with this property
-     *         must be no longer than 128 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
-     *         CHAR256}: This property provides optimized memory, disk and
-     *         query performance for string columns. Strings with this property
-     *         must be no longer than 256 characters.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#INT8 INT8}: This
-     *         property provides optimized memory and query performance for int
-     *         columns. Ints with this property must be between -128 and +127
-     *         (inclusive)
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#INT16 INT16}:
-     *         This property provides optimized memory and query performance
-     *         for int columns. Ints with this property must be between -32768
-     *         and +32767 (inclusive)
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#IPV4 IPV4}: This
-     *         property provides optimized memory, disk and query performance
-     *         for string columns representing IPv4 addresses (i.e.
-     *         192.168.1.1). Strings with this property must be of the form:
-     *         A.B.C.D where A, B, C and D are in the range of 0-255.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#WKT WKT}: Valid
-     *         only for 'string' and 'bytes' columns. Indicates that this field
-     *         contains geospatial geometry objects in Well-Known Text (WKT) or
-     *         Well-Known Binary (WKB) format.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
-     *         PRIMARY_KEY}: This property indicates that this column will be
-     *         part of (or the entire) <a
-     *         href="../../../../../concepts/tables.html#primary-keys"
-     *         target="_top">primary key</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
-     *         SHARD_KEY}: This property indicates that this column will be
-     *         part of (or the entire) <a
-     *         href="../../../../../concepts/tables.html#shard-keys"
-     *         target="_top">shard key</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
-     *         NULLABLE}: This property indicates that this column is nullable.
-     *         However, setting this property is insufficient for making the
-     *         column nullable.  The user must declare the type of the column
-     *         as a union between its regular type and 'null' in the avro
-     *         schema for the record type in {@code typeDefinition}.  For
-     *         example, if a column is of type integer and is nullable, then
-     *         the entry for the column in the avro schema must be: ['int',
-     *         'null'].
-     *         The C++, C#, Java, and Python APIs have built-in convenience for
-     *         bypassing setting the avro schema by hand.  For those languages,
-     *         one can use this property as usual and not have to worry about
-     *         the avro schema for the record.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#DICT DICT}: This
-     *         property indicates that this column should be <a
-     *         href="../../../../../concepts/dictionary_encoding.html"
-     *         target="_top">dictionary encoded</a>. It can only be used in
-     *         conjunction with restricted string (charN), int, long or date
-     *         columns. Dictionary encoding is best for columns where the
-     *         cardinality (the number of unique values) is expected to be low.
-     *         This property can save a large amount of memory.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
-     *         INIT_WITH_NOW}: For 'date', 'time', 'datetime', or 'timestamp'
-     *         column types, replace empty strings and invalid timestamps with
-     *         'NOW()' upon insert.
-     *         </ul>
-     * 
-     */
-    public Map<String, List<String>> getProperties() {
-        return properties;
-    }
-
-    /**
-     * 
-     * @param properties  Each key-value pair specifies the properties to use
-     *                    for a given column where the key is the column name.
-     *                    All keys used must be relevant column names for the
-     *                    given table.  Specifying any property overrides the
-     *                    default properties for that column (which is based on
-     *                    the column's data type).
-     *                    Valid values are:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATA
-     *                    DATA}: Default property for all numeric and string
-     *                    type columns; makes the column available for GPU
-     *                    queries.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TEXT_SEARCH
-     *                    TEXT_SEARCH}: Valid only for 'string' columns.
-     *                    Enables full text search for string columns. Can be
-     *                    set independently of {@code data} and {@code
-     *                    store_only}.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#STORE_ONLY
-     *                    STORE_ONLY}: Persist the column value but do not make
-     *                    it available to queries (e.g. {@link
-     *                    com.gpudb.GPUdb#filter(FilterRequest)})-i.e. it is
-     *                    mutually exclusive to the {@code data} property. Any
-     *                    'bytes' type column must have a {@code store_only}
-     *                    property. This property reduces system memory usage.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DISK_OPTIMIZED
-     *                    DISK_OPTIMIZED}: Works in conjunction with the {@code
-     *                    data} property for string columns. This property
-     *                    reduces system disk usage by disabling reverse string
-     *                    lookups. Queries like {@link
-     *                    com.gpudb.GPUdb#filter(FilterRequest)}, {@link
-     *                    com.gpudb.GPUdb#filterByList(FilterByListRequest)},
-     *                    and {@link
-     *                    com.gpudb.GPUdb#filterByValue(FilterByValueRequest)}
-     *                    work as usual but {@link
-     *                    com.gpudb.GPUdb#aggregateUniqueRaw(AggregateUniqueRequest)}
-     *                    and {@link
-     *                    com.gpudb.GPUdb#aggregateGroupByRaw(AggregateGroupByRequest)}
-     *                    are not allowed on columns with this property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TIMESTAMP
-     *                    TIMESTAMP}: Valid only for 'long' columns. Indicates
-     *                    that this field represents a timestamp and will be
-     *                    provided in milliseconds since the Unix epoch:
-     *                    00:00:00 Jan 1 1970.  Dates represented by a
-     *                    timestamp must fall between the year 1000 and the
-     *                    year 2900.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#ULONG
-     *                    ULONG}: Valid only for 'string' columns.  It
-     *                    represents an unsigned long integer data type. The
-     *                    string can only be interpreted as an unsigned long
-     *                    data type with minimum value of zero, and maximum
-     *                    value of 18446744073709551615.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DECIMAL
-     *                    DECIMAL}: Valid only for 'string' columns.  It
-     *                    represents a SQL type NUMERIC(19, 4) data type.
-     *                    There can be up to 15 digits before the decimal point
-     *                    and up to four digits in the fractional part.  The
-     *                    value can be positive or negative (indicated by a
-     *                    minus sign at the beginning).  This property is
-     *                    mutually exclusive with the {@code text_search}
-     *                    property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATE
-     *                    DATE}: Valid only for 'string' columns.  Indicates
-     *                    that this field represents a date and will be
-     *                    provided in the format 'YYYY-MM-DD'.  The allowable
-     *                    range is 1000-01-01 through 2900-01-01.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#TIME
-     *                    TIME}: Valid only for 'string' columns.  Indicates
-     *                    that this field represents a time-of-day and will be
-     *                    provided in the format 'HH:MM:SS.mmm'.  The allowable
-     *                    range is 00:00:00.000 through 23:59:59.999.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DATETIME
-     *                    DATETIME}: Valid only for 'string' columns.
-     *                    Indicates that this field represents a datetime and
-     *                    will be provided in the format 'YYYY-MM-DD
-     *                    HH:MM:SS.mmm'.  The allowable range is 1000-01-01
-     *                    00:00:00.000 through 2900-01-01 23:59:59.999.  This
-     *                    property is mutually exclusive with the {@code
-     *                    text_search} property.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR1
-     *                    CHAR1}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 1
-     *                    character.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR2
-     *                    CHAR2}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 2
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR4
-     *                    CHAR4}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 4
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR8
-     *                    CHAR8}: This property provides optimized memory, disk
-     *                    and query performance for string columns. Strings
-     *                    with this property must be no longer than 8
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR16
-     *                    CHAR16}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 16
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR32
-     *                    CHAR32}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 32
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR64
-     *                    CHAR64}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 64
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR128
-     *                    CHAR128}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 128
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#CHAR256
-     *                    CHAR256}: This property provides optimized memory,
-     *                    disk and query performance for string columns.
-     *                    Strings with this property must be no longer than 256
-     *                    characters.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INT8
-     *                    INT8}: This property provides optimized memory and
-     *                    query performance for int columns. Ints with this
-     *                    property must be between -128 and +127 (inclusive)
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INT16
-     *                    INT16}: This property provides optimized memory and
-     *                    query performance for int columns. Ints with this
-     *                    property must be between -32768 and +32767
-     *                    (inclusive)
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#IPV4
-     *                    IPV4}: This property provides optimized memory, disk
-     *                    and query performance for string columns representing
-     *                    IPv4 addresses (i.e. 192.168.1.1). Strings with this
-     *                    property must be of the form: A.B.C.D where A, B, C
-     *                    and D are in the range of 0-255.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#WKT
-     *                    WKT}: Valid only for 'string' and 'bytes' columns.
-     *                    Indicates that this field contains geospatial
-     *                    geometry objects in Well-Known Text (WKT) or
-     *                    Well-Known Binary (WKB) format.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#PRIMARY_KEY
-     *                    PRIMARY_KEY}: This property indicates that this
-     *                    column will be part of (or the entire) <a
-     *                    href="../../../../../concepts/tables.html#primary-keys"
-     *                    target="_top">primary key</a>.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#SHARD_KEY
-     *                    SHARD_KEY}: This property indicates that this column
-     *                    will be part of (or the entire) <a
-     *                    href="../../../../../concepts/tables.html#shard-keys"
-     *                    target="_top">shard key</a>.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#NULLABLE
-     *                    NULLABLE}: This property indicates that this column
-     *                    is nullable.  However, setting this property is
-     *                    insufficient for making the column nullable.  The
-     *                    user must declare the type of the column as a union
-     *                    between its regular type and 'null' in the avro
-     *                    schema for the record type in {@code typeDefinition}.
-     *                    For example, if a column is of type integer and is
-     *                    nullable, then the entry for the column in the avro
-     *                    schema must be: ['int', 'null'].
-     *                    The C++, C#, Java, and Python APIs have built-in
-     *                    convenience for bypassing setting the avro schema by
-     *                    hand.  For those languages, one can use this property
-     *                    as usual and not have to worry about the avro schema
-     *                    for the record.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#DICT
-     *                    DICT}: This property indicates that this column
-     *                    should be <a
-     *                    href="../../../../../concepts/dictionary_encoding.html"
-     *                    target="_top">dictionary encoded</a>. It can only be
-     *                    used in conjunction with restricted string (charN),
-     *                    int, long or date columns. Dictionary encoding is
-     *                    best for columns where the cardinality (the number of
-     *                    unique values) is expected to be low. This property
-     *                    can save a large amount of memory.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.CreateTypeRequest.Properties#INIT_WITH_NOW
-     *                    INIT_WITH_NOW}: For 'date', 'time', 'datetime', or
-     *                    'timestamp' column types, replace empty strings and
-     *                    invalid timestamps with 'NOW()' upon insert.
-     *                    </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTypeRequest setProperties(Map<String, List<String>> properties) {
-        this.properties = (properties == null) ? new LinkedHashMap<String, List<String>>() : properties;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateTypeRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.typeDefinition;
-
-            case 1:
-                return this.label;
-
-            case 2:
-                return this.properties;
-
-            case 3:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Properties() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.typeDefinition = (String)value;
-                break;
-
-            case 1:
-                this.label = (String)value;
-                break;
-
-            case 2:
-                this.properties = (Map<String, List<String>>)value;
-                break;
-
-            case 3:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        CreateTypeRequest that = (CreateTypeRequest)obj;
-
-        return ( this.typeDefinition.equals( that.typeDefinition )
-                 && this.label.equals( that.label )
-                 && this.properties.equals( that.properties )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "typeDefinition" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeDefinition ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "label" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.label ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "properties" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.properties ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.typeDefinition.hashCode();
-        hashCode = (31 * hashCode) + this.label.hashCode();
-        hashCode = (31 * hashCode) + this.properties.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

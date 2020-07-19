@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,44 +32,13 @@ public class AdminAlterJobsRequest implements IndexedRecord {
             .record("AdminAlterJobsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("jobIds").type().array().items().longType().noDefault()
-                .name("action").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("jobIds").type().array().items().longType().noDefault()
+            .name("action").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Action to be performed on the jobs specified by job_ids.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL CANCEL}
-     * </ul>
-     * A set of string constants for the parameter {@code action}.
-     */
-    public static final class Action {
-        public static final String CANCEL = "cancel";
-
-        private Action() {  }
-    }
-
     private List<Long> jobIds;
     private String action;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AdminAlterJobsRequest object with default parameters.
      */
@@ -77,11 +47,10 @@ public class AdminAlterJobsRequest implements IndexedRecord {
         action = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs an AdminAlterJobsRequest object with the specified
      * parameters.
-     * 
+     *
      * @param jobIds  Jobs to be modified.
      * @param action  Action to be performed on the jobs specified by job_ids.
      *                Supported values:
@@ -90,9 +59,8 @@ public class AdminAlterJobsRequest implements IndexedRecord {
      *                com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL
      *                CANCEL}
      *                </ul>
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      */
     public AdminAlterJobsRequest(List<Long> jobIds, String action, Map<String, String> options) {
         this.jobIds = (jobIds == null) ? new ArrayList<Long>() : jobIds;
@@ -101,20 +69,25 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Jobs to be modified.
-     * 
      */
     public List<Long> getJobIds() {
         return jobIds;
     }
 
     /**
-     * 
-     * @param jobIds  Jobs to be modified.
-     * 
+     * @param jobIds Jobs to be modified.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsRequest setJobIds(List<Long> jobIds) {
         this.jobIds = (jobIds == null) ? new ArrayList<Long>() : jobIds;
@@ -122,31 +95,26 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Action to be performed on the jobs specified by job_ids.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL CANCEL}
-     *         </ul>
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL CANCEL}
+     * </ul>
      */
     public String getAction() {
         return action;
     }
 
     /**
-     * 
-     * @param action  Action to be performed on the jobs specified by job_ids.
-     *                Supported values:
-     *                <ul>
-     *                        <li> {@link
-     *                com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL
-     *                CANCEL}
-     *                </ul>
-     * 
+     * @param action Action to be performed on the jobs specified by job_ids.
+     *               Supported values:
+     *               <ul>
+     *                       <li> {@link
+     *               com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL
+     *               CANCEL}
+     *               </ul>
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsRequest setAction(String action) {
         this.action = (action == null) ? "" : action;
@@ -154,21 +122,16 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -178,9 +141,8 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -190,13 +152,10 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -218,27 +177,25 @@ public class AdminAlterJobsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.jobIds = (List<Long>)value;
+                this.jobIds = (List<Long>) value;
                 break;
 
             case 1:
-                this.action = (String)value;
+                this.action = (String) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -248,38 +205,38 @@ public class AdminAlterJobsRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminAlterJobsRequest that = (AdminAlterJobsRequest)obj;
+        AdminAlterJobsRequest that = (AdminAlterJobsRequest) obj;
 
-        return ( this.jobIds.equals( that.jobIds )
-                 && this.action.equals( that.action )
-                 && this.options.equals( that.options ) );
+        return (this.jobIds.equals(that.jobIds)
+                && this.action.equals(that.action)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "jobIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "action" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.action ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("jobIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobIds));
+        builder.append(", ");
+        builder.append(gd.toString("action"));
+        builder.append(": ");
+        builder.append(gd.toString(this.action));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -291,6 +248,22 @@ public class AdminAlterJobsRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.action.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Action to be performed on the jobs specified by job_ids.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminAlterJobsRequest.Action#CANCEL CANCEL}
+     * </ul>
+     * A set of string constants for the parameter {@code action}.
+     */
+    public static final class Action {
+        public static final String CANCEL = "cancel";
+
+        private Action() {
+        }
     }
 
 }

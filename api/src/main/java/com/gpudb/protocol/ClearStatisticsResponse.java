@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,28 +23,13 @@ public class ClearStatisticsResponse implements IndexedRecord {
             .record("ClearStatisticsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private String columnName;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ClearStatisticsResponse object with default parameters.
      */
@@ -51,20 +37,25 @@ public class ClearStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearStatisticsResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -72,20 +63,15 @@ public class ClearStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code columnName}.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Value of {@code columnName}.
-     * 
+     * @param columnName Value of {@code columnName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearStatisticsResponse setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -93,20 +79,15 @@ public class ClearStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearStatisticsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -116,9 +97,8 @@ public class ClearStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -128,13 +108,10 @@ public class ClearStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -156,27 +133,25 @@ public class ClearStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -186,38 +161,38 @@ public class ClearStatisticsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ClearStatisticsResponse that = (ClearStatisticsResponse)obj;
+        ClearStatisticsResponse that = (ClearStatisticsResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.columnName.equals( that.columnName )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.columnName.equals(that.columnName)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

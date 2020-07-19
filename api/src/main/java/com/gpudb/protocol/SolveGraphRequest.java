@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,28 +37,1090 @@ public class SolveGraphRequest implements IndexedRecord {
             .record("SolveGraphRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("weightsOnEdges").type().array().items().stringType().noDefault()
-                .name("restrictions").type().array().items().stringType().noDefault()
-                .name("solverType").type().stringType().noDefault()
-                .name("sourceNodes").type().array().items().stringType().noDefault()
-                .name("destinationNodes").type().array().items().stringType().noDefault()
-                .name("solutionTable").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("weightsOnEdges").type().array().items().stringType().noDefault()
+            .name("restrictions").type().array().items().stringType().noDefault()
+            .name("solverType").type().stringType().noDefault()
+            .name("sourceNodes").type().array().items().stringType().noDefault()
+            .name("destinationNodes").type().array().items().stringType().noDefault()
+            .name("solutionTable").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String graphName;
+    private List<String> weightsOnEdges;
+    private List<String> restrictions;
+    private String solverType;
+    private List<String> sourceNodes;
+    private List<String> destinationNodes;
+    private String solutionTable;
+    private Map<String, String> options;
+    /**
+     * Constructs a SolveGraphRequest object with default parameters.
+     */
+    public SolveGraphRequest() {
+        graphName = "";
+        weightsOnEdges = new ArrayList<>();
+        restrictions = new ArrayList<>();
+        solverType = "";
+        sourceNodes = new ArrayList<>();
+        destinationNodes = new ArrayList<>();
+        solutionTable = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a SolveGraphRequest object with the specified parameters.
+     *
+     * @param graphName        Name of the graph resource to solve.
+     * @param weightsOnEdges   Additional weights to apply to the edges of an
+     *                         existing graph. Weights must be specified using
+     *                         <a
+     *                         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                         target="_top">identifiers</a>; identifiers are
+     *                         grouped as <a
+     *                         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                         target="_top">combinations</a>. Identifiers can
+     *                         be used with existing column names, e.g.,
+     *                         'table.column AS WEIGHTS_EDGE_ID', expressions,
+     *                         e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
+     *                         or raw values, e.g., '{4, 15, 2} AS
+     *                         WEIGHTS_VALUESPECIFIED'. Any provided weights
+     *                         will be added (in the case of
+     *                         'WEIGHTS_VALUESPECIFIED') to or multiplied with
+     *                         (in the case of 'WEIGHTS_FACTORSPECIFIED') the
+     *                         existing weight(s). If using raw values in an
+     *                         identifier combination, the number of values
+     *                         specified must match across the combination.  The
+     *                         default value is an empty {@link List}.
+     * @param restrictions     Additional restrictions to apply to the nodes/edges
+     *                         of an existing graph. Restrictions must be
+     *                         specified using <a
+     *                         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                         target="_top">identifiers</a>; identifiers are
+     *                         grouped as <a
+     *                         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                         target="_top">combinations</a>. Identifiers can be
+     *                         used with existing column names, e.g.,
+     *                         'table.column AS RESTRICTIONS_EDGE_ID',
+     *                         expressions, e.g., 'column/2 AS
+     *                         RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                         '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                         using raw values in an identifier combination, the
+     *                         number of values specified must match across the
+     *                         combination. If {@code
+     *                         remove_previous_restrictions} is set to {@code
+     *                         true}, any provided restrictions will replace the
+     *                         existing restrictions. If {@code
+     *                         remove_previous_restrictions} is set to {@code
+     *                         false}, any provided restrictions will be added (in
+     *                         the case of 'RESTRICTIONS_VALUECOMPARED') to or
+     *                         replaced (in the case of
+     *                         'RESTRICTIONS_ONOFFCOMPARED').  The default value
+     *                         is an empty {@link List}.
+     * @param solverType       The type of solver to use for the graph.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     *                         SHORTEST_PATH}: Solves for the optimal (shortest)
+     *                         path based on weights and restrictions from one
+     *                         source to destinations nodes. Also known as the
+     *                         Dijkstra solver.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
+     *                         PAGE_RANK}: Solves for the probability of each
+     *                         destination node being visited based on the links of
+     *                         the graph topology. Weights are not required to use
+     *                         this solver.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
+     *                         PROBABILITY_RANK}: Solves for the transitional
+     *                         probability (Hidden Markov) for each node based on
+     *                         the weights (probability assigned over given edges).
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
+     *                         CENTRALITY}: Solves for the degree of a node to
+     *                         depict how many pairs of individuals that would have
+     *                         to go through the node to reach one another in the
+     *                         minimum number of hops. Also known as betweenness.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
+     *                         MULTIPLE_ROUTING}: Solves for finding the minimum
+     *                         cost cumulative path for a round-trip starting from
+     *                         the given source and visiting each given destination
+     *                         node once then returning to the source. Also known as
+     *                         the travelling salesman problem.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
+     *                         INVERSE_SHORTEST_PATH}: Solves for finding the
+     *                         optimal path cost for each destination node to route
+     *                         to the source node. Also known as inverse Dijkstra or
+     *                         the service man routing problem.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
+     *                         BACKHAUL_ROUTING}: Solves for optimal routes that
+     *                         connect remote asset nodes to the fixed (backbone)
+     *                         asset nodes.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
+     *                         ALLPATHS}: Solves for paths that would give costs
+     *                         between max and min solution radia - Make sure to
+     *                         limit by the 'max_solution_targets' option. Min cost
+     *                         shoudl be >= shortest_path cost.
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     *                         SHORTEST_PATH}.
+     * @param sourceNodes      It can be one of the nodal identifiers - e.g:
+     *                         'NODE_WKTPOINT' for source nodes. For {@code
+     *                         BACKHAUL_ROUTING}, this list depicts the fixed
+     *                         assets.  The default value is an empty {@link List}.
+     * @param destinationNodes It can be one of the nodal identifiers - e.g:
+     *                         'NODE_WKTPOINT' for destination (target) nodes.
+     *                         For {@code BACKHAUL_ROUTING}, this list depicts
+     *                         the remote assets.  The default value is an
+     *                         empty {@link List}.
+     * @param solutionTable    Name of the table to store the solution.  The
+     *                         default value is 'graph_solutions'.
+     * @param options          Additional parameters
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
+     *                         MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
+     *                         {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
+     *                         maximum solution cost radius, which ignores the {@code
+     *                         destinationNodes} list and instead outputs the nodes
+     *                         within the radius sorted by ascending cost. If set to
+     *                         '0.0', the setting is ignored.  The default value is
+     *                         '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
+     *                         MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
+     *                         {@code INVERSE_SHORTEST_PATH} solvers only. Applicable
+     *                         only when {@code max_solution_radius} is set. Sets the
+     *                         minimum solution cost radius, which ignores the {@code
+     *                         destinationNodes} list and instead outputs the nodes
+     *                         within the radius sorted by ascending cost. If set to
+     *                         '0.0', the setting is ignored.  The default value is
+     *                         '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
+     *                         MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and
+     *                         {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
+     *                         maximum number of solution targets, which ignores the
+     *                         {@code destinationNodes} list and instead outputs no
+     *                         more than n number of nodes sorted by ascending cost
+     *                         where n is equal to the setting value. If set to 0, the
+     *                         setting is ignored.  The default value is '0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
+     *                         EXPORT_SOLVE_RESULTS}: Returns solution results inside
+     *                         the {@code resultPerDestinationNode} array in the
+     *                         response if set to {@code true}.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                         FALSE}
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                         FALSE}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
+     *                         REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions
+     *                         applied to the graph during the creation stage and only
+     *                         use the restrictions specified in this request if set to
+     *                         {@code true}.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                         FALSE}
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                         FALSE}.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                         RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                         comparison. Any node or edge with a
+     *                         RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                         restriction_threshold_value} will not be included in the
+     *                         solution.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
+     *                         UNIFORM_WEIGHTS}: When specified, assigns the given
+     *                         value to all the edges in the graph. Note that weights
+     *                         provided in {@code weightsOnEdges} will override this
+     *                         value.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
+     *                         LEFT_TURN_PENALTY}: This will add an additonal weight
+     *                         over the edges labelled as 'left turn' if the 'add_turn'
+     *                         option parameter of the {@link
+     *                         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                         invoked at graph creation.  The default value is '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
+     *                         RIGHT_TURN_PENALTY}: This will add an additonal weight
+     *                         over the edges labelled as' right turn' if the
+     *                         'add_turn' option parameter of the {@link
+     *                         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                         invoked at graph creation.  The default value is '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
+     *                         INTERSECTION_PENALTY}: This will add an additonal weight
+     *                         over the edges labelled as 'intersection' if the
+     *                         'add_turn' option parameter of the {@link
+     *                         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                         invoked at graph creation.  The default value is '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
+     *                         SHARP_TURN_PENALTY}: This will add an additonal weight
+     *                         over the edges labelled as 'sharp turn' or 'u-turn' if
+     *                         the 'add_turn' option parameter of the {@link
+     *                         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                         invoked at graph creation.  The default value is '0.0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
+     *                         NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers
+     *                         only; sets the number of shortest paths computed from
+     *                         each node. This is the heuristic criterion. Default
+     *                         value of zero allows the number to be computed
+     *                         automatically by the solver. The user may want to
+     *                         override this parameter to speed-up the solver.  The
+     *                         default value is '0'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
+     *                         MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING}
+     *                         solvers only; sets the cap on the combinatorial
+     *                         sequences generated. If the default value of two
+     *                         millions is overridden to a lesser value, it can
+     *                         potentially speed up the solver.  The default value is
+     *                         '2000000'.
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
+     *                         ACCURATE_SNAPS}: Valid for single source destination
+     *                         pair solves if points are described in NODE_WKTPOINT
+     *                         identifier types: When true (default), it snaps to the
+     *                         nearest node of the graph; otherwise, it searches for
+     *                         the closest entity that could be an edge. For the latter
+     *                         case (false), the solver modifies the resulting cost
+     *                         with the weights proportional to the ratio of the snap
+     *                         location within the edge. This may be an over-kill when
+     *                         the performance is considered and the difference is well
+     *                         less than 1 percent. In batch runs, since the
+     *                         performance is of utmost importance, the option is
+     *                         always considered 'false'.
+     *                         Supported values:
+     *                         <ul>
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                                 <li> {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                         FALSE}
+     *                         </ul>
+     *                         The default value is {@link
+     *                         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
+     *                         </ul>
+     *                         The default value is an empty {@link Map}.
+     */
+    public SolveGraphRequest(String graphName, List<String> weightsOnEdges, List<String> restrictions, String solverType, List<String> sourceNodes, List<String> destinationNodes, String solutionTable, Map<String, String> options) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        this.solverType = (solverType == null) ? "" : solverType;
+        this.sourceNodes = (sourceNodes == null) ? new ArrayList<String>() : sourceNodes;
+        this.destinationNodes = (destinationNodes == null) ? new ArrayList<String>() : destinationNodes;
+        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the graph resource to solve.
+     */
+    public String getGraphName() {
+        return graphName;
+    }
+
+    /**
+     * @param graphName Name of the graph resource to solve.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setGraphName(String graphName) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        return this;
+    }
+
+    /**
+     * @return Additional weights to apply to the edges of an existing graph.
+     * Weights must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
+     * expressions, e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
+     * or raw values, e.g., '{4, 15, 2} AS WEIGHTS_VALUESPECIFIED'. Any
+     * provided weights will be added (in the case of
+     * 'WEIGHTS_VALUESPECIFIED') to or multiplied with (in the case of
+     * 'WEIGHTS_FACTORSPECIFIED') the existing weight(s). If using raw
+     * values in an identifier combination, the number of values
+     * specified must match across the combination.  The default value
+     * is an empty {@link List}.
+     */
+    public List<String> getWeightsOnEdges() {
+        return weightsOnEdges;
+    }
+
+    /**
+     * @param weightsOnEdges Additional weights to apply to the edges of an
+     *                       existing graph. Weights must be specified using
+     *                       <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                       target="_top">identifiers</a>; identifiers are
+     *                       grouped as <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                       target="_top">combinations</a>. Identifiers can
+     *                       be used with existing column names, e.g.,
+     *                       'table.column AS WEIGHTS_EDGE_ID', expressions,
+     *                       e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
+     *                       or raw values, e.g., '{4, 15, 2} AS
+     *                       WEIGHTS_VALUESPECIFIED'. Any provided weights
+     *                       will be added (in the case of
+     *                       'WEIGHTS_VALUESPECIFIED') to or multiplied with
+     *                       (in the case of 'WEIGHTS_FACTORSPECIFIED') the
+     *                       existing weight(s). If using raw values in an
+     *                       identifier combination, the number of values
+     *                       specified must match across the combination.  The
+     *                       default value is an empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setWeightsOnEdges(List<String> weightsOnEdges) {
+        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
+        return this;
+    }
+
+    /**
+     * @return Additional restrictions to apply to the nodes/edges of an
+     * existing graph. Restrictions must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS
+     * RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
+     * RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
+     * AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
+     * identifier combination, the number of values specified must
+     * match across the combination. If {@code
+     * remove_previous_restrictions} is set to {@code true}, any
+     * provided restrictions will replace the existing restrictions. If
+     * {@code remove_previous_restrictions} is set to {@code false},
+     * any provided restrictions will be added (in the case of
+     * 'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of
+     * 'RESTRICTIONS_ONOFFCOMPARED').  The default value is an empty
+     * {@link List}.
+     */
+    public List<String> getRestrictions() {
+        return restrictions;
+    }
+
+    /**
+     * @param restrictions Additional restrictions to apply to the nodes/edges
+     *                     of an existing graph. Restrictions must be
+     *                     specified using <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                     target="_top">identifiers</a>; identifiers are
+     *                     grouped as <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                     target="_top">combinations</a>. Identifiers can be
+     *                     used with existing column names, e.g.,
+     *                     'table.column AS RESTRICTIONS_EDGE_ID',
+     *                     expressions, e.g., 'column/2 AS
+     *                     RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                     '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                     using raw values in an identifier combination, the
+     *                     number of values specified must match across the
+     *                     combination. If {@code
+     *                     remove_previous_restrictions} is set to {@code
+     *                     true}, any provided restrictions will replace the
+     *                     existing restrictions. If {@code
+     *                     remove_previous_restrictions} is set to {@code
+     *                     false}, any provided restrictions will be added (in
+     *                     the case of 'RESTRICTIONS_VALUECOMPARED') to or
+     *                     replaced (in the case of
+     *                     'RESTRICTIONS_ONOFFCOMPARED').  The default value
+     *                     is an empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setRestrictions(List<String> restrictions) {
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        return this;
+    }
+
+    /**
+     * @return The type of solver to use for the graph.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     * SHORTEST_PATH}: Solves for the optimal (shortest) path based on
+     * weights and restrictions from one source to destinations nodes.
+     * Also known as the Dijkstra solver.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
+     * PAGE_RANK}: Solves for the probability of each destination node
+     * being visited based on the links of the graph topology. Weights
+     * are not required to use this solver.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
+     * PROBABILITY_RANK}: Solves for the transitional probability
+     * (Hidden Markov) for each node based on the weights (probability
+     * assigned over given edges).
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
+     * CENTRALITY}: Solves for the degree of a node to depict how many
+     * pairs of individuals that would have to go through the node to
+     * reach one another in the minimum number of hops. Also known as
+     * betweenness.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
+     * MULTIPLE_ROUTING}: Solves for finding the minimum cost
+     * cumulative path for a round-trip starting from the given source
+     * and visiting each given destination node once then returning to
+     * the source. Also known as the travelling salesman problem.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
+     * INVERSE_SHORTEST_PATH}: Solves for finding the optimal path cost
+     * for each destination node to route to the source node. Also
+     * known as inverse Dijkstra or the service man routing problem.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
+     * BACKHAUL_ROUTING}: Solves for optimal routes that connect remote
+     * asset nodes to the fixed (backbone) asset nodes.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
+     * ALLPATHS}: Solves for paths that would give costs between max
+     * and min solution radia - Make sure to limit by the
+     * 'max_solution_targets' option. Min cost shoudl be >=
+     * shortest_path cost.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     * SHORTEST_PATH}.
+     */
+    public String getSolverType() {
+        return solverType;
+    }
+
+    /**
+     * @param solverType The type of solver to use for the graph.
+     *                   Supported values:
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     *                   SHORTEST_PATH}: Solves for the optimal (shortest)
+     *                   path based on weights and restrictions from one
+     *                   source to destinations nodes. Also known as the
+     *                   Dijkstra solver.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
+     *                   PAGE_RANK}: Solves for the probability of each
+     *                   destination node being visited based on the links of
+     *                   the graph topology. Weights are not required to use
+     *                   this solver.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
+     *                   PROBABILITY_RANK}: Solves for the transitional
+     *                   probability (Hidden Markov) for each node based on
+     *                   the weights (probability assigned over given edges).
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
+     *                   CENTRALITY}: Solves for the degree of a node to
+     *                   depict how many pairs of individuals that would have
+     *                   to go through the node to reach one another in the
+     *                   minimum number of hops. Also known as betweenness.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
+     *                   MULTIPLE_ROUTING}: Solves for finding the minimum
+     *                   cost cumulative path for a round-trip starting from
+     *                   the given source and visiting each given destination
+     *                   node once then returning to the source. Also known as
+     *                   the travelling salesman problem.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
+     *                   INVERSE_SHORTEST_PATH}: Solves for finding the
+     *                   optimal path cost for each destination node to route
+     *                   to the source node. Also known as inverse Dijkstra or
+     *                   the service man routing problem.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
+     *                   BACKHAUL_ROUTING}: Solves for optimal routes that
+     *                   connect remote asset nodes to the fixed (backbone)
+     *                   asset nodes.
+     *                           <li> {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
+     *                   ALLPATHS}: Solves for paths that would give costs
+     *                   between max and min solution radia - Make sure to
+     *                   limit by the 'max_solution_targets' option. Min cost
+     *                   shoudl be >= shortest_path cost.
+     *                   </ul>
+     *                   The default value is {@link
+     *                   com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
+     *                   SHORTEST_PATH}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setSolverType(String solverType) {
+        this.solverType = (solverType == null) ? "" : solverType;
+        return this;
+    }
+
+    /**
+     * @return It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT'
+     * for source nodes. For {@code BACKHAUL_ROUTING}, this list
+     * depicts the fixed assets.  The default value is an empty {@link
+     * List}.
+     */
+    public List<String> getSourceNodes() {
+        return sourceNodes;
+    }
+
+    /**
+     * @param sourceNodes It can be one of the nodal identifiers - e.g:
+     *                    'NODE_WKTPOINT' for source nodes. For {@code
+     *                    BACKHAUL_ROUTING}, this list depicts the fixed
+     *                    assets.  The default value is an empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setSourceNodes(List<String> sourceNodes) {
+        this.sourceNodes = (sourceNodes == null) ? new ArrayList<String>() : sourceNodes;
+        return this;
+    }
+
+    /**
+     * @return It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT'
+     * for destination (target) nodes. For {@code BACKHAUL_ROUTING},
+     * this list depicts the remote assets.  The default value is an
+     * empty {@link List}.
+     */
+    public List<String> getDestinationNodes() {
+        return destinationNodes;
+    }
+
+    /**
+     * @param destinationNodes It can be one of the nodal identifiers - e.g:
+     *                         'NODE_WKTPOINT' for destination (target) nodes.
+     *                         For {@code BACKHAUL_ROUTING}, this list depicts
+     *                         the remote assets.  The default value is an
+     *                         empty {@link List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setDestinationNodes(List<String> destinationNodes) {
+        this.destinationNodes = (destinationNodes == null) ? new ArrayList<String>() : destinationNodes;
+        return this;
+    }
+
+    /**
+     * @return Name of the table to store the solution.  The default value is
+     * 'graph_solutions'.
+     */
+    public String getSolutionTable() {
+        return solutionTable;
+    }
+
+    /**
+     * @param solutionTable Name of the table to store the solution.  The
+     *                      default value is 'graph_solutions'.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setSolutionTable(String solutionTable) {
+        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
+        return this;
+    }
+
+    /**
+     * @return Additional parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
+     * MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and {@code
+     * INVERSE_SHORTEST_PATH} solvers only. Sets the maximum solution
+     * cost radius, which ignores the {@code destinationNodes} list and
+     * instead outputs the nodes within the radius sorted by ascending
+     * cost. If set to '0.0', the setting is ignored.  The default
+     * value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
+     * MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and {@code
+     * INVERSE_SHORTEST_PATH} solvers only. Applicable only when {@code
+     * max_solution_radius} is set. Sets the minimum solution cost
+     * radius, which ignores the {@code destinationNodes} list and
+     * instead outputs the nodes within the radius sorted by ascending
+     * cost. If set to '0.0', the setting is ignored.  The default
+     * value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
+     * MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and {@code
+     * INVERSE_SHORTEST_PATH} solvers only. Sets the maximum number of
+     * solution targets, which ignores the {@code destinationNodes}
+     * list and instead outputs no more than n number of nodes sorted
+     * by ascending cost where n is equal to the setting value. If set
+     * to 0, the setting is ignored.  The default value is '0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
+     * EXPORT_SOLVE_RESULTS}: Returns solution results inside the
+     * {@code resultPerDestinationNode} array in the response if set to
+     * {@code true}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
+     * REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions applied
+     * to the graph during the creation stage and only use the
+     * restrictions specified in this request if set to {@code true}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     * RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     * comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
+     * value greater than the {@code restriction_threshold_value} will
+     * not be included in the solution.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
+     * UNIFORM_WEIGHTS}: When specified, assigns the given value to all
+     * the edges in the graph. Note that weights provided in {@code
+     * weightsOnEdges} will override this value.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
+     * LEFT_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as 'left turn' if the 'add_turn' option parameter
+     * of the {@link com.gpudb.GPUdb#createGraph(CreateGraphRequest)}
+     * was invoked at graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
+     * RIGHT_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as' right turn' if the 'add_turn' option
+     * parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
+     * INTERSECTION_PENALTY}: This will add an additonal weight over
+     * the edges labelled as 'intersection' if the 'add_turn' option
+     * parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
+     * SHARP_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn'
+     * option parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
+     * NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers only; sets
+     * the number of shortest paths computed from each node. This is
+     * the heuristic criterion. Default value of zero allows the number
+     * to be computed automatically by the solver. The user may want to
+     * override this parameter to speed-up the solver.  The default
+     * value is '0'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
+     * MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING} solvers
+     * only; sets the cap on the combinatorial sequences generated. If
+     * the default value of two millions is overridden to a lesser
+     * value, it can potentially speed up the solver.  The default
+     * value is '2000000'.
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
+     * ACCURATE_SNAPS}: Valid for single source destination pair solves
+     * if points are described in NODE_WKTPOINT identifier types: When
+     * true (default), it snaps to the nearest node of the graph;
+     * otherwise, it searches for the closest entity that could be an
+     * edge. For the latter case (false), the solver modifies the
+     * resulting cost with the weights proportional to the ratio of the
+     * snap location within the edge. This may be an over-kill when the
+     * performance is considered and the difference is well less than 1
+     * percent. In batch runs, since the performance is of utmost
+     * importance, the option is always considered 'false'.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Additional parameters
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
+     *                MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
+     *                {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
+     *                maximum solution cost radius, which ignores the {@code
+     *                destinationNodes} list and instead outputs the nodes
+     *                within the radius sorted by ascending cost. If set to
+     *                '0.0', the setting is ignored.  The default value is
+     *                '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
+     *                MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
+     *                {@code INVERSE_SHORTEST_PATH} solvers only. Applicable
+     *                only when {@code max_solution_radius} is set. Sets the
+     *                minimum solution cost radius, which ignores the {@code
+     *                destinationNodes} list and instead outputs the nodes
+     *                within the radius sorted by ascending cost. If set to
+     *                '0.0', the setting is ignored.  The default value is
+     *                '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
+     *                MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and
+     *                {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
+     *                maximum number of solution targets, which ignores the
+     *                {@code destinationNodes} list and instead outputs no
+     *                more than n number of nodes sorted by ascending cost
+     *                where n is equal to the setting value. If set to 0, the
+     *                setting is ignored.  The default value is '0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
+     *                EXPORT_SOLVE_RESULTS}: Returns solution results inside
+     *                the {@code resultPerDestinationNode} array in the
+     *                response if set to {@code true}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
+     *                REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions
+     *                applied to the graph during the creation stage and only
+     *                use the restrictions specified in this request if set to
+     *                {@code true}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                comparison. Any node or edge with a
+     *                RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                restriction_threshold_value} will not be included in the
+     *                solution.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
+     *                UNIFORM_WEIGHTS}: When specified, assigns the given
+     *                value to all the edges in the graph. Note that weights
+     *                provided in {@code weightsOnEdges} will override this
+     *                value.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
+     *                LEFT_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'left turn' if the 'add_turn'
+     *                option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
+     *                RIGHT_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as' right turn' if the
+     *                'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
+     *                INTERSECTION_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'intersection' if the
+     *                'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
+     *                SHARP_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'sharp turn' or 'u-turn' if
+     *                the 'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
+     *                NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers
+     *                only; sets the number of shortest paths computed from
+     *                each node. This is the heuristic criterion. Default
+     *                value of zero allows the number to be computed
+     *                automatically by the solver. The user may want to
+     *                override this parameter to speed-up the solver.  The
+     *                default value is '0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
+     *                MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING}
+     *                solvers only; sets the cap on the combinatorial
+     *                sequences generated. If the default value of two
+     *                millions is overridden to a lesser value, it can
+     *                potentially speed up the solver.  The default value is
+     *                '2000000'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
+     *                ACCURATE_SNAPS}: Valid for single source destination
+     *                pair solves if points are described in NODE_WKTPOINT
+     *                identifier types: When true (default), it snaps to the
+     *                nearest node of the graph; otherwise, it searches for
+     *                the closest entity that could be an edge. For the latter
+     *                case (false), the solver modifies the resulting cost
+     *                with the weights proportional to the ratio of the snap
+     *                location within the edge. This may be an over-kill when
+     *                the performance is considered and the difference is well
+     *                less than 1 percent. In batch runs, since the
+     *                performance is of utmost importance, the option is
+     *                always considered 'false'.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public SolveGraphRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.graphName;
+
+            case 1:
+                return this.weightsOnEdges;
+
+            case 2:
+                return this.restrictions;
+
+            case 3:
+                return this.solverType;
+
+            case 4:
+                return this.sourceNodes;
+
+            case 5:
+                return this.destinationNodes;
+
+            case 6:
+                return this.solutionTable;
+
+            case 7:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.graphName = (String) value;
+                break;
+
+            case 1:
+                this.weightsOnEdges = (List<String>) value;
+                break;
+
+            case 2:
+                this.restrictions = (List<String>) value;
+                break;
+
+            case 3:
+                this.solverType = (String) value;
+                break;
+
+            case 4:
+                this.sourceNodes = (List<String>) value;
+                break;
+
+            case 5:
+                this.destinationNodes = (List<String>) value;
+                break;
+
+            case 6:
+                this.solutionTable = (String) value;
+                break;
+
+            case 7:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        SolveGraphRequest that = (SolveGraphRequest) obj;
+
+        return (this.graphName.equals(that.graphName)
+                && this.weightsOnEdges.equals(that.weightsOnEdges)
+                && this.restrictions.equals(that.restrictions)
+                && this.solverType.equals(that.solverType)
+                && this.sourceNodes.equals(that.sourceNodes)
+                && this.destinationNodes.equals(that.destinationNodes)
+                && this.solutionTable.equals(that.solutionTable)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("weightsOnEdges"));
+        builder.append(": ");
+        builder.append(gd.toString(this.weightsOnEdges));
+        builder.append(", ");
+        builder.append(gd.toString("restrictions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.restrictions));
+        builder.append(", ");
+        builder.append(gd.toString("solverType"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solverType));
+        builder.append(", ");
+        builder.append(gd.toString("sourceNodes"));
+        builder.append(": ");
+        builder.append(gd.toString(this.sourceNodes));
+        builder.append(", ");
+        builder.append(gd.toString("destinationNodes"));
+        builder.append(": ");
+        builder.append(gd.toString(this.destinationNodes));
+        builder.append(", ");
+        builder.append(gd.toString("solutionTable"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solutionTable));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.graphName.hashCode();
+        hashCode = (31 * hashCode) + this.weightsOnEdges.hashCode();
+        hashCode = (31 * hashCode) + this.restrictions.hashCode();
+        hashCode = (31 * hashCode) + this.solverType.hashCode();
+        hashCode = (31 * hashCode) + this.sourceNodes.hashCode();
+        hashCode = (31 * hashCode) + this.destinationNodes.hashCode();
+        hashCode = (31 * hashCode) + this.solutionTable.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * The type of solver to use for the graph.
@@ -166,9 +1229,9 @@ public class SolveGraphRequest implements IndexedRecord {
          */
         public static final String ALLPATHS = "ALLPATHS";
 
-        private SolverType() {  }
+        private SolverType() {
+        }
     }
-
 
     /**
      * Additional parameters
@@ -445,1123 +1508,8 @@ public class SolveGraphRequest implements IndexedRecord {
          */
         public static final String ACCURATE_SNAPS = "accurate_snaps";
 
-        private Options() {  }
-    }
-
-    private String graphName;
-    private List<String> weightsOnEdges;
-    private List<String> restrictions;
-    private String solverType;
-    private List<String> sourceNodes;
-    private List<String> destinationNodes;
-    private String solutionTable;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a SolveGraphRequest object with default parameters.
-     */
-    public SolveGraphRequest() {
-        graphName = "";
-        weightsOnEdges = new ArrayList<>();
-        restrictions = new ArrayList<>();
-        solverType = "";
-        sourceNodes = new ArrayList<>();
-        destinationNodes = new ArrayList<>();
-        solutionTable = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a SolveGraphRequest object with the specified parameters.
-     * 
-     * @param graphName  Name of the graph resource to solve.
-     * @param weightsOnEdges  Additional weights to apply to the edges of an
-     *                        existing graph. Weights must be specified using
-     *                        <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                        target="_top">identifiers</a>; identifiers are
-     *                        grouped as <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                        target="_top">combinations</a>. Identifiers can
-     *                        be used with existing column names, e.g.,
-     *                        'table.column AS WEIGHTS_EDGE_ID', expressions,
-     *                        e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
-     *                        or raw values, e.g., '{4, 15, 2} AS
-     *                        WEIGHTS_VALUESPECIFIED'. Any provided weights
-     *                        will be added (in the case of
-     *                        'WEIGHTS_VALUESPECIFIED') to or multiplied with
-     *                        (in the case of 'WEIGHTS_FACTORSPECIFIED') the
-     *                        existing weight(s). If using raw values in an
-     *                        identifier combination, the number of values
-     *                        specified must match across the combination.  The
-     *                        default value is an empty {@link List}.
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      true}, any provided restrictions will replace the
-     *                      existing restrictions. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      false}, any provided restrictions will be added (in
-     *                      the case of 'RESTRICTIONS_VALUECOMPARED') to or
-     *                      replaced (in the case of
-     *                      'RESTRICTIONS_ONOFFCOMPARED').  The default value
-     *                      is an empty {@link List}.
-     * @param solverType  The type of solver to use for the graph.
-     *                    Supported values:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *                    SHORTEST_PATH}: Solves for the optimal (shortest)
-     *                    path based on weights and restrictions from one
-     *                    source to destinations nodes. Also known as the
-     *                    Dijkstra solver.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
-     *                    PAGE_RANK}: Solves for the probability of each
-     *                    destination node being visited based on the links of
-     *                    the graph topology. Weights are not required to use
-     *                    this solver.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
-     *                    PROBABILITY_RANK}: Solves for the transitional
-     *                    probability (Hidden Markov) for each node based on
-     *                    the weights (probability assigned over given edges).
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
-     *                    CENTRALITY}: Solves for the degree of a node to
-     *                    depict how many pairs of individuals that would have
-     *                    to go through the node to reach one another in the
-     *                    minimum number of hops. Also known as betweenness.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
-     *                    MULTIPLE_ROUTING}: Solves for finding the minimum
-     *                    cost cumulative path for a round-trip starting from
-     *                    the given source and visiting each given destination
-     *                    node once then returning to the source. Also known as
-     *                    the travelling salesman problem.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
-     *                    INVERSE_SHORTEST_PATH}: Solves for finding the
-     *                    optimal path cost for each destination node to route
-     *                    to the source node. Also known as inverse Dijkstra or
-     *                    the service man routing problem.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
-     *                    BACKHAUL_ROUTING}: Solves for optimal routes that
-     *                    connect remote asset nodes to the fixed (backbone)
-     *                    asset nodes.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
-     *                    ALLPATHS}: Solves for paths that would give costs
-     *                    between max and min solution radia - Make sure to
-     *                    limit by the 'max_solution_targets' option. Min cost
-     *                    shoudl be >= shortest_path cost.
-     *                    </ul>
-     *                    The default value is {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *                    SHORTEST_PATH}.
-     * @param sourceNodes  It can be one of the nodal identifiers - e.g:
-     *                     'NODE_WKTPOINT' for source nodes. For {@code
-     *                     BACKHAUL_ROUTING}, this list depicts the fixed
-     *                     assets.  The default value is an empty {@link List}.
-     * @param destinationNodes  It can be one of the nodal identifiers - e.g:
-     *                          'NODE_WKTPOINT' for destination (target) nodes.
-     *                          For {@code BACKHAUL_ROUTING}, this list depicts
-     *                          the remote assets.  The default value is an
-     *                          empty {@link List}.
-     * @param solutionTable  Name of the table to store the solution.  The
-     *                       default value is 'graph_solutions'.
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
-     *                 MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
-     *                 maximum solution cost radius, which ignores the {@code
-     *                 destinationNodes} list and instead outputs the nodes
-     *                 within the radius sorted by ascending cost. If set to
-     *                 '0.0', the setting is ignored.  The default value is
-     *                 '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
-     *                 MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Applicable
-     *                 only when {@code max_solution_radius} is set. Sets the
-     *                 minimum solution cost radius, which ignores the {@code
-     *                 destinationNodes} list and instead outputs the nodes
-     *                 within the radius sorted by ascending cost. If set to
-     *                 '0.0', the setting is ignored.  The default value is
-     *                 '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
-     *                 MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
-     *                 maximum number of solution targets, which ignores the
-     *                 {@code destinationNodes} list and instead outputs no
-     *                 more than n number of nodes sorted by ascending cost
-     *                 where n is equal to the setting value. If set to 0, the
-     *                 setting is ignored.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
-     *                 EXPORT_SOLVE_RESULTS}: Returns solution results inside
-     *                 the {@code resultPerDestinationNode} array in the
-     *                 response if set to {@code true}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
-     *                 REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions
-     *                 applied to the graph during the creation stage and only
-     *                 use the restrictions specified in this request if set to
-     *                 {@code true}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 solution.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
-     *                 UNIFORM_WEIGHTS}: When specified, assigns the given
-     *                 value to all the edges in the graph. Note that weights
-     *                 provided in {@code weightsOnEdges} will override this
-     *                 value.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
-     *                 LEFT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'left turn' if the 'add_turn'
-     *                 option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
-     *                 RIGHT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as' right turn' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
-     *                 INTERSECTION_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'intersection' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
-     *                 SHARP_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'sharp turn' or 'u-turn' if
-     *                 the 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
-     *                 NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers
-     *                 only; sets the number of shortest paths computed from
-     *                 each node. This is the heuristic criterion. Default
-     *                 value of zero allows the number to be computed
-     *                 automatically by the solver. The user may want to
-     *                 override this parameter to speed-up the solver.  The
-     *                 default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
-     *                 MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING}
-     *                 solvers only; sets the cap on the combinatorial
-     *                 sequences generated. If the default value of two
-     *                 millions is overridden to a lesser value, it can
-     *                 potentially speed up the solver.  The default value is
-     *                 '2000000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
-     *                 ACCURATE_SNAPS}: Valid for single source destination
-     *                 pair solves if points are described in NODE_WKTPOINT
-     *                 identifier types: When true (default), it snaps to the
-     *                 nearest node of the graph; otherwise, it searches for
-     *                 the closest entity that could be an edge. For the latter
-     *                 case (false), the solver modifies the resulting cost
-     *                 with the weights proportional to the ratio of the snap
-     *                 location within the edge. This may be an over-kill when
-     *                 the performance is considered and the difference is well
-     *                 less than 1 percent. In batch runs, since the
-     *                 performance is of utmost importance, the option is
-     *                 always considered 'false'.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public SolveGraphRequest(String graphName, List<String> weightsOnEdges, List<String> restrictions, String solverType, List<String> sourceNodes, List<String> destinationNodes, String solutionTable, Map<String, String> options) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        this.solverType = (solverType == null) ? "" : solverType;
-        this.sourceNodes = (sourceNodes == null) ? new ArrayList<String>() : sourceNodes;
-        this.destinationNodes = (destinationNodes == null) ? new ArrayList<String>() : destinationNodes;
-        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the graph resource to solve.
-     * 
-     */
-    public String getGraphName() {
-        return graphName;
-    }
-
-    /**
-     * 
-     * @param graphName  Name of the graph resource to solve.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setGraphName(String graphName) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional weights to apply to the edges of an existing graph.
-     *         Weights must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
-     *         expressions, e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
-     *         or raw values, e.g., '{4, 15, 2} AS WEIGHTS_VALUESPECIFIED'. Any
-     *         provided weights will be added (in the case of
-     *         'WEIGHTS_VALUESPECIFIED') to or multiplied with (in the case of
-     *         'WEIGHTS_FACTORSPECIFIED') the existing weight(s). If using raw
-     *         values in an identifier combination, the number of values
-     *         specified must match across the combination.  The default value
-     *         is an empty {@link List}.
-     * 
-     */
-    public List<String> getWeightsOnEdges() {
-        return weightsOnEdges;
-    }
-
-    /**
-     * 
-     * @param weightsOnEdges  Additional weights to apply to the edges of an
-     *                        existing graph. Weights must be specified using
-     *                        <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                        target="_top">identifiers</a>; identifiers are
-     *                        grouped as <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                        target="_top">combinations</a>. Identifiers can
-     *                        be used with existing column names, e.g.,
-     *                        'table.column AS WEIGHTS_EDGE_ID', expressions,
-     *                        e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
-     *                        or raw values, e.g., '{4, 15, 2} AS
-     *                        WEIGHTS_VALUESPECIFIED'. Any provided weights
-     *                        will be added (in the case of
-     *                        'WEIGHTS_VALUESPECIFIED') to or multiplied with
-     *                        (in the case of 'WEIGHTS_FACTORSPECIFIED') the
-     *                        existing weight(s). If using raw values in an
-     *                        identifier combination, the number of values
-     *                        specified must match across the combination.  The
-     *                        default value is an empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setWeightsOnEdges(List<String> weightsOnEdges) {
-        this.weightsOnEdges = (weightsOnEdges == null) ? new ArrayList<String>() : weightsOnEdges;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional restrictions to apply to the nodes/edges of an
-     *         existing graph. Restrictions must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS
-     *         RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
-     *         RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
-     *         AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
-     *         identifier combination, the number of values specified must
-     *         match across the combination. If {@code
-     *         remove_previous_restrictions} is set to {@code true}, any
-     *         provided restrictions will replace the existing restrictions. If
-     *         {@code remove_previous_restrictions} is set to {@code false},
-     *         any provided restrictions will be added (in the case of
-     *         'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of
-     *         'RESTRICTIONS_ONOFFCOMPARED').  The default value is an empty
-     *         {@link List}.
-     * 
-     */
-    public List<String> getRestrictions() {
-        return restrictions;
-    }
-
-    /**
-     * 
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      true}, any provided restrictions will replace the
-     *                      existing restrictions. If {@code
-     *                      remove_previous_restrictions} is set to {@code
-     *                      false}, any provided restrictions will be added (in
-     *                      the case of 'RESTRICTIONS_VALUECOMPARED') to or
-     *                      replaced (in the case of
-     *                      'RESTRICTIONS_ONOFFCOMPARED').  The default value
-     *                      is an empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setRestrictions(List<String> restrictions) {
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The type of solver to use for the graph.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *         SHORTEST_PATH}: Solves for the optimal (shortest) path based on
-     *         weights and restrictions from one source to destinations nodes.
-     *         Also known as the Dijkstra solver.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
-     *         PAGE_RANK}: Solves for the probability of each destination node
-     *         being visited based on the links of the graph topology. Weights
-     *         are not required to use this solver.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
-     *         PROBABILITY_RANK}: Solves for the transitional probability
-     *         (Hidden Markov) for each node based on the weights (probability
-     *         assigned over given edges).
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
-     *         CENTRALITY}: Solves for the degree of a node to depict how many
-     *         pairs of individuals that would have to go through the node to
-     *         reach one another in the minimum number of hops. Also known as
-     *         betweenness.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
-     *         MULTIPLE_ROUTING}: Solves for finding the minimum cost
-     *         cumulative path for a round-trip starting from the given source
-     *         and visiting each given destination node once then returning to
-     *         the source. Also known as the travelling salesman problem.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
-     *         INVERSE_SHORTEST_PATH}: Solves for finding the optimal path cost
-     *         for each destination node to route to the source node. Also
-     *         known as inverse Dijkstra or the service man routing problem.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
-     *         BACKHAUL_ROUTING}: Solves for optimal routes that connect remote
-     *         asset nodes to the fixed (backbone) asset nodes.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
-     *         ALLPATHS}: Solves for paths that would give costs between max
-     *         and min solution radia - Make sure to limit by the
-     *         'max_solution_targets' option. Min cost shoudl be >=
-     *         shortest_path cost.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *         SHORTEST_PATH}.
-     * 
-     */
-    public String getSolverType() {
-        return solverType;
-    }
-
-    /**
-     * 
-     * @param solverType  The type of solver to use for the graph.
-     *                    Supported values:
-     *                    <ul>
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *                    SHORTEST_PATH}: Solves for the optimal (shortest)
-     *                    path based on weights and restrictions from one
-     *                    source to destinations nodes. Also known as the
-     *                    Dijkstra solver.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#PAGE_RANK
-     *                    PAGE_RANK}: Solves for the probability of each
-     *                    destination node being visited based on the links of
-     *                    the graph topology. Weights are not required to use
-     *                    this solver.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#PROBABILITY_RANK
-     *                    PROBABILITY_RANK}: Solves for the transitional
-     *                    probability (Hidden Markov) for each node based on
-     *                    the weights (probability assigned over given edges).
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#CENTRALITY
-     *                    CENTRALITY}: Solves for the degree of a node to
-     *                    depict how many pairs of individuals that would have
-     *                    to go through the node to reach one another in the
-     *                    minimum number of hops. Also known as betweenness.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#MULTIPLE_ROUTING
-     *                    MULTIPLE_ROUTING}: Solves for finding the minimum
-     *                    cost cumulative path for a round-trip starting from
-     *                    the given source and visiting each given destination
-     *                    node once then returning to the source. Also known as
-     *                    the travelling salesman problem.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#INVERSE_SHORTEST_PATH
-     *                    INVERSE_SHORTEST_PATH}: Solves for finding the
-     *                    optimal path cost for each destination node to route
-     *                    to the source node. Also known as inverse Dijkstra or
-     *                    the service man routing problem.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#BACKHAUL_ROUTING
-     *                    BACKHAUL_ROUTING}: Solves for optimal routes that
-     *                    connect remote asset nodes to the fixed (backbone)
-     *                    asset nodes.
-     *                            <li> {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#ALLPATHS
-     *                    ALLPATHS}: Solves for paths that would give costs
-     *                    between max and min solution radia - Make sure to
-     *                    limit by the 'max_solution_targets' option. Min cost
-     *                    shoudl be >= shortest_path cost.
-     *                    </ul>
-     *                    The default value is {@link
-     *                    com.gpudb.protocol.SolveGraphRequest.SolverType#SHORTEST_PATH
-     *                    SHORTEST_PATH}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setSolverType(String solverType) {
-        this.solverType = (solverType == null) ? "" : solverType;
-        return this;
-    }
-
-    /**
-     * 
-     * @return It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT'
-     *         for source nodes. For {@code BACKHAUL_ROUTING}, this list
-     *         depicts the fixed assets.  The default value is an empty {@link
-     *         List}.
-     * 
-     */
-    public List<String> getSourceNodes() {
-        return sourceNodes;
-    }
-
-    /**
-     * 
-     * @param sourceNodes  It can be one of the nodal identifiers - e.g:
-     *                     'NODE_WKTPOINT' for source nodes. For {@code
-     *                     BACKHAUL_ROUTING}, this list depicts the fixed
-     *                     assets.  The default value is an empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setSourceNodes(List<String> sourceNodes) {
-        this.sourceNodes = (sourceNodes == null) ? new ArrayList<String>() : sourceNodes;
-        return this;
-    }
-
-    /**
-     * 
-     * @return It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT'
-     *         for destination (target) nodes. For {@code BACKHAUL_ROUTING},
-     *         this list depicts the remote assets.  The default value is an
-     *         empty {@link List}.
-     * 
-     */
-    public List<String> getDestinationNodes() {
-        return destinationNodes;
-    }
-
-    /**
-     * 
-     * @param destinationNodes  It can be one of the nodal identifiers - e.g:
-     *                          'NODE_WKTPOINT' for destination (target) nodes.
-     *                          For {@code BACKHAUL_ROUTING}, this list depicts
-     *                          the remote assets.  The default value is an
-     *                          empty {@link List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setDestinationNodes(List<String> destinationNodes) {
-        this.destinationNodes = (destinationNodes == null) ? new ArrayList<String>() : destinationNodes;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the table to store the solution.  The default value is
-     *         'graph_solutions'.
-     * 
-     */
-    public String getSolutionTable() {
-        return solutionTable;
-    }
-
-    /**
-     * 
-     * @param solutionTable  Name of the table to store the solution.  The
-     *                       default value is 'graph_solutions'.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setSolutionTable(String solutionTable) {
-        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
-     *         MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and {@code
-     *         INVERSE_SHORTEST_PATH} solvers only. Sets the maximum solution
-     *         cost radius, which ignores the {@code destinationNodes} list and
-     *         instead outputs the nodes within the radius sorted by ascending
-     *         cost. If set to '0.0', the setting is ignored.  The default
-     *         value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
-     *         MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and {@code
-     *         INVERSE_SHORTEST_PATH} solvers only. Applicable only when {@code
-     *         max_solution_radius} is set. Sets the minimum solution cost
-     *         radius, which ignores the {@code destinationNodes} list and
-     *         instead outputs the nodes within the radius sorted by ascending
-     *         cost. If set to '0.0', the setting is ignored.  The default
-     *         value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
-     *         MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and {@code
-     *         INVERSE_SHORTEST_PATH} solvers only. Sets the maximum number of
-     *         solution targets, which ignores the {@code destinationNodes}
-     *         list and instead outputs no more than n number of nodes sorted
-     *         by ascending cost where n is equal to the setting value. If set
-     *         to 0, the setting is ignored.  The default value is '0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
-     *         EXPORT_SOLVE_RESULTS}: Returns solution results inside the
-     *         {@code resultPerDestinationNode} array in the response if set to
-     *         {@code true}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
-     *         REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions applied
-     *         to the graph during the creation stage and only use the
-     *         restrictions specified in this request if set to {@code true}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *         RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *         comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
-     *         value greater than the {@code restriction_threshold_value} will
-     *         not be included in the solution.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
-     *         UNIFORM_WEIGHTS}: When specified, assigns the given value to all
-     *         the edges in the graph. Note that weights provided in {@code
-     *         weightsOnEdges} will override this value.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
-     *         LEFT_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as 'left turn' if the 'add_turn' option parameter
-     *         of the {@link com.gpudb.GPUdb#createGraph(CreateGraphRequest)}
-     *         was invoked at graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
-     *         RIGHT_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as' right turn' if the 'add_turn' option
-     *         parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
-     *         INTERSECTION_PENALTY}: This will add an additonal weight over
-     *         the edges labelled as 'intersection' if the 'add_turn' option
-     *         parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
-     *         SHARP_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn'
-     *         option parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
-     *         NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers only; sets
-     *         the number of shortest paths computed from each node. This is
-     *         the heuristic criterion. Default value of zero allows the number
-     *         to be computed automatically by the solver. The user may want to
-     *         override this parameter to speed-up the solver.  The default
-     *         value is '0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
-     *         MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING} solvers
-     *         only; sets the cap on the combinatorial sequences generated. If
-     *         the default value of two millions is overridden to a lesser
-     *         value, it can potentially speed up the solver.  The default
-     *         value is '2000000'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
-     *         ACCURATE_SNAPS}: Valid for single source destination pair solves
-     *         if points are described in NODE_WKTPOINT identifier types: When
-     *         true (default), it snaps to the nearest node of the graph;
-     *         otherwise, it searches for the closest entity that could be an
-     *         edge. For the latter case (false), the solver modifies the
-     *         resulting cost with the weights proportional to the ratio of the
-     *         snap location within the edge. This may be an over-kill when the
-     *         performance is considered and the difference is well less than 1
-     *         percent. In batch runs, since the performance is of utmost
-     *         importance, the option is always considered 'false'.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_RADIUS
-     *                 MAX_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
-     *                 maximum solution cost radius, which ignores the {@code
-     *                 destinationNodes} list and instead outputs the nodes
-     *                 within the radius sorted by ascending cost. If set to
-     *                 '0.0', the setting is ignored.  The default value is
-     *                 '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MIN_SOLUTION_RADIUS
-     *                 MIN_SOLUTION_RADIUS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Applicable
-     *                 only when {@code max_solution_radius} is set. Sets the
-     *                 minimum solution cost radius, which ignores the {@code
-     *                 destinationNodes} list and instead outputs the nodes
-     *                 within the radius sorted by ascending cost. If set to
-     *                 '0.0', the setting is ignored.  The default value is
-     *                 '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_SOLUTION_TARGETS
-     *                 MAX_SOLUTION_TARGETS}: For {@code SHORTEST_PATH} and
-     *                 {@code INVERSE_SHORTEST_PATH} solvers only. Sets the
-     *                 maximum number of solution targets, which ignores the
-     *                 {@code destinationNodes} list and instead outputs no
-     *                 more than n number of nodes sorted by ascending cost
-     *                 where n is equal to the setting value. If set to 0, the
-     *                 setting is ignored.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#EXPORT_SOLVE_RESULTS
-     *                 EXPORT_SOLVE_RESULTS}: Returns solution results inside
-     *                 the {@code resultPerDestinationNode} array in the
-     *                 response if set to {@code true}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#REMOVE_PREVIOUS_RESTRICTIONS
-     *                 REMOVE_PREVIOUS_RESTRICTIONS}: Ignore the restrictions
-     *                 applied to the graph during the creation stage and only
-     *                 use the restrictions specified in this request if set to
-     *                 {@code true}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 solution.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#UNIFORM_WEIGHTS
-     *                 UNIFORM_WEIGHTS}: When specified, assigns the given
-     *                 value to all the edges in the graph. Note that weights
-     *                 provided in {@code weightsOnEdges} will override this
-     *                 value.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#LEFT_TURN_PENALTY
-     *                 LEFT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'left turn' if the 'add_turn'
-     *                 option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#RIGHT_TURN_PENALTY
-     *                 RIGHT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as' right turn' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#INTERSECTION_PENALTY
-     *                 INTERSECTION_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'intersection' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#SHARP_TURN_PENALTY
-     *                 SHARP_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'sharp turn' or 'u-turn' if
-     *                 the 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#NUM_BEST_PATHS
-     *                 NUM_BEST_PATHS}: For {@code MULTIPLE_ROUTING} solvers
-     *                 only; sets the number of shortest paths computed from
-     *                 each node. This is the heuristic criterion. Default
-     *                 value of zero allows the number to be computed
-     *                 automatically by the solver. The user may want to
-     *                 override this parameter to speed-up the solver.  The
-     *                 default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#MAX_NUM_COMBINATIONS
-     *                 MAX_NUM_COMBINATIONS}: For {@code MULTIPLE_ROUTING}
-     *                 solvers only; sets the cap on the combinatorial
-     *                 sequences generated. If the default value of two
-     *                 millions is overridden to a lesser value, it can
-     *                 potentially speed up the solver.  The default value is
-     *                 '2000000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#ACCURATE_SNAPS
-     *                 ACCURATE_SNAPS}: Valid for single source destination
-     *                 pair solves if points are described in NODE_WKTPOINT
-     *                 identifier types: When true (default), it snaps to the
-     *                 nearest node of the graph; otherwise, it searches for
-     *                 the closest entity that could be an edge. For the latter
-     *                 case (false), the solver modifies the resulting cost
-     *                 with the weights proportional to the ratio of the snap
-     *                 location within the edge. This may be an over-kill when
-     *                 the performance is considered and the difference is well
-     *                 less than 1 percent. In batch runs, since the
-     *                 performance is of utmost importance, the option is
-     *                 always considered 'false'.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.SolveGraphRequest.Options#TRUE TRUE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public SolveGraphRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.graphName;
-
-            case 1:
-                return this.weightsOnEdges;
-
-            case 2:
-                return this.restrictions;
-
-            case 3:
-                return this.solverType;
-
-            case 4:
-                return this.sourceNodes;
-
-            case 5:
-                return this.destinationNodes;
-
-            case 6:
-                return this.solutionTable;
-
-            case 7:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.graphName = (String)value;
-                break;
-
-            case 1:
-                this.weightsOnEdges = (List<String>)value;
-                break;
-
-            case 2:
-                this.restrictions = (List<String>)value;
-                break;
-
-            case 3:
-                this.solverType = (String)value;
-                break;
-
-            case 4:
-                this.sourceNodes = (List<String>)value;
-                break;
-
-            case 5:
-                this.destinationNodes = (List<String>)value;
-                break;
-
-            case 6:
-                this.solutionTable = (String)value;
-                break;
-
-            case 7:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        SolveGraphRequest that = (SolveGraphRequest)obj;
-
-        return ( this.graphName.equals( that.graphName )
-                 && this.weightsOnEdges.equals( that.weightsOnEdges )
-                 && this.restrictions.equals( that.restrictions )
-                 && this.solverType.equals( that.solverType )
-                 && this.sourceNodes.equals( that.sourceNodes )
-                 && this.destinationNodes.equals( that.destinationNodes )
-                 && this.solutionTable.equals( that.solutionTable )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "weightsOnEdges" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.weightsOnEdges ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "restrictions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.restrictions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solverType" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solverType ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "sourceNodes" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.sourceNodes ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "destinationNodes" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.destinationNodes ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solutionTable" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solutionTable ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.graphName.hashCode();
-        hashCode = (31 * hashCode) + this.weightsOnEdges.hashCode();
-        hashCode = (31 * hashCode) + this.restrictions.hashCode();
-        hashCode = (31 * hashCode) + this.solverType.hashCode();
-        hashCode = (31 * hashCode) + this.sourceNodes.hashCode();
-        hashCode = (31 * hashCode) + this.destinationNodes.hashCode();
-        hashCode = (31 * hashCode) + this.solutionTable.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

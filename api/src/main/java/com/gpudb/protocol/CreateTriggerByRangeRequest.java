@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,34 +40,19 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
             .record("CreateTriggerByRangeRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("requestId").type().stringType().noDefault()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("min").type().doubleType().noDefault()
-                .name("max").type().doubleType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("requestId").type().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("min").type().doubleType().noDefault()
+            .name("max").type().doubleType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String requestId;
     private List<String> tableNames;
     private String columnName;
     private double min;
     private double max;
     private Map<String, String> options;
-
-
     /**
      * Constructs a CreateTriggerByRangeRequest object with default parameters.
      */
@@ -77,21 +63,21 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a CreateTriggerByRangeRequest object with the specified
      * parameters.
-     * 
+     *
      * @param requestId  User-created ID for the trigger. The ID can be
      *                   alphanumeric, contain symbols, and must contain at
      *                   least one character.
-     * @param tableNames  Tables on which the trigger will be active.
-     * @param columnName  Name of a numeric column_name on which the trigger is
-     *                    activated.
-     * @param min  The lower bound (inclusive) for the trigger range.
-     * @param max  The upper bound (inclusive) for the trigger range.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param tableNames Tables on which the trigger will be active.
+     * @param columnName Name of a numeric column_name on which the trigger is
+     *                   activated.
+     * @param min        The lower bound (inclusive) for the trigger range.
+     * @param max        The upper bound (inclusive) for the trigger range.
+     * @param options    Optional parameters.  The default value is an empty
+     *                   {@link Map}.
      */
     public CreateTriggerByRangeRequest(String requestId, List<String> tableNames, String columnName, double min, double max, Map<String, String> options) {
         this.requestId = (requestId == null) ? "" : requestId;
@@ -103,23 +89,28 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return User-created ID for the trigger. The ID can be alphanumeric,
-     *         contain symbols, and must contain at least one character.
-     * 
+     * contain symbols, and must contain at least one character.
      */
     public String getRequestId() {
         return requestId;
     }
 
     /**
-     * 
-     * @param requestId  User-created ID for the trigger. The ID can be
-     *                   alphanumeric, contain symbols, and must contain at
-     *                   least one character.
-     * 
+     * @param requestId User-created ID for the trigger. The ID can be
+     *                  alphanumeric, contain symbols, and must contain at
+     *                  least one character.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setRequestId(String requestId) {
         this.requestId = (requestId == null) ? "" : requestId;
@@ -127,20 +118,15 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Tables on which the trigger will be active.
-     * 
      */
     public List<String> getTableNames() {
         return tableNames;
     }
 
     /**
-     * 
-     * @param tableNames  Tables on which the trigger will be active.
-     * 
+     * @param tableNames Tables on which the trigger will be active.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setTableNames(List<String> tableNames) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -148,21 +134,16 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of a numeric column_name on which the trigger is activated.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Name of a numeric column_name on which the trigger is
-     *                    activated.
-     * 
+     * @param columnName Name of a numeric column_name on which the trigger is
+     *                   activated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -170,20 +151,15 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The lower bound (inclusive) for the trigger range.
-     * 
      */
     public double getMin() {
         return min;
     }
 
     /**
-     * 
-     * @param min  The lower bound (inclusive) for the trigger range.
-     * 
+     * @param min The lower bound (inclusive) for the trigger range.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setMin(double min) {
         this.min = min;
@@ -191,20 +167,15 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The upper bound (inclusive) for the trigger range.
-     * 
      */
     public double getMax() {
         return max;
     }
 
     /**
-     * 
-     * @param max  The upper bound (inclusive) for the trigger range.
-     * 
+     * @param max The upper bound (inclusive) for the trigger range.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setMax(double max) {
         this.max = max;
@@ -212,21 +183,16 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTriggerByRangeRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -236,9 +202,8 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -248,13 +213,10 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -285,39 +247,37 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.requestId = (String)value;
+                this.requestId = (String) value;
                 break;
 
             case 1:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 2:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 3:
-                this.min = (Double)value;
+                this.min = (Double) value;
                 break;
 
             case 4:
-                this.max = (Double)value;
+                this.max = (Double) value;
                 break;
 
             case 5:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -327,53 +287,53 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateTriggerByRangeRequest that = (CreateTriggerByRangeRequest)obj;
+        CreateTriggerByRangeRequest that = (CreateTriggerByRangeRequest) obj;
 
-        return ( this.requestId.equals( that.requestId )
-                 && this.tableNames.equals( that.tableNames )
-                 && this.columnName.equals( that.columnName )
-                 && ( (Double)this.min ).equals( (Double)that.min )
-                 && ( (Double)this.max ).equals( (Double)that.max )
-                 && this.options.equals( that.options ) );
+        return (this.requestId.equals(that.requestId)
+                && this.tableNames.equals(that.tableNames)
+                && this.columnName.equals(that.columnName)
+                && ((Double) this.min).equals((Double) that.min)
+                && ((Double) this.max).equals((Double) that.max)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "requestId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.requestId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "min" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.min ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "max" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.max ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("requestId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.requestId));
+        builder.append(", ");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("min"));
+        builder.append(": ");
+        builder.append(gd.toString(this.min));
+        builder.append(", ");
+        builder.append(gd.toString("max"));
+        builder.append(": ");
+        builder.append(gd.toString(this.max));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -384,8 +344,8 @@ public class CreateTriggerByRangeRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.requestId.hashCode();
         hashCode = (31 * hashCode) + this.tableNames.hashCode();
         hashCode = (31 * hashCode) + this.columnName.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.min).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.max).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.min).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.max).hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
     }

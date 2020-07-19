@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class AggregateStatisticsResponse implements IndexedRecord {
             .record("AggregateStatisticsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("stats").type().map().values().doubleType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("stats").type().map().values().doubleType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private Map<String, Double> stats;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AggregateStatisticsResponse object with default
      * parameters.
@@ -50,22 +36,27 @@ public class AggregateStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return (statistic name, double value) pairs of the requested
-     *         statistics, including the total count by default.
-     * 
+     * statistics, including the total count by default.
      */
     public Map<String, Double> getStats() {
         return stats;
     }
 
     /**
-     * 
-     * @param stats  (statistic name, double value) pairs of the requested
-     *               statistics, including the total count by default.
-     * 
+     * @param stats (statistic name, double value) pairs of the requested
+     *              statistics, including the total count by default.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateStatisticsResponse setStats(Map<String, Double> stats) {
         this.stats = (stats == null) ? new LinkedHashMap<String, Double>() : stats;
@@ -73,20 +64,15 @@ public class AggregateStatisticsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AggregateStatisticsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -96,9 +82,8 @@ public class AggregateStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -108,13 +93,10 @@ public class AggregateStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -133,23 +115,21 @@ public class AggregateStatisticsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.stats = (Map<String, Double>)value;
+                this.stats = (Map<String, Double>) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -159,33 +139,33 @@ public class AggregateStatisticsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AggregateStatisticsResponse that = (AggregateStatisticsResponse)obj;
+        AggregateStatisticsResponse that = (AggregateStatisticsResponse) obj;
 
-        return ( this.stats.equals( that.stats )
-                 && this.info.equals( that.info ) );
+        return (this.stats.equals(that.stats)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "stats" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.stats ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("stats"));
+        builder.append(": ");
+        builder.append(gd.toString(this.stats));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

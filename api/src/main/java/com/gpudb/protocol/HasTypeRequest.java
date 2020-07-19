@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,26 +24,11 @@ public class HasTypeRequest implements IndexedRecord {
             .record("HasTypeRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("typeId").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String typeId;
     private Map<String, String> options;
-
-
     /**
      * Constructs a HasTypeRequest object with default parameters.
      */
@@ -51,14 +37,14 @@ public class HasTypeRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a HasTypeRequest object with the specified parameters.
-     * 
+     *
      * @param typeId  Id of the type returned in response to {@link
      *                com.gpudb.GPUdb#createType(CreateTypeRequest)} request.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      */
     public HasTypeRequest(String typeId, Map<String, String> options) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -66,22 +52,27 @@ public class HasTypeRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Id of the type returned in response to {@link
-     *         com.gpudb.GPUdb#createType(CreateTypeRequest)} request.
-     * 
+     * com.gpudb.GPUdb#createType(CreateTypeRequest)} request.
      */
     public String getTypeId() {
         return typeId;
     }
 
     /**
-     * 
-     * @param typeId  Id of the type returned in response to {@link
-     *                com.gpudb.GPUdb#createType(CreateTypeRequest)} request.
-     * 
+     * @param typeId Id of the type returned in response to {@link
+     *               com.gpudb.GPUdb#createType(CreateTypeRequest)} request.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasTypeRequest setTypeId(String typeId) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -89,21 +80,16 @@ public class HasTypeRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public HasTypeRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -113,9 +99,8 @@ public class HasTypeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -125,13 +110,10 @@ public class HasTypeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -150,23 +132,21 @@ public class HasTypeRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.typeId = (String)value;
+                this.typeId = (String) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -176,33 +156,33 @@ public class HasTypeRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        HasTypeRequest that = (HasTypeRequest)obj;
+        HasTypeRequest that = (HasTypeRequest) obj;
 
-        return ( this.typeId.equals( that.typeId )
-                 && this.options.equals( that.options ) );
+        return (this.typeId.equals(that.typeId)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,27 +24,14 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
             .record("VisualizeIsochroneResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("bgColor").type().longType().noDefault()
-                .name("imageData").type().bytesType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
-                .name("solveInfo").type().map().values().stringType().noDefault()
-                .name("contourInfo").type().map().values().stringType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("bgColor").type().longType().noDefault()
+            .name("imageData").type().bytesType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
+            .name("solveInfo").type().map().values().stringType().noDefault()
+            .name("contourInfo").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private int width;
     private int height;
     private long bgColor;
@@ -51,8 +39,6 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     private Map<String, String> info;
     private Map<String, String> solveInfo;
     private Map<String, String> contourInfo;
-
-
     /**
      * Constructs a VisualizeIsochroneResponse object with default parameters.
      */
@@ -60,20 +46,25 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Width of the image as provided in {@code width}.
-     * 
      */
     public int getWidth() {
         return width;
     }
 
     /**
-     * 
-     * @param width  Width of the image as provided in {@code width}.
-     * 
+     * @param width Width of the image as provided in {@code width}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setWidth(int width) {
         this.width = width;
@@ -81,20 +72,15 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Height of the image as provided in {@code height}.
-     * 
      */
     public int getHeight() {
         return height;
     }
 
     /**
-     * 
-     * @param height  Height of the image as provided in {@code height}.
-     * 
+     * @param height Height of the image as provided in {@code height}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setHeight(int height) {
         this.height = height;
@@ -102,21 +88,16 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Background color of the image as provided in {@code bg_color}.
-     * 
      */
     public long getBgColor() {
         return bgColor;
     }
 
     /**
-     * 
-     * @param bgColor  Background color of the image as provided in {@code
-     *                 bg_color}.
-     * 
+     * @param bgColor Background color of the image as provided in {@code
+     *                bg_color}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setBgColor(long bgColor) {
         this.bgColor = bgColor;
@@ -124,41 +105,31 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Generated contour image data.
-     * 
      */
     public ByteBuffer getImageData() {
         return imageData;
     }
 
     /**
-     * 
-     * @param imageData  Generated contour image data.
-     * 
+     * @param imageData Generated contour image data.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setImageData(ByteBuffer imageData) {
-        this.imageData = (imageData == null) ? ByteBuffer.wrap( new byte[0] ) : imageData;
+        this.imageData = (imageData == null) ? ByteBuffer.wrap(new byte[0]) : imageData;
         return this;
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -166,20 +137,15 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getSolveInfo() {
         return solveInfo;
     }
 
     /**
-     * 
-     * @param solveInfo  Additional information.
-     * 
+     * @param solveInfo Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setSolveInfo(Map<String, String> solveInfo) {
         this.solveInfo = (solveInfo == null) ? new LinkedHashMap<String, String>() : solveInfo;
@@ -187,20 +153,15 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getContourInfo() {
         return contourInfo;
     }
 
     /**
-     * 
-     * @param contourInfo  Additional information.
-     * 
+     * @param contourInfo Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public VisualizeIsochroneResponse setContourInfo(Map<String, String> contourInfo) {
         this.contourInfo = (contourInfo == null) ? new LinkedHashMap<String, String>() : contourInfo;
@@ -210,9 +171,8 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -222,13 +182,10 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -262,43 +219,41 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 1:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 2:
-                this.bgColor = (Long)value;
+                this.bgColor = (Long) value;
                 break;
 
             case 3:
-                this.imageData = (ByteBuffer)value;
+                this.imageData = (ByteBuffer) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             case 5:
-                this.solveInfo = (Map<String, String>)value;
+                this.solveInfo = (Map<String, String>) value;
                 break;
 
             case 6:
-                this.contourInfo = (Map<String, String>)value;
+                this.contourInfo = (Map<String, String>) value;
                 break;
 
             default:
@@ -308,58 +263,58 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeIsochroneResponse that = (VisualizeIsochroneResponse)obj;
+        VisualizeIsochroneResponse that = (VisualizeIsochroneResponse) obj;
 
-        return ( ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && ( this.bgColor == that.bgColor )
-                 && this.imageData.equals( that.imageData )
-                 && this.info.equals( that.info )
-                 && this.solveInfo.equals( that.solveInfo )
-                 && this.contourInfo.equals( that.contourInfo ) );
+        return ((this.width == that.width)
+                && (this.height == that.height)
+                && (this.bgColor == that.bgColor)
+                && this.imageData.equals(that.imageData)
+                && this.info.equals(that.info)
+                && this.solveInfo.equals(that.solveInfo)
+                && this.contourInfo.equals(that.contourInfo));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "bgColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.bgColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "imageData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.imageData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solveInfo" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solveInfo ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "contourInfo" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.contourInfo ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("bgColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.bgColor));
+        builder.append(", ");
+        builder.append(gd.toString("imageData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.imageData));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append(", ");
+        builder.append(gd.toString("solveInfo"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solveInfo));
+        builder.append(", ");
+        builder.append(gd.toString("contourInfo"));
+        builder.append(": ");
+        builder.append(gd.toString(this.contourInfo));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -369,7 +324,7 @@ public class VisualizeIsochroneResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
-        hashCode = (31 * hashCode) + ((Long)this.bgColor).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.bgColor).hashCode();
         hashCode = (31 * hashCode) + this.imageData.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         hashCode = (31 * hashCode) + this.solveInfo.hashCode();

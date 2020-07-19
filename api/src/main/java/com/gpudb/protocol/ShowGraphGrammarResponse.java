@@ -7,12 +7,13 @@
 package com.gpudb.protocol;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class ShowGraphGrammarResponse implements IndexedRecord {
@@ -21,23 +22,18 @@ public class ShowGraphGrammarResponse implements IndexedRecord {
             .record("ShowGraphGrammarResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("result").type().booleanType().noDefault()
-                .name("componentsJson").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("result").type().booleanType().noDefault()
+            .name("componentsJson").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private boolean result;
     private String componentsJson;
     private Map<String, String> info;
-
-
     public ShowGraphGrammarResponse() {
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public boolean getResult() {
@@ -94,15 +90,15 @@ public class ShowGraphGrammarResponse implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.result = (Boolean)value;
+                this.result = (Boolean) value;
                 break;
 
             case 1:
-                this.componentsJson = (String)value;
+                this.componentsJson = (String) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -113,19 +109,19 @@ public class ShowGraphGrammarResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowGraphGrammarResponse that = (ShowGraphGrammarResponse)obj;
+        ShowGraphGrammarResponse that = (ShowGraphGrammarResponse) obj;
 
-        return ( ( this.result == that.result )
-                 && this.componentsJson.equals( that.componentsJson )
-                 && this.info.equals( that.info ) );
+        return ((this.result == that.result)
+                && this.componentsJson.equals(that.componentsJson)
+                && this.info.equals(that.info));
     }
 
 
@@ -133,19 +129,19 @@ public class ShowGraphGrammarResponse implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "result" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.result ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "componentsJson" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.componentsJson ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("result"));
+        builder.append(": ");
+        builder.append(gd.toString(this.result));
+        builder.append(", ");
+        builder.append(gd.toString("componentsJson"));
+        builder.append(": ");
+        builder.append(gd.toString(this.componentsJson));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -154,7 +150,7 @@ public class ShowGraphGrammarResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Boolean)this.result).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.result).hashCode();
         hashCode = (31 * hashCode) + this.componentsJson.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;

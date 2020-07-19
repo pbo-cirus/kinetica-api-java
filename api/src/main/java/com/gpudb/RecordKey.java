@@ -5,11 +5,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,10 +29,33 @@ final class RecordKey {
         isValid = true;
     }
 
+    /**
+     * Utility function parsing a given string into an unsigned long.
+     * If possible, return true; return false otherwise.
+     */
+    public static boolean isUnsignedLong(String value) {
+        int max_len = 20;
+
+        // Need to have the correct number of characters
+        int str_len = value.length();
+        if ((str_len == 0) || (str_len > max_len)) {
+            return false;
+        }
+
+        // Each character must be a digit
+        for (int i = 0; i < str_len; ++i) {
+            if (!Character.isDigit(value.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
     public void addChar(String value, int length) {
         if (value == null) {
             for (int i = 0; i < length; i++) {
-                buffer.put((byte)0);
+                buffer.put((byte) 0);
             }
 
             return;
@@ -50,7 +69,7 @@ final class RecordKey {
         }
 
         for (int i = length; i > count; i--) {
-            buffer.put((byte)0);
+            buffer.put((byte) 0);
         }
 
         for (int i = count - 1; i >= 0; i--) {
@@ -155,12 +174,12 @@ final class RecordKey {
             return;
         }
 
-        buffer.putLong(((long)(year - 1900) << 53)
-                | ((long)month << 49)
-                | ((long)day << 44)
-                | ((long)hour << 39)
-                | ((long)minute << 33)
-                | ((long)second << 27)
+        buffer.putLong(((long) (year - 1900) << 53)
+                | ((long) month << 49)
+                | ((long) day << 44)
+                | ((long) hour << 39)
+                | ((long) minute << 33)
+                | ((long) second << 27)
                 | (millisecond << 17)
                 | (calendar.get(Calendar.DAY_OF_YEAR) << 8)
                 | (calendar.get(Calendar.DAY_OF_WEEK) << 5));
@@ -223,20 +242,20 @@ final class RecordKey {
 
     public void addInt8(Integer value) {
         if (value == null) {
-            buffer.put((byte)0);
+            buffer.put((byte) 0);
             return;
         }
 
-        buffer.put((byte)(int)value);
+        buffer.put((byte) (int) value);
     }
 
     public void addInt16(Integer value) {
         if (value == null) {
-            buffer.putShort((short)0);
+            buffer.putShort((short) 0);
             return;
         }
 
-        buffer.putShort((short)(int)value);
+        buffer.putShort((short) (int) value);
     }
 
     public void addIPv4(String value) {
@@ -358,42 +377,17 @@ final class RecordKey {
         GregorianCalendar calendar = new GregorianCalendar(UTC);
         calendar.setGregorianChange(MIN_DATE);
         calendar.setTimeInMillis(value);
-        buffer.putLong(((long)(calendar.get(Calendar.YEAR) - 1900) << 53)
-                | ((long)(calendar.get(Calendar.MONTH) + 1) << 49)
-                | ((long)calendar.get(Calendar.DAY_OF_MONTH) << 44)
-                | ((long)calendar.get(Calendar.HOUR_OF_DAY) << 39)
-                | ((long)calendar.get(Calendar.MINUTE) << 33)
-                | ((long)calendar.get(Calendar.SECOND) << 27)
+        buffer.putLong(((long) (calendar.get(Calendar.YEAR) - 1900) << 53)
+                | ((long) (calendar.get(Calendar.MONTH) + 1) << 49)
+                | ((long) calendar.get(Calendar.DAY_OF_MONTH) << 44)
+                | ((long) calendar.get(Calendar.HOUR_OF_DAY) << 39)
+                | ((long) calendar.get(Calendar.MINUTE) << 33)
+                | ((long) calendar.get(Calendar.SECOND) << 27)
                 | (calendar.get(Calendar.MILLISECOND) << 17)
                 | (calendar.get(Calendar.DAY_OF_YEAR) << 8)
                 | (calendar.get(Calendar.DAY_OF_WEEK) << 5));
     }
 
-
-
-    /**
-     * Utility function parsing a given string into an unsigned long.
-     * If possible, return true; return false otherwise.
-     */
-    public static boolean isUnsignedLong(String value) {
-        int max_len = 20;
-
-        // Need to have the correct number of characters
-        int str_len = value.length();
-        if ((str_len == 0) || (str_len > max_len)) {
-            return false;
-        }
-
-        // Each character must be a digit
-        for (int i = 0; i < str_len; ++i ) {
-            if ( !Character.isDigit( value.charAt(i) ) ) {
-                return false;
-            }
-        }
-        return true;
-        
-    }
-    
     public void addUlong(String value) throws GPUdbException {
         if (value == null) {
             buffer.putLong(0l);
@@ -401,14 +395,13 @@ final class RecordKey {
         }
 
         // Verify if this is a proper unsigned long value
-        if ( !isUnsignedLong( value ) )
-        {
-            throw new GPUdbException( "Unable to parse string value '" + value
-                                      + "' as an unsigned long" );
+        if (!isUnsignedLong(value)) {
+            throw new GPUdbException("Unable to parse string value '" + value
+                    + "' as an unsigned long");
         }
 
         // Convert the string to an unsigned long value
-        byte[] ulong_bytes = new BigInteger( value ).abs().toByteArray();
+        byte[] ulong_bytes = new BigInteger(value).abs().toByteArray();
         int byte_count = ulong_bytes.length;
         int ulong_size = 8;
 
@@ -416,29 +409,28 @@ final class RecordKey {
         // byte to accommodate the sign bit.  We don't want the sign bit for sharding
         // anyway.
         int min_index = 0;
-        if ( byte_count > ulong_size ) {
+        if (byte_count > ulong_size) {
             min_index = (byte_count - ulong_size);
         }
 
         // Put in the unsigned long (which is in a big endian order)
         // while skipping any extra byte for the sign bit
-        for (int i = (byte_count-1); i >= min_index; --i ) {
-            buffer.put( ulong_bytes[ i ] );
+        for (int i = (byte_count - 1); i >= min_index; --i) {
+            buffer.put(ulong_bytes[i]);
         }
         // Need to pad with zeroes if less than size of a long
-        for (int i = byte_count; i < ulong_size; ++i ) {
-            buffer.put( (byte)0 );
+        for (int i = byte_count; i < ulong_size; ++i) {
+            buffer.put((byte) 0);
         }
 
-}
+    }
 
 
-    
     public void computeHashes() {
         MurmurHash3.LongPair murmur = new MurmurHash3.LongPair();
         MurmurHash3.murmurhash3_x64_128(buffer.array(), 0, buffer.capacity(), 10, murmur);
         routingHash = murmur.val1;
-        hashCode = (int)(routingHash ^ (routingHash >>> 32));
+        hashCode = (int) (routingHash ^ (routingHash >>> 32));
         buffer.rewind();
     }
 
@@ -456,7 +448,7 @@ final class RecordKey {
             return false;
         }
 
-        return this.buffer.equals(((RecordKey)obj).buffer);
+        return this.buffer.equals(((RecordKey) obj).buffer);
     }
 
     @Override
@@ -465,6 +457,6 @@ final class RecordKey {
     }
 
     public int route(List<Integer> routingTable) {
-        return routingTable.get(Math.abs((int)(routingHash % routingTable.size()))) - 1;
+        return routingTable.get(Math.abs((int) (routingHash % routingTable.size()))) - 1;
     }
 }

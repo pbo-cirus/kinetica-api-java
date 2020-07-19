@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,61 +33,19 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
             .record("FilterByAreaGeometryRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("viewName").type().stringType().noDefault()
-                .name("columnName").type().stringType().noDefault()
-                .name("xVector").type().array().items().doubleType().noDefault()
-                .name("yVector").type().array().items().doubleType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("viewName").type().stringType().noDefault()
+            .name("columnName").type().stringType().noDefault()
+            .name("xVector").type().array().items().doubleType().noDefault()
+            .name("yVector").type().array().items().doubleType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * Optional parameters.
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
-     * COLLECTION_NAME}: Name of a collection which is to contain the newly
-     * created view. If the collection provided is non-existent, the collection
-     * will be automatically created. If empty, then the newly created view
-     * will be top-level.
-     * </ul>
-     * The default value is an empty {@link Map}.
-     * A set of string constants for the parameter {@code options}.
-     */
-    public static final class Options {
-
-        /**
-         * Name of a collection which is to contain the newly created view. If
-         * the collection provided is non-existent, the collection will be
-         * automatically created. If empty, then the newly created view will be
-         * top-level.
-         */
-        public static final String COLLECTION_NAME = "collection_name";
-
-        private Options() {  }
-    }
-
     private String tableName;
     private String viewName;
     private String columnName;
     private List<Double> xVector;
     private List<Double> yVector;
     private Map<String, String> options;
-
-
     /**
      * Constructs a FilterByAreaGeometryRequest object with default parameters.
      */
@@ -98,38 +57,36 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
         yVector = new ArrayList<>();
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a FilterByAreaGeometryRequest object with the specified
      * parameters.
-     * 
+     *
      * @param tableName  Name of the table to filter.  This may be the name of
      *                   a collection, a table, or a view (when chaining
      *                   queries).  If filtering a collection, all child tables
      *                   where the filter expression is valid will be filtered;
      *                   the filtered result tables will then be placed in a
      *                   collection specified by {@code viewName}.
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Must not be an already existing
-     *                  collection, table or view.  The default value is ''.
-     * @param columnName  Name of the geospatial geometry column to be
-     *                    filtered.
-     * @param xVector  List of x coordinates of the vertices of the polygon
-     *                 representing the area to be filtered.
-     * @param yVector  List of y coordinates of the vertices of the polygon
-     *                 representing the area to be filtered.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param viewName   If provided, then this will be the name of the view
+     *                   containing the results. Must not be an already existing
+     *                   collection, table or view.  The default value is ''.
+     * @param columnName Name of the geospatial geometry column to be
+     *                   filtered.
+     * @param xVector    List of x coordinates of the vertices of the polygon
+     *                   representing the area to be filtered.
+     * @param yVector    List of y coordinates of the vertices of the polygon
+     *                   representing the area to be filtered.
+     * @param options    Optional parameters.
+     *                   <ul>
+     *                           <li> {@link
+     *                   com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
+     *                   COLLECTION_NAME}: Name of a collection which is to
+     *                   contain the newly created view. If the collection
+     *                   provided is non-existent, the collection will be
+     *                   automatically created. If empty, then the newly created
+     *                   view will be top-level.
+     *                   </ul>
+     *                   The default value is an empty {@link Map}.
      */
     public FilterByAreaGeometryRequest(String tableName, String viewName, String columnName, List<Double> xVector, List<Double> yVector, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -141,30 +98,35 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the table to filter.  This may be the name of a
-     *         collection, a table, or a view (when chaining queries).  If
-     *         filtering a collection, all child tables where the filter
-     *         expression is valid will be filtered; the filtered result tables
-     *         will then be placed in a collection specified by {@code
-     *         viewName}.
-     * 
+     * collection, a table, or a view (when chaining queries).  If
+     * filtering a collection, all child tables where the filter
+     * expression is valid will be filtered; the filtered result tables
+     * will then be placed in a collection specified by {@code
+     * viewName}.
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Name of the table to filter.  This may be the name of
-     *                   a collection, a table, or a view (when chaining
-     *                   queries).  If filtering a collection, all child tables
-     *                   where the filter expression is valid will be filtered;
-     *                   the filtered result tables will then be placed in a
-     *                   collection specified by {@code viewName}.
-     * 
+     * @param tableName Name of the table to filter.  This may be the name of
+     *                  a collection, a table, or a view (when chaining
+     *                  queries).  If filtering a collection, all child tables
+     *                  where the filter expression is valid will be filtered;
+     *                  the filtered result tables will then be placed in a
+     *                  collection specified by {@code viewName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -172,24 +134,19 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return If provided, then this will be the name of the view containing
-     *         the results. Must not be an already existing collection, table
-     *         or view.  The default value is ''.
-     * 
+     * the results. Must not be an already existing collection, table
+     * or view.  The default value is ''.
      */
     public String getViewName() {
         return viewName;
     }
 
     /**
-     * 
-     * @param viewName  If provided, then this will be the name of the view
-     *                  containing the results. Must not be an already existing
-     *                  collection, table or view.  The default value is ''.
-     * 
+     * @param viewName If provided, then this will be the name of the view
+     *                 containing the results. Must not be an already existing
+     *                 collection, table or view.  The default value is ''.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setViewName(String viewName) {
         this.viewName = (viewName == null) ? "" : viewName;
@@ -197,21 +154,16 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of the geospatial geometry column to be filtered.
-     * 
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * 
-     * @param columnName  Name of the geospatial geometry column to be
-     *                    filtered.
-     * 
+     * @param columnName Name of the geospatial geometry column to be
+     *                   filtered.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setColumnName(String columnName) {
         this.columnName = (columnName == null) ? "" : columnName;
@@ -219,22 +171,17 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return List of x coordinates of the vertices of the polygon
-     *         representing the area to be filtered.
-     * 
+     * representing the area to be filtered.
      */
     public List<Double> getXVector() {
         return xVector;
     }
 
     /**
-     * 
-     * @param xVector  List of x coordinates of the vertices of the polygon
-     *                 representing the area to be filtered.
-     * 
+     * @param xVector List of x coordinates of the vertices of the polygon
+     *                representing the area to be filtered.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setXVector(List<Double> xVector) {
         this.xVector = (xVector == null) ? new ArrayList<Double>() : xVector;
@@ -242,22 +189,17 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return List of y coordinates of the vertices of the polygon
-     *         representing the area to be filtered.
-     * 
+     * representing the area to be filtered.
      */
     public List<Double> getYVector() {
         return yVector;
     }
 
     /**
-     * 
-     * @param yVector  List of y coordinates of the vertices of the polygon
-     *                 representing the area to be filtered.
-     * 
+     * @param yVector List of y coordinates of the vertices of the polygon
+     *                representing the area to be filtered.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setYVector(List<Double> yVector) {
         this.yVector = (yVector == null) ? new ArrayList<Double>() : yVector;
@@ -265,39 +207,34 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
-     *         COLLECTION_NAME}: Name of a collection which is to contain the
-     *         newly created view. If the collection provided is non-existent,
-     *         the collection will be automatically created. If empty, then the
-     *         newly created view will be top-level.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the
+     * newly created view. If the collection provided is non-existent,
+     * the collection will be automatically created. If empty, then the
+     * newly created view will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
-     *                 COLLECTION_NAME}: Name of a collection which is to
-     *                 contain the newly created view. If the collection
-     *                 provided is non-existent, the collection will be
-     *                 automatically created. If empty, then the newly created
-     *                 view will be top-level.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
+     *                COLLECTION_NAME}: Name of a collection which is to
+     *                contain the newly created view. If the collection
+     *                provided is non-existent, the collection will be
+     *                automatically created. If empty, then the newly created
+     *                view will be top-level.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByAreaGeometryRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -307,9 +244,8 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -319,13 +255,10 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -356,39 +289,37 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.viewName = (String)value;
+                this.viewName = (String) value;
                 break;
 
             case 2:
-                this.columnName = (String)value;
+                this.columnName = (String) value;
                 break;
 
             case 3:
-                this.xVector = (List<Double>)value;
+                this.xVector = (List<Double>) value;
                 break;
 
             case 4:
-                this.yVector = (List<Double>)value;
+                this.yVector = (List<Double>) value;
                 break;
 
             case 5:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -398,53 +329,53 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByAreaGeometryRequest that = (FilterByAreaGeometryRequest)obj;
+        FilterByAreaGeometryRequest that = (FilterByAreaGeometryRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.viewName.equals( that.viewName )
-                 && this.columnName.equals( that.columnName )
-                 && this.xVector.equals( that.xVector )
-                 && this.yVector.equals( that.yVector )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.viewName.equals(that.viewName)
+                && this.columnName.equals(that.columnName)
+                && this.xVector.equals(that.xVector)
+                && this.yVector.equals(that.yVector)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "viewName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.viewName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xVector" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xVector ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yVector" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yVector ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("viewName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.viewName));
+        builder.append(", ");
+        builder.append(gd.toString("columnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnName));
+        builder.append(", ");
+        builder.append(gd.toString("xVector"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xVector));
+        builder.append(", ");
+        builder.append(gd.toString("yVector"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yVector));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -459,6 +390,33 @@ public class FilterByAreaGeometryRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.yVector.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.FilterByAreaGeometryRequest.Options#COLLECTION_NAME
+     * COLLECTION_NAME}: Name of a collection which is to contain the newly
+     * created view. If the collection provided is non-existent, the collection
+     * will be automatically created. If empty, then the newly created view
+     * will be top-level.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     * A set of string constants for the parameter {@code options}.
+     */
+    public static final class Options {
+
+        /**
+         * Name of a collection which is to contain the newly created view. If
+         * the collection provided is non-existent, the collection will be
+         * automatically created. If empty, then the newly created view will be
+         * top-level.
+         */
+        public static final String COLLECTION_NAME = "collection_name";
+
+        private Options() {
+        }
     }
 
 }

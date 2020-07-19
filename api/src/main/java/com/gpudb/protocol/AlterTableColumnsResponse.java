@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,27 +25,14 @@ public class AlterTableColumnsResponse implements IndexedRecord {
             .record("AlterTableColumnsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeId").type().stringType().noDefault()
-                .name("typeDefinition").type().stringType().noDefault()
-                .name("properties").type().map().values().array().items().stringType().noDefault()
-                .name("label").type().stringType().noDefault()
-                .name("columnAlterations").type().array().items().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("typeDefinition").type().stringType().noDefault()
+            .name("properties").type().map().values().array().items().stringType().noDefault()
+            .name("label").type().stringType().noDefault()
+            .name("columnAlterations").type().array().items().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private String typeId;
     private String typeDefinition;
@@ -52,8 +40,6 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     private String label;
     private List<Map<String, String>> columnAlterations;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AlterTableColumnsResponse object with default parameters.
      */
@@ -61,20 +47,25 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Table on which the operation was performed.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Table on which the operation was performed.
-     * 
+     * @param tableName Table on which the operation was performed.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -82,22 +73,17 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return return the type_id (when changing a table, a new type may be
-     *         created)
-     * 
+     * created)
      */
     public String getTypeId() {
         return typeId;
     }
 
     /**
-     * 
-     * @param typeId  return the type_id (when changing a table, a new type may
-     *                be created)
-     * 
+     * @param typeId return the type_id (when changing a table, a new type may
+     *               be created)
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setTypeId(String typeId) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -105,22 +91,17 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return return the type_definition  (when changing a table, a new type
-     *         may be created)
-     * 
+     * may be created)
      */
     public String getTypeDefinition() {
         return typeDefinition;
     }
 
     /**
-     * 
-     * @param typeDefinition  return the type_definition  (when changing a
-     *                        table, a new type may be created)
-     * 
+     * @param typeDefinition return the type_definition  (when changing a
+     *                       table, a new type may be created)
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setTypeDefinition(String typeDefinition) {
         this.typeDefinition = (typeDefinition == null) ? "" : typeDefinition;
@@ -128,22 +109,17 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return return the type properties  (when changing a table, a new type
-     *         may be created)
-     * 
+     * may be created)
      */
     public Map<String, List<String>> getProperties() {
         return properties;
     }
 
     /**
-     * 
-     * @param properties  return the type properties  (when changing a table, a
-     *                    new type may be created)
-     * 
+     * @param properties return the type properties  (when changing a table, a
+     *                   new type may be created)
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setProperties(Map<String, List<String>> properties) {
         this.properties = (properties == null) ? new LinkedHashMap<String, List<String>>() : properties;
@@ -151,22 +127,17 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return return the type label  (when changing a table, a new type may be
-     *         created)
-     * 
+     * created)
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * 
-     * @param label  return the type label  (when changing a table, a new type
-     *               may be created)
-     * 
+     * @param label return the type label  (when changing a table, a new type
+     *              may be created)
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setLabel(String label) {
         this.label = (label == null) ? "" : label;
@@ -174,41 +145,36 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return list of alter table add/delete/change column requests - all for
-     *         the same table.
-     *                         each request is a map that includes
-     *         'column_name', 'action' and the options specific for the action,
-     *                         note that the same options as in alter table
-     *         requests but in the same map as the column name and the action.
-     *         For example:
-     *         [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
-     *                         {'column_name':'col_1','action':'add_column',
-     *         'type':'int','default_value':'1'}
-     *                         ]
-     * 
+     * the same table.
+     * each request is a map that includes
+     * 'column_name', 'action' and the options specific for the action,
+     * note that the same options as in alter table
+     * requests but in the same map as the column name and the action.
+     * For example:
+     * [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
+     * {'column_name':'col_1','action':'add_column',
+     * 'type':'int','default_value':'1'}
+     * ]
      */
     public List<Map<String, String>> getColumnAlterations() {
         return columnAlterations;
     }
 
     /**
-     * 
-     * @param columnAlterations  list of alter table add/delete/change column
-     *                           requests - all for the same table.
-     *                                           each request is a map that
-     *                           includes 'column_name', 'action' and the
-     *                           options specific for the action,
-     *                                           note that the same options as
-     *                           in alter table requests but in the same map as
-     *                           the column name and the action. For example:
-     *                           [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
-     *                           {'column_name':'col_1','action':'add_column',
-     *                           'type':'int','default_value':'1'}
-     *                                           ]
-     * 
+     * @param columnAlterations list of alter table add/delete/change column
+     *                          requests - all for the same table.
+     *                          each request is a map that
+     *                          includes 'column_name', 'action' and the
+     *                          options specific for the action,
+     *                          note that the same options as
+     *                          in alter table requests but in the same map as
+     *                          the column name and the action. For example:
+     *                          [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},
+     *                          {'column_name':'col_1','action':'add_column',
+     *                          'type':'int','default_value':'1'}
+     *                          ]
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setColumnAlterations(List<Map<String, String>> columnAlterations) {
         this.columnAlterations = (columnAlterations == null) ? new ArrayList<Map<String, String>>() : columnAlterations;
@@ -216,20 +182,15 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableColumnsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -239,9 +200,8 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -251,13 +211,10 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -291,43 +248,41 @@ public class AlterTableColumnsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.typeId = (String)value;
+                this.typeId = (String) value;
                 break;
 
             case 2:
-                this.typeDefinition = (String)value;
+                this.typeDefinition = (String) value;
                 break;
 
             case 3:
-                this.properties = (Map<String, List<String>>)value;
+                this.properties = (Map<String, List<String>>) value;
                 break;
 
             case 4:
-                this.label = (String)value;
+                this.label = (String) value;
                 break;
 
             case 5:
-                this.columnAlterations = (List<Map<String, String>>)value;
+                this.columnAlterations = (List<Map<String, String>>) value;
                 break;
 
             case 6:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -337,58 +292,58 @@ public class AlterTableColumnsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AlterTableColumnsResponse that = (AlterTableColumnsResponse)obj;
+        AlterTableColumnsResponse that = (AlterTableColumnsResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeId.equals( that.typeId )
-                 && this.typeDefinition.equals( that.typeDefinition )
-                 && this.properties.equals( that.properties )
-                 && this.label.equals( that.label )
-                 && this.columnAlterations.equals( that.columnAlterations )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.typeId.equals(that.typeId)
+                && this.typeDefinition.equals(that.typeDefinition)
+                && this.properties.equals(that.properties)
+                && this.label.equals(that.label)
+                && this.columnAlterations.equals(that.columnAlterations)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeDefinition" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeDefinition ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "properties" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.properties ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "label" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.label ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "columnAlterations" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.columnAlterations ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("typeDefinition"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeDefinition));
+        builder.append(", ");
+        builder.append(gd.toString("properties"));
+        builder.append(": ");
+        builder.append(gd.toString(this.properties));
+        builder.append(", ");
+        builder.append(gd.toString("label"));
+        builder.append(": ");
+        builder.append(gd.toString(this.label));
+        builder.append(", ");
+        builder.append(gd.toString("columnAlterations"));
+        builder.append(": ");
+        builder.append(gd.toString(this.columnAlterations));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

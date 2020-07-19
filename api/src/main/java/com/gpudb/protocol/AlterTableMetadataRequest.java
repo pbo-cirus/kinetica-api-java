@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,28 +30,13 @@ public class AlterTableMetadataRequest implements IndexedRecord {
             .record("AlterTableMetadataRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableNames").type().array().items().stringType().noDefault()
-                .name("metadataMap").type().map().values().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableNames").type().array().items().stringType().noDefault()
+            .name("metadataMap").type().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> tableNames;
     private Map<String, String> metadataMap;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AlterTableMetadataRequest object with default parameters.
      */
@@ -60,22 +46,22 @@ public class AlterTableMetadataRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs an AlterTableMetadataRequest object with the specified
      * parameters.
-     * 
+     *
      * @param tableNames  Names of the tables whose metadata will be updated.
      *                    All specified tables must exist, or an error will be
      *                    returned.
-     * @param metadataMap  A map which contains the metadata of the tables that
-     *                     are to be updated. Note that only one map is
-     *                     provided for all the tables; so the change will be
-     *                     applied to every table. If the provided map is
-     *                     empty, then all existing metadata for the table(s)
-     *                     will be cleared.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param metadataMap A map which contains the metadata of the tables that
+     *                    are to be updated. Note that only one map is
+     *                    provided for all the tables; so the change will be
+     *                    applied to every table. If the provided map is
+     *                    empty, then all existing metadata for the table(s)
+     *                    will be cleared.
+     * @param options     Optional parameters.  The default value is an empty
+     *                    {@link Map}.
      */
     public AlterTableMetadataRequest(List<String> tableNames, Map<String, String> metadataMap, Map<String, String> options) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -84,23 +70,28 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Names of the tables whose metadata will be updated. All
-     *         specified tables must exist, or an error will be returned.
-     * 
+     * specified tables must exist, or an error will be returned.
      */
     public List<String> getTableNames() {
         return tableNames;
     }
 
     /**
-     * 
-     * @param tableNames  Names of the tables whose metadata will be updated.
-     *                    All specified tables must exist, or an error will be
-     *                    returned.
-     * 
+     * @param tableNames Names of the tables whose metadata will be updated.
+     *                   All specified tables must exist, or an error will be
+     *                   returned.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableMetadataRequest setTableNames(List<String> tableNames) {
         this.tableNames = (tableNames == null) ? new ArrayList<String>() : tableNames;
@@ -108,29 +99,24 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return A map which contains the metadata of the tables that are to be
-     *         updated. Note that only one map is provided for all the tables;
-     *         so the change will be applied to every table. If the provided
-     *         map is empty, then all existing metadata for the table(s) will
-     *         be cleared.
-     * 
+     * updated. Note that only one map is provided for all the tables;
+     * so the change will be applied to every table. If the provided
+     * map is empty, then all existing metadata for the table(s) will
+     * be cleared.
      */
     public Map<String, String> getMetadataMap() {
         return metadataMap;
     }
 
     /**
-     * 
-     * @param metadataMap  A map which contains the metadata of the tables that
-     *                     are to be updated. Note that only one map is
-     *                     provided for all the tables; so the change will be
-     *                     applied to every table. If the provided map is
-     *                     empty, then all existing metadata for the table(s)
-     *                     will be cleared.
-     * 
+     * @param metadataMap A map which contains the metadata of the tables that
+     *                    are to be updated. Note that only one map is
+     *                    provided for all the tables; so the change will be
+     *                    applied to every table. If the provided map is
+     *                    empty, then all existing metadata for the table(s)
+     *                    will be cleared.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableMetadataRequest setMetadataMap(Map<String, String> metadataMap) {
         this.metadataMap = (metadataMap == null) ? new LinkedHashMap<String, String>() : metadataMap;
@@ -138,21 +124,16 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterTableMetadataRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -162,9 +143,8 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -174,13 +154,10 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -202,27 +179,25 @@ public class AlterTableMetadataRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableNames = (List<String>)value;
+                this.tableNames = (List<String>) value;
                 break;
 
             case 1:
-                this.metadataMap = (Map<String, String>)value;
+                this.metadataMap = (Map<String, String>) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -232,38 +207,38 @@ public class AlterTableMetadataRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AlterTableMetadataRequest that = (AlterTableMetadataRequest)obj;
+        AlterTableMetadataRequest that = (AlterTableMetadataRequest) obj;
 
-        return ( this.tableNames.equals( that.tableNames )
-                 && this.metadataMap.equals( that.metadataMap )
-                 && this.options.equals( that.options ) );
+        return (this.tableNames.equals(that.tableNames)
+                && this.metadataMap.equals(that.metadataMap)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableNames" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableNames ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "metadataMap" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.metadataMap ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableNames"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableNames));
+        builder.append(", ");
+        builder.append(gd.toString("metadataMap"));
+        builder.append(": ");
+        builder.append(gd.toString(this.metadataMap));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

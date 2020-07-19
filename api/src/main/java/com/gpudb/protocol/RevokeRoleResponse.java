@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,28 +23,13 @@ public class RevokeRoleResponse implements IndexedRecord {
             .record("RevokeRoleResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("role").type().stringType().noDefault()
-                .name("member").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("role").type().stringType().noDefault()
+            .name("member").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String role;
     private String member;
     private Map<String, String> info;
-
-
     /**
      * Constructs a RevokeRoleResponse object with default parameters.
      */
@@ -51,20 +37,25 @@ public class RevokeRoleResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code role}.
-     * 
      */
     public String getRole() {
         return role;
     }
 
     /**
-     * 
-     * @param role  Value of {@code role}.
-     * 
+     * @param role Value of {@code role}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokeRoleResponse setRole(String role) {
         this.role = (role == null) ? "" : role;
@@ -72,20 +63,15 @@ public class RevokeRoleResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code member}.
-     * 
      */
     public String getMember() {
         return member;
     }
 
     /**
-     * 
-     * @param member  Value of {@code member}.
-     * 
+     * @param member Value of {@code member}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokeRoleResponse setMember(String member) {
         this.member = (member == null) ? "" : member;
@@ -93,20 +79,15 @@ public class RevokeRoleResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RevokeRoleResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -116,9 +97,8 @@ public class RevokeRoleResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -128,13 +108,10 @@ public class RevokeRoleResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -156,27 +133,25 @@ public class RevokeRoleResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.role = (String)value;
+                this.role = (String) value;
                 break;
 
             case 1:
-                this.member = (String)value;
+                this.member = (String) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -186,38 +161,38 @@ public class RevokeRoleResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        RevokeRoleResponse that = (RevokeRoleResponse)obj;
+        RevokeRoleResponse that = (RevokeRoleResponse) obj;
 
-        return ( this.role.equals( that.role )
-                 && this.member.equals( that.member )
-                 && this.info.equals( that.info ) );
+        return (this.role.equals(that.role)
+                && this.member.equals(that.member)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "role" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.role ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "member" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.member ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("role"));
+        builder.append(": ");
+        builder.append(gd.toString(this.role));
+        builder.append(", ");
+        builder.append(gd.toString("member"));
+        builder.append(": ");
+        builder.append(gd.toString(this.member));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

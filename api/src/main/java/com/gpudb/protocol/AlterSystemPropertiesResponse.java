@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
             .record("AlterSystemPropertiesResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("updatedPropertiesMap").type().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("updatedPropertiesMap").type().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private Map<String, String> updatedPropertiesMap;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AlterSystemPropertiesResponse object with default
      * parameters.
@@ -50,22 +36,27 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return map of values updated, For speed tests a map of values measured
-     *         to the measurement
-     * 
+     * to the measurement
      */
     public Map<String, String> getUpdatedPropertiesMap() {
         return updatedPropertiesMap;
     }
 
     /**
-     * 
-     * @param updatedPropertiesMap  map of values updated, For speed tests a
-     *                              map of values measured to the measurement
-     * 
+     * @param updatedPropertiesMap map of values updated, For speed tests a
+     *                             map of values measured to the measurement
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterSystemPropertiesResponse setUpdatedPropertiesMap(Map<String, String> updatedPropertiesMap) {
         this.updatedPropertiesMap = (updatedPropertiesMap == null) ? new LinkedHashMap<String, String>() : updatedPropertiesMap;
@@ -73,20 +64,15 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AlterSystemPropertiesResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -96,9 +82,8 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -108,13 +93,10 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -133,23 +115,21 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.updatedPropertiesMap = (Map<String, String>)value;
+                this.updatedPropertiesMap = (Map<String, String>) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -159,33 +139,33 @@ public class AlterSystemPropertiesResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AlterSystemPropertiesResponse that = (AlterSystemPropertiesResponse)obj;
+        AlterSystemPropertiesResponse that = (AlterSystemPropertiesResponse) obj;
 
-        return ( this.updatedPropertiesMap.equals( that.updatedPropertiesMap )
-                 && this.info.equals( that.info ) );
+        return (this.updatedPropertiesMap.equals(that.updatedPropertiesMap)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "updatedPropertiesMap" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.updatedPropertiesMap ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("updatedPropertiesMap"));
+        builder.append(": ");
+        builder.append(gd.toString(this.updatedPropertiesMap));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

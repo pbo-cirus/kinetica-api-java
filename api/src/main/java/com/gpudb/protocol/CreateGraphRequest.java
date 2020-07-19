@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -21,7 +22,7 @@ import org.apache.avro.generic.IndexedRecord;
  * <p>
  * Creates a new graph network using given nodes, edges, weights, and
  * restrictions.
-
+ * <p>
  * IMPORTANT: It's highly recommended that you review the <a
  * href="../../../../../graph_solver/network_graph_solver.html"
  * target="_top">Network Graphs & Solvers</a> concepts documentation, the <a
@@ -35,27 +36,1152 @@ public class CreateGraphRequest implements IndexedRecord {
             .record("CreateGraphRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("directedGraph").type().booleanType().noDefault()
-                .name("nodes").type().array().items().stringType().noDefault()
-                .name("edges").type().array().items().stringType().noDefault()
-                .name("weights").type().array().items().stringType().noDefault()
-                .name("restrictions").type().array().items().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("directedGraph").type().booleanType().noDefault()
+            .name("nodes").type().array().items().stringType().noDefault()
+            .name("edges").type().array().items().stringType().noDefault()
+            .name("weights").type().array().items().stringType().noDefault()
+            .name("restrictions").type().array().items().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String graphName;
+    private boolean directedGraph;
+    private List<String> nodes;
+    private List<String> edges;
+    private List<String> weights;
+    private List<String> restrictions;
+    private Map<String, String> options;
+    /**
+     * Constructs a CreateGraphRequest object with default parameters.
+     */
+    public CreateGraphRequest() {
+        graphName = "";
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
+        weights = new ArrayList<>();
+        restrictions = new ArrayList<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a CreateGraphRequest object with the specified parameters.
+     *
+     * @param graphName     Name of the graph resource to generate.
+     * @param directedGraph If set to {@code true}, the graph will be
+     *                      directed. If set to {@code false}, the graph will
+     *                      not be directed. Consult <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     *                      target="_top">Directed Graphs</a> for more
+     *                      details.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
+     *                      TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
+     *                      TRUE}.
+     * @param nodes         Nodes represent fundamental topological units of a graph.
+     *                      Nodes must be specified using <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                      target="_top">identifiers</a>; identifiers are grouped as
+     *                      <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                      target="_top">combinations</a>. Identifiers can be used
+     *                      with existing column names, e.g., 'table.column AS
+     *                      NODE_ID', expressions, e.g., 'ST_MAKEPOINT(column1,
+     *                      column2) AS NODE_WKTPOINT', or raw values, e.g., '{9, 10,
+     *                      11} AS NODE_ID'. If using raw values in an identifier
+     *                      combination, the number of values specified must match
+     *                      across the combination.
+     * @param edges         Edges represent the required fundamental topological unit
+     *                      of a graph that typically connect nodes. Edges must be
+     *                      specified using <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                      target="_top">identifiers</a>; identifiers are grouped as
+     *                      <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                      target="_top">combinations</a>. Identifiers can be used
+     *                      with existing column names, e.g., 'table.column AS
+     *                      EDGE_ID', expressions, e.g., 'SUBSTR(column, 1, 6) AS
+     *                      EDGE_NODE1_NAME', or raw values, e.g., "{'family',
+     *                      'coworker'} AS EDGE_LABEL". If using raw values in an
+     *                      identifier combination, the number of values specified
+     *                      must match across the combination.
+     * @param weights       Weights represent a method of informing the graph solver
+     *                      of the cost of including a given edge in a solution.
+     *                      Weights must be specified using <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                      target="_top">identifiers</a>; identifiers are grouped
+     *                      as <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                      target="_top">combinations</a>. Identifiers can be used
+     *                      with existing column names, e.g., 'table.column AS
+     *                      WEIGHTS_EDGE_ID', expressions, e.g., 'ST_LENGTH(wkt) AS
+     *                      WEIGHTS_VALUESPECIFIED', or raw values, e.g., '{4, 15}
+     *                      AS WEIGHTS_VALUESPECIFIED'. If using raw values in an
+     *                      identifier combination, the number of values specified
+     *                      must match across the combination.
+     * @param restrictions  Restrictions represent a method of informing the
+     *                      graph solver which edges and/or nodes should be
+     *                      ignored for the solution. Restrictions must be
+     *                      specified using <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                      target="_top">identifiers</a>; identifiers are
+     *                      grouped as <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                      target="_top">combinations</a>. Identifiers can be
+     *                      used with existing column names, e.g.,
+     *                      'table.column AS RESTRICTIONS_EDGE_ID',
+     *                      expressions, e.g., 'column/2 AS
+     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                      using raw values in an identifier combination, the
+     *                      number of values specified must match across the
+     *                      combination.
+     * @param options       Optional parameters.
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                      RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                      comparison. Any node or edge with a
+     *                      RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                      restriction_threshold_value} will not be included in the
+     *                      graph.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
+     *                      MERGE_TOLERANCE}: If node geospatial positions are input
+     *                      (e.g., WKTPOINT, X, Y), determines the minimum
+     *                      separation allowed between unique nodes. If nodes are
+     *                      within the tolerance of each other, they will be merged
+     *                      as a single node.  The default value is '1.0E-4'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MIN_X
+     *                      MIN_X}: Minimum x (longitude) value for spatial graph
+     *                      associations.  The default value is '-180.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MAX_X
+     *                      MAX_X}: Maximum x (longitude) value for spatial graph
+     *                      associations.  The default value is '180.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y
+     *                      MIN_Y}: Minimum y (latitude) value for spatial graph
+     *                      associations.  The default value is '-90.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y
+     *                      MAX_Y}: Maximum y (latitude) value for spatial graph
+     *                      associations.  The default value is '90.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
+     *                      RECREATE}: If set to {@code true} and the graph (using
+     *                      {@code graphName}) already exists, the graph is deleted
+     *                      and recreated.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#MODIFY
+     *                      MODIFY}: If set to {@code true}, {@code recreate} is set
+     *                      to {@code true}, and the graph (specified using {@code
+     *                      graphName}) already exists, the graph is updated with
+     *                      the given components.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
+     *                      EXPORT_CREATE_RESULTS}: If set to {@code true}, returns
+     *                      the graph topology in the response as arrays.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
+     *                      ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
+     *                      'EDGE_WKTLINE' column identifier to the specified {@code
+     *                      graph_table} so the graph can be viewed via WMS; for
+     *                      social and non-geospatial graphs, the 'EDGE_WKTLINE'
+     *                      column identifier will be populated with spatial
+     *                      coordinates derived from a flattening layout algorithm
+     *                      so the graph can still be viewed.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
+     *                      SAVE_PERSIST}: If set to {@code true}, the graph will be
+     *                      saved in the persist directory (see the <a
+     *                      href="../../../../../config/index.html"
+     *                      target="_top">config reference</a> for more
+     *                      information). If set to {@code false}, the graph will be
+     *                      removed when the graph server is shutdown.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB
+     *                      SYNC_DB}: If set to {@code true} and {@code
+     *                      save_persist} is set to {@code true}, the graph will be
+     *                      fully reconstructed upon a database restart and be
+     *                      updated to align with any source table(s) updates made
+     *                      since the creation of the graph. If dynamic graph
+     *                      updates upon table inserts are desired, use {@code
+     *                      add_table_monitor} instead.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
+     *                      ADD_TABLE_MONITOR}: Adds a table monitor to every table
+     *                      used in the creation of the graph; this table monitor
+     *                      will trigger the graph to update dynamically upon
+     *                      inserts to the source table(s). Note that upon database
+     *                      restart, if {@code save_persist} is also set to {@code
+     *                      true}, the graph will be fully reconstructed and the
+     *                      table monitors will be reattached. For more details on
+     *                      table monitors, see {@link
+     *                      com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
+     *                      GRAPH_TABLE}: If specified, the created graph is also
+     *                      created as a table with the given name and following
+     *                      identifier columns: 'EDGE_ID', 'EDGE_NODE1_ID',
+     *                      'EDGE_NODE2_ID'. If left blank, no table is created.
+     *                      The default value is ''.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
+     *                      REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled
+     *                      entities requested, if set to true this will NOT delete
+     *                      the entity but only the label associated with the
+     *                      entity. Otherwise (default), it'll delete the label AND
+     *                      the entity.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
+     *                      ADD_TURNS}: Adds dummy 'pillowed' edges around
+     *                      intersection nodes where there are more than three edges
+     *                      so that additional weight penalties can be imposed by
+     *                      the solve endpoints. (increases the total number of
+     *                      edges).
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
+     *                      TURN_ANGLE}: Value in degrees modifies the thresholds
+     *                      for attributing right, left, sharp turns, and
+     *                      intersections. It is the vertical deviation angle from
+     *                      the incoming edge to the intersection node. The larger
+     *                      the value, the larger the threshold for sharp turns and
+     *                      intersections; the smaller the value, the larger the
+     *                      threshold for right and left turns; 0 < turn_angle < 90.
+     *                      The default value is '60'.
+     *                      </ul>
+     *                      The default value is an empty {@link Map}.
+     */
+    public CreateGraphRequest(String graphName, boolean directedGraph, List<String> nodes, List<String> edges, List<String> weights, List<String> restrictions, Map<String, String> options) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        this.directedGraph = directedGraph;
+        this.nodes = (nodes == null) ? new ArrayList<String>() : nodes;
+        this.edges = (edges == null) ? new ArrayList<String>() : edges;
+        this.weights = (weights == null) ? new ArrayList<String>() : weights;
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the graph resource to generate.
+     */
+    public String getGraphName() {
+        return graphName;
+    }
+
+    /**
+     * @param graphName Name of the graph resource to generate.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setGraphName(String graphName) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        return this;
+    }
+
+    /**
+     * @return If set to {@code true}, the graph will be directed. If set to
+     * {@code false}, the graph will not be directed. Consult <a
+     * href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     * target="_top">Directed Graphs</a> for more details.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE TRUE}.
+     */
+    public boolean getDirectedGraph() {
+        return directedGraph;
+    }
+
+    /**
+     * @param directedGraph If set to {@code true}, the graph will be
+     *                      directed. If set to {@code false}, the graph will
+     *                      not be directed. Consult <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     *                      target="_top">Directed Graphs</a> for more
+     *                      details.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
+     *                      TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
+     *                      TRUE}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setDirectedGraph(boolean directedGraph) {
+        this.directedGraph = directedGraph;
+        return this;
+    }
+
+    /**
+     * @return Nodes represent fundamental topological units of a graph. Nodes
+     * must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS NODE_ID',
+     * expressions, e.g., 'ST_MAKEPOINT(column1, column2) AS
+     * NODE_WKTPOINT', or raw values, e.g., '{9, 10, 11} AS NODE_ID'.
+     * If using raw values in an identifier combination, the number of
+     * values specified must match across the combination.
+     */
+    public List<String> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * @param nodes Nodes represent fundamental topological units of a graph.
+     *              Nodes must be specified using <a
+     *              href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *              target="_top">identifiers</a>; identifiers are grouped as
+     *              <a
+     *              href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *              target="_top">combinations</a>. Identifiers can be used
+     *              with existing column names, e.g., 'table.column AS
+     *              NODE_ID', expressions, e.g., 'ST_MAKEPOINT(column1,
+     *              column2) AS NODE_WKTPOINT', or raw values, e.g., '{9, 10,
+     *              11} AS NODE_ID'. If using raw values in an identifier
+     *              combination, the number of values specified must match
+     *              across the combination.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setNodes(List<String> nodes) {
+        this.nodes = (nodes == null) ? new ArrayList<String>() : nodes;
+        return this;
+    }
+
+    /**
+     * @return Edges represent the required fundamental topological unit of a
+     * graph that typically connect nodes. Edges must be specified
+     * using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS EDGE_ID',
+     * expressions, e.g., 'SUBSTR(column, 1, 6) AS EDGE_NODE1_NAME', or
+     * raw values, e.g., "{'family', 'coworker'} AS EDGE_LABEL". If
+     * using raw values in an identifier combination, the number of
+     * values specified must match across the combination.
+     */
+    public List<String> getEdges() {
+        return edges;
+    }
+
+    /**
+     * @param edges Edges represent the required fundamental topological unit
+     *              of a graph that typically connect nodes. Edges must be
+     *              specified using <a
+     *              href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *              target="_top">identifiers</a>; identifiers are grouped as
+     *              <a
+     *              href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *              target="_top">combinations</a>. Identifiers can be used
+     *              with existing column names, e.g., 'table.column AS
+     *              EDGE_ID', expressions, e.g., 'SUBSTR(column, 1, 6) AS
+     *              EDGE_NODE1_NAME', or raw values, e.g., "{'family',
+     *              'coworker'} AS EDGE_LABEL". If using raw values in an
+     *              identifier combination, the number of values specified
+     *              must match across the combination.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setEdges(List<String> edges) {
+        this.edges = (edges == null) ? new ArrayList<String>() : edges;
+        return this;
+    }
+
+    /**
+     * @return Weights represent a method of informing the graph solver of the
+     * cost of including a given edge in a solution. Weights must be
+     * specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
+     * expressions, e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
+     * or raw values, e.g., '{4, 15} AS WEIGHTS_VALUESPECIFIED'. If
+     * using raw values in an identifier combination, the number of
+     * values specified must match across the combination.
+     */
+    public List<String> getWeights() {
+        return weights;
+    }
+
+    /**
+     * @param weights Weights represent a method of informing the graph solver
+     *                of the cost of including a given edge in a solution.
+     *                Weights must be specified using <a
+     *                href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                target="_top">identifiers</a>; identifiers are grouped
+     *                as <a
+     *                href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                target="_top">combinations</a>. Identifiers can be used
+     *                with existing column names, e.g., 'table.column AS
+     *                WEIGHTS_EDGE_ID', expressions, e.g., 'ST_LENGTH(wkt) AS
+     *                WEIGHTS_VALUESPECIFIED', or raw values, e.g., '{4, 15}
+     *                AS WEIGHTS_VALUESPECIFIED'. If using raw values in an
+     *                identifier combination, the number of values specified
+     *                must match across the combination.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setWeights(List<String> weights) {
+        this.weights = (weights == null) ? new ArrayList<String>() : weights;
+        return this;
+    }
+
+    /**
+     * @return Restrictions represent a method of informing the graph solver
+     * which edges and/or nodes should be ignored for the solution.
+     * Restrictions must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS
+     * RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
+     * RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
+     * AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
+     * identifier combination, the number of values specified must
+     * match across the combination.
+     */
+    public List<String> getRestrictions() {
+        return restrictions;
+    }
+
+    /**
+     * @param restrictions Restrictions represent a method of informing the
+     *                     graph solver which edges and/or nodes should be
+     *                     ignored for the solution. Restrictions must be
+     *                     specified using <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                     target="_top">identifiers</a>; identifiers are
+     *                     grouped as <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                     target="_top">combinations</a>. Identifiers can be
+     *                     used with existing column names, e.g.,
+     *                     'table.column AS RESTRICTIONS_EDGE_ID',
+     *                     expressions, e.g., 'column/2 AS
+     *                     RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                     '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                     using raw values in an identifier combination, the
+     *                     number of values specified must match across the
+     *                     combination.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setRestrictions(List<String> restrictions) {
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     * RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     * comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
+     * value greater than the {@code restriction_threshold_value} will
+     * not be included in the graph.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
+     * MERGE_TOLERANCE}: If node geospatial positions are input (e.g.,
+     * WKTPOINT, X, Y), determines the minimum separation allowed
+     * between unique nodes. If nodes are within the tolerance of each
+     * other, they will be merged as a single node.  The default value
+     * is '1.0E-4'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MIN_X MIN_X}:
+     * Minimum x (longitude) value for spatial graph associations.  The
+     * default value is '-180.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MAX_X MAX_X}:
+     * Maximum x (longitude) value for spatial graph associations.  The
+     * default value is '180.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y MIN_Y}:
+     * Minimum y (latitude) value for spatial graph associations.  The
+     * default value is '-90.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y MAX_Y}:
+     * Maximum y (latitude) value for spatial graph associations.  The
+     * default value is '90.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
+     * RECREATE}: If set to {@code true} and the graph (using {@code
+     * graphName}) already exists, the graph is deleted and recreated.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#MODIFY MODIFY}: If
+     * set to {@code true}, {@code recreate} is set to {@code true},
+     * and the graph (specified using {@code graphName}) already
+     * exists, the graph is updated with the given components.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
+     * EXPORT_CREATE_RESULTS}: If set to {@code true}, returns the
+     * graph topology in the response as arrays.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
+     * ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
+     * 'EDGE_WKTLINE' column identifier to the specified {@code
+     * graph_table} so the graph can be viewed via WMS; for social and
+     * non-geospatial graphs, the 'EDGE_WKTLINE' column identifier will
+     * be populated with spatial coordinates derived from a flattening
+     * layout algorithm so the graph can still be viewed.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
+     * SAVE_PERSIST}: If set to {@code true}, the graph will be saved
+     * in the persist directory (see the <a
+     * href="../../../../../config/index.html" target="_top">config
+     * reference</a> for more information). If set to {@code false},
+     * the graph will be removed when the graph server is shutdown.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB SYNC_DB}:
+     * If set to {@code true} and {@code save_persist} is set to {@code
+     * true}, the graph will be fully reconstructed upon a database
+     * restart and be updated to align with any source table(s) updates
+     * made since the creation of the graph. If dynamic graph updates
+     * upon table inserts are desired, use {@code add_table_monitor}
+     * instead.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
+     * ADD_TABLE_MONITOR}: Adds a table monitor to every table used in
+     * the creation of the graph; this table monitor will trigger the
+     * graph to update dynamically upon inserts to the source table(s).
+     * Note that upon database restart, if {@code save_persist} is also
+     * set to {@code true}, the graph will be fully reconstructed and
+     * the table monitors will be reattached. For more details on table
+     * monitors, see {@link
+     * com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
+     * GRAPH_TABLE}: If specified, the created graph is also created as
+     * a table with the given name and following identifier columns:
+     * 'EDGE_ID', 'EDGE_NODE1_ID', 'EDGE_NODE2_ID'. If left blank, no
+     * table is created.  The default value is ''.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
+     * REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled entities
+     * requested, if set to true this will NOT delete the entity but
+     * only the label associated with the entity. Otherwise (default),
+     * it'll delete the label AND the entity.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
+     * ADD_TURNS}: Adds dummy 'pillowed' edges around intersection
+     * nodes where there are more than three edges so that additional
+     * weight penalties can be imposed by the solve endpoints.
+     * (increases the total number of edges).
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
+     * TURN_ANGLE}: Value in degrees modifies the thresholds for
+     * attributing right, left, sharp turns, and intersections. It is
+     * the vertical deviation angle from the incoming edge to the
+     * intersection node. The larger the value, the larger the
+     * threshold for sharp turns and intersections; the smaller the
+     * value, the larger the threshold for right and left turns; 0 <
+     * turn_angle < 90.  The default value is '60'.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                comparison. Any node or edge with a
+     *                RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                restriction_threshold_value} will not be included in the
+     *                graph.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
+     *                MERGE_TOLERANCE}: If node geospatial positions are input
+     *                (e.g., WKTPOINT, X, Y), determines the minimum
+     *                separation allowed between unique nodes. If nodes are
+     *                within the tolerance of each other, they will be merged
+     *                as a single node.  The default value is '1.0E-4'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MIN_X
+     *                MIN_X}: Minimum x (longitude) value for spatial graph
+     *                associations.  The default value is '-180.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MAX_X
+     *                MAX_X}: Maximum x (longitude) value for spatial graph
+     *                associations.  The default value is '180.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y
+     *                MIN_Y}: Minimum y (latitude) value for spatial graph
+     *                associations.  The default value is '-90.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y
+     *                MAX_Y}: Maximum y (latitude) value for spatial graph
+     *                associations.  The default value is '90.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
+     *                RECREATE}: If set to {@code true} and the graph (using
+     *                {@code graphName}) already exists, the graph is deleted
+     *                and recreated.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#MODIFY
+     *                MODIFY}: If set to {@code true}, {@code recreate} is set
+     *                to {@code true}, and the graph (specified using {@code
+     *                graphName}) already exists, the graph is updated with
+     *                the given components.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
+     *                EXPORT_CREATE_RESULTS}: If set to {@code true}, returns
+     *                the graph topology in the response as arrays.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
+     *                ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
+     *                'EDGE_WKTLINE' column identifier to the specified {@code
+     *                graph_table} so the graph can be viewed via WMS; for
+     *                social and non-geospatial graphs, the 'EDGE_WKTLINE'
+     *                column identifier will be populated with spatial
+     *                coordinates derived from a flattening layout algorithm
+     *                so the graph can still be viewed.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
+     *                SAVE_PERSIST}: If set to {@code true}, the graph will be
+     *                saved in the persist directory (see the <a
+     *                href="../../../../../config/index.html"
+     *                target="_top">config reference</a> for more
+     *                information). If set to {@code false}, the graph will be
+     *                removed when the graph server is shutdown.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB
+     *                SYNC_DB}: If set to {@code true} and {@code
+     *                save_persist} is set to {@code true}, the graph will be
+     *                fully reconstructed upon a database restart and be
+     *                updated to align with any source table(s) updates made
+     *                since the creation of the graph. If dynamic graph
+     *                updates upon table inserts are desired, use {@code
+     *                add_table_monitor} instead.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
+     *                ADD_TABLE_MONITOR}: Adds a table monitor to every table
+     *                used in the creation of the graph; this table monitor
+     *                will trigger the graph to update dynamically upon
+     *                inserts to the source table(s). Note that upon database
+     *                restart, if {@code save_persist} is also set to {@code
+     *                true}, the graph will be fully reconstructed and the
+     *                table monitors will be reattached. For more details on
+     *                table monitors, see {@link
+     *                com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
+     *                GRAPH_TABLE}: If specified, the created graph is also
+     *                created as a table with the given name and following
+     *                identifier columns: 'EDGE_ID', 'EDGE_NODE1_ID',
+     *                'EDGE_NODE2_ID'. If left blank, no table is created.
+     *                The default value is ''.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
+     *                REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled
+     *                entities requested, if set to true this will NOT delete
+     *                the entity but only the label associated with the
+     *                entity. Otherwise (default), it'll delete the label AND
+     *                the entity.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
+     *                ADD_TURNS}: Adds dummy 'pillowed' edges around
+     *                intersection nodes where there are more than three edges
+     *                so that additional weight penalties can be imposed by
+     *                the solve endpoints. (increases the total number of
+     *                edges).
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
+     *                TURN_ANGLE}: Value in degrees modifies the thresholds
+     *                for attributing right, left, sharp turns, and
+     *                intersections. It is the vertical deviation angle from
+     *                the incoming edge to the intersection node. The larger
+     *                the value, the larger the threshold for sharp turns and
+     *                intersections; the smaller the value, the larger the
+     *                threshold for right and left turns; 0 < turn_angle < 90.
+     *                The default value is '60'.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public CreateGraphRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.graphName;
+
+            case 1:
+                return this.directedGraph;
+
+            case 2:
+                return this.nodes;
+
+            case 3:
+                return this.edges;
+
+            case 4:
+                return this.weights;
+
+            case 5:
+                return this.restrictions;
+
+            case 6:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.graphName = (String) value;
+                break;
+
+            case 1:
+                this.directedGraph = (Boolean) value;
+                break;
+
+            case 2:
+                this.nodes = (List<String>) value;
+                break;
+
+            case 3:
+                this.edges = (List<String>) value;
+                break;
+
+            case 4:
+                this.weights = (List<String>) value;
+                break;
+
+            case 5:
+                this.restrictions = (List<String>) value;
+                break;
+
+            case 6:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        CreateGraphRequest that = (CreateGraphRequest) obj;
+
+        return (this.graphName.equals(that.graphName)
+                && (this.directedGraph == that.directedGraph)
+                && this.nodes.equals(that.nodes)
+                && this.edges.equals(that.edges)
+                && this.weights.equals(that.weights)
+                && this.restrictions.equals(that.restrictions)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("directedGraph"));
+        builder.append(": ");
+        builder.append(gd.toString(this.directedGraph));
+        builder.append(", ");
+        builder.append(gd.toString("nodes"));
+        builder.append(": ");
+        builder.append(gd.toString(this.nodes));
+        builder.append(", ");
+        builder.append(gd.toString("edges"));
+        builder.append(": ");
+        builder.append(gd.toString(this.edges));
+        builder.append(", ");
+        builder.append(gd.toString("weights"));
+        builder.append(": ");
+        builder.append(gd.toString(this.weights));
+        builder.append(", ");
+        builder.append(gd.toString("restrictions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.restrictions));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.graphName.hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.directedGraph).hashCode();
+        hashCode = (31 * hashCode) + this.nodes.hashCode();
+        hashCode = (31 * hashCode) + this.edges.hashCode();
+        hashCode = (31 * hashCode) + this.weights.hashCode();
+        hashCode = (31 * hashCode) + this.restrictions.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * If set to {@code true}, the graph will be directed. If set to {@code
@@ -77,9 +1203,9 @@ public class CreateGraphRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private DirectedGraph() {  }
+        private DirectedGraph() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -474,1181 +1600,8 @@ public class CreateGraphRequest implements IndexedRecord {
          */
         public static final String TURN_ANGLE = "turn_angle";
 
-        private Options() {  }
-    }
-
-    private String graphName;
-    private boolean directedGraph;
-    private List<String> nodes;
-    private List<String> edges;
-    private List<String> weights;
-    private List<String> restrictions;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a CreateGraphRequest object with default parameters.
-     */
-    public CreateGraphRequest() {
-        graphName = "";
-        nodes = new ArrayList<>();
-        edges = new ArrayList<>();
-        weights = new ArrayList<>();
-        restrictions = new ArrayList<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a CreateGraphRequest object with the specified parameters.
-     * 
-     * @param graphName  Name of the graph resource to generate.
-     * @param directedGraph  If set to {@code true}, the graph will be
-     *                       directed. If set to {@code false}, the graph will
-     *                       not be directed. Consult <a
-     *                       href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *                       target="_top">Directed Graphs</a> for more
-     *                       details.
-     *                       Supported values:
-     *                       <ul>
-     *                               <li> {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
-     *                       TRUE}
-     *                               <li> {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE
-     *                       FALSE}
-     *                       </ul>
-     *                       The default value is {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
-     *                       TRUE}.
-     * @param nodes  Nodes represent fundamental topological units of a graph.
-     *               Nodes must be specified using <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *               target="_top">identifiers</a>; identifiers are grouped as
-     *               <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *               target="_top">combinations</a>. Identifiers can be used
-     *               with existing column names, e.g., 'table.column AS
-     *               NODE_ID', expressions, e.g., 'ST_MAKEPOINT(column1,
-     *               column2) AS NODE_WKTPOINT', or raw values, e.g., '{9, 10,
-     *               11} AS NODE_ID'. If using raw values in an identifier
-     *               combination, the number of values specified must match
-     *               across the combination.
-     * @param edges  Edges represent the required fundamental topological unit
-     *               of a graph that typically connect nodes. Edges must be
-     *               specified using <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *               target="_top">identifiers</a>; identifiers are grouped as
-     *               <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *               target="_top">combinations</a>. Identifiers can be used
-     *               with existing column names, e.g., 'table.column AS
-     *               EDGE_ID', expressions, e.g., 'SUBSTR(column, 1, 6) AS
-     *               EDGE_NODE1_NAME', or raw values, e.g., "{'family',
-     *               'coworker'} AS EDGE_LABEL". If using raw values in an
-     *               identifier combination, the number of values specified
-     *               must match across the combination.
-     * @param weights  Weights represent a method of informing the graph solver
-     *                 of the cost of including a given edge in a solution.
-     *                 Weights must be specified using <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                 target="_top">identifiers</a>; identifiers are grouped
-     *                 as <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                 target="_top">combinations</a>. Identifiers can be used
-     *                 with existing column names, e.g., 'table.column AS
-     *                 WEIGHTS_EDGE_ID', expressions, e.g., 'ST_LENGTH(wkt) AS
-     *                 WEIGHTS_VALUESPECIFIED', or raw values, e.g., '{4, 15}
-     *                 AS WEIGHTS_VALUESPECIFIED'. If using raw values in an
-     *                 identifier combination, the number of values specified
-     *                 must match across the combination.
-     * @param restrictions  Restrictions represent a method of informing the
-     *                      graph solver which edges and/or nodes should be
-     *                      ignored for the solution. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 graph.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
-     *                 MERGE_TOLERANCE}: If node geospatial positions are input
-     *                 (e.g., WKTPOINT, X, Y), determines the minimum
-     *                 separation allowed between unique nodes. If nodes are
-     *                 within the tolerance of each other, they will be merged
-     *                 as a single node.  The default value is '1.0E-4'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MIN_X
-     *                 MIN_X}: Minimum x (longitude) value for spatial graph
-     *                 associations.  The default value is '-180.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MAX_X
-     *                 MAX_X}: Maximum x (longitude) value for spatial graph
-     *                 associations.  The default value is '180.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y
-     *                 MIN_Y}: Minimum y (latitude) value for spatial graph
-     *                 associations.  The default value is '-90.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y
-     *                 MAX_Y}: Maximum y (latitude) value for spatial graph
-     *                 associations.  The default value is '90.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
-     *                 RECREATE}: If set to {@code true} and the graph (using
-     *                 {@code graphName}) already exists, the graph is deleted
-     *                 and recreated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MODIFY
-     *                 MODIFY}: If set to {@code true}, {@code recreate} is set
-     *                 to {@code true}, and the graph (specified using {@code
-     *                 graphName}) already exists, the graph is updated with
-     *                 the given components.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
-     *                 EXPORT_CREATE_RESULTS}: If set to {@code true}, returns
-     *                 the graph topology in the response as arrays.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *                 ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
-     *                 'EDGE_WKTLINE' column identifier to the specified {@code
-     *                 graph_table} so the graph can be viewed via WMS; for
-     *                 social and non-geospatial graphs, the 'EDGE_WKTLINE'
-     *                 column identifier will be populated with spatial
-     *                 coordinates derived from a flattening layout algorithm
-     *                 so the graph can still be viewed.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
-     *                 SAVE_PERSIST}: If set to {@code true}, the graph will be
-     *                 saved in the persist directory (see the <a
-     *                 href="../../../../../config/index.html"
-     *                 target="_top">config reference</a> for more
-     *                 information). If set to {@code false}, the graph will be
-     *                 removed when the graph server is shutdown.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB
-     *                 SYNC_DB}: If set to {@code true} and {@code
-     *                 save_persist} is set to {@code true}, the graph will be
-     *                 fully reconstructed upon a database restart and be
-     *                 updated to align with any source table(s) updates made
-     *                 since the creation of the graph. If dynamic graph
-     *                 updates upon table inserts are desired, use {@code
-     *                 add_table_monitor} instead.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
-     *                 ADD_TABLE_MONITOR}: Adds a table monitor to every table
-     *                 used in the creation of the graph; this table monitor
-     *                 will trigger the graph to update dynamically upon
-     *                 inserts to the source table(s). Note that upon database
-     *                 restart, if {@code save_persist} is also set to {@code
-     *                 true}, the graph will be fully reconstructed and the
-     *                 table monitors will be reattached. For more details on
-     *                 table monitors, see {@link
-     *                 com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
-     *                 GRAPH_TABLE}: If specified, the created graph is also
-     *                 created as a table with the given name and following
-     *                 identifier columns: 'EDGE_ID', 'EDGE_NODE1_ID',
-     *                 'EDGE_NODE2_ID'. If left blank, no table is created.
-     *                 The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
-     *                 REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled
-     *                 entities requested, if set to true this will NOT delete
-     *                 the entity but only the label associated with the
-     *                 entity. Otherwise (default), it'll delete the label AND
-     *                 the entity.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
-     *                 ADD_TURNS}: Adds dummy 'pillowed' edges around
-     *                 intersection nodes where there are more than three edges
-     *                 so that additional weight penalties can be imposed by
-     *                 the solve endpoints. (increases the total number of
-     *                 edges).
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
-     *                 TURN_ANGLE}: Value in degrees modifies the thresholds
-     *                 for attributing right, left, sharp turns, and
-     *                 intersections. It is the vertical deviation angle from
-     *                 the incoming edge to the intersection node. The larger
-     *                 the value, the larger the threshold for sharp turns and
-     *                 intersections; the smaller the value, the larger the
-     *                 threshold for right and left turns; 0 < turn_angle < 90.
-     *                 The default value is '60'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public CreateGraphRequest(String graphName, boolean directedGraph, List<String> nodes, List<String> edges, List<String> weights, List<String> restrictions, Map<String, String> options) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        this.directedGraph = directedGraph;
-        this.nodes = (nodes == null) ? new ArrayList<String>() : nodes;
-        this.edges = (edges == null) ? new ArrayList<String>() : edges;
-        this.weights = (weights == null) ? new ArrayList<String>() : weights;
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the graph resource to generate.
-     * 
-     */
-    public String getGraphName() {
-        return graphName;
-    }
-
-    /**
-     * 
-     * @param graphName  Name of the graph resource to generate.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setGraphName(String graphName) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return If set to {@code true}, the graph will be directed. If set to
-     *         {@code false}, the graph will not be directed. Consult <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *         target="_top">Directed Graphs</a> for more details.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE TRUE}.
-     * 
-     */
-    public boolean getDirectedGraph() {
-        return directedGraph;
-    }
-
-    /**
-     * 
-     * @param directedGraph  If set to {@code true}, the graph will be
-     *                       directed. If set to {@code false}, the graph will
-     *                       not be directed. Consult <a
-     *                       href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *                       target="_top">Directed Graphs</a> for more
-     *                       details.
-     *                       Supported values:
-     *                       <ul>
-     *                               <li> {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
-     *                       TRUE}
-     *                               <li> {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#FALSE
-     *                       FALSE}
-     *                       </ul>
-     *                       The default value is {@link
-     *                       com.gpudb.protocol.CreateGraphRequest.DirectedGraph#TRUE
-     *                       TRUE}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setDirectedGraph(boolean directedGraph) {
-        this.directedGraph = directedGraph;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Nodes represent fundamental topological units of a graph. Nodes
-     *         must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS NODE_ID',
-     *         expressions, e.g., 'ST_MAKEPOINT(column1, column2) AS
-     *         NODE_WKTPOINT', or raw values, e.g., '{9, 10, 11} AS NODE_ID'.
-     *         If using raw values in an identifier combination, the number of
-     *         values specified must match across the combination.
-     * 
-     */
-    public List<String> getNodes() {
-        return nodes;
-    }
-
-    /**
-     * 
-     * @param nodes  Nodes represent fundamental topological units of a graph.
-     *               Nodes must be specified using <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *               target="_top">identifiers</a>; identifiers are grouped as
-     *               <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *               target="_top">combinations</a>. Identifiers can be used
-     *               with existing column names, e.g., 'table.column AS
-     *               NODE_ID', expressions, e.g., 'ST_MAKEPOINT(column1,
-     *               column2) AS NODE_WKTPOINT', or raw values, e.g., '{9, 10,
-     *               11} AS NODE_ID'. If using raw values in an identifier
-     *               combination, the number of values specified must match
-     *               across the combination.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setNodes(List<String> nodes) {
-        this.nodes = (nodes == null) ? new ArrayList<String>() : nodes;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Edges represent the required fundamental topological unit of a
-     *         graph that typically connect nodes. Edges must be specified
-     *         using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS EDGE_ID',
-     *         expressions, e.g., 'SUBSTR(column, 1, 6) AS EDGE_NODE1_NAME', or
-     *         raw values, e.g., "{'family', 'coworker'} AS EDGE_LABEL". If
-     *         using raw values in an identifier combination, the number of
-     *         values specified must match across the combination.
-     * 
-     */
-    public List<String> getEdges() {
-        return edges;
-    }
-
-    /**
-     * 
-     * @param edges  Edges represent the required fundamental topological unit
-     *               of a graph that typically connect nodes. Edges must be
-     *               specified using <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *               target="_top">identifiers</a>; identifiers are grouped as
-     *               <a
-     *               href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *               target="_top">combinations</a>. Identifiers can be used
-     *               with existing column names, e.g., 'table.column AS
-     *               EDGE_ID', expressions, e.g., 'SUBSTR(column, 1, 6) AS
-     *               EDGE_NODE1_NAME', or raw values, e.g., "{'family',
-     *               'coworker'} AS EDGE_LABEL". If using raw values in an
-     *               identifier combination, the number of values specified
-     *               must match across the combination.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setEdges(List<String> edges) {
-        this.edges = (edges == null) ? new ArrayList<String>() : edges;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Weights represent a method of informing the graph solver of the
-     *         cost of including a given edge in a solution. Weights must be
-     *         specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID',
-     *         expressions, e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED',
-     *         or raw values, e.g., '{4, 15} AS WEIGHTS_VALUESPECIFIED'. If
-     *         using raw values in an identifier combination, the number of
-     *         values specified must match across the combination.
-     * 
-     */
-    public List<String> getWeights() {
-        return weights;
-    }
-
-    /**
-     * 
-     * @param weights  Weights represent a method of informing the graph solver
-     *                 of the cost of including a given edge in a solution.
-     *                 Weights must be specified using <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                 target="_top">identifiers</a>; identifiers are grouped
-     *                 as <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                 target="_top">combinations</a>. Identifiers can be used
-     *                 with existing column names, e.g., 'table.column AS
-     *                 WEIGHTS_EDGE_ID', expressions, e.g., 'ST_LENGTH(wkt) AS
-     *                 WEIGHTS_VALUESPECIFIED', or raw values, e.g., '{4, 15}
-     *                 AS WEIGHTS_VALUESPECIFIED'. If using raw values in an
-     *                 identifier combination, the number of values specified
-     *                 must match across the combination.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setWeights(List<String> weights) {
-        this.weights = (weights == null) ? new ArrayList<String>() : weights;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Restrictions represent a method of informing the graph solver
-     *         which edges and/or nodes should be ignored for the solution.
-     *         Restrictions must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS
-     *         RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
-     *         RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
-     *         AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
-     *         identifier combination, the number of values specified must
-     *         match across the combination.
-     * 
-     */
-    public List<String> getRestrictions() {
-        return restrictions;
-    }
-
-    /**
-     * 
-     * @param restrictions  Restrictions represent a method of informing the
-     *                      graph solver which edges and/or nodes should be
-     *                      ignored for the solution. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setRestrictions(List<String> restrictions) {
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *         RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *         comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
-     *         value greater than the {@code restriction_threshold_value} will
-     *         not be included in the graph.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
-     *         MERGE_TOLERANCE}: If node geospatial positions are input (e.g.,
-     *         WKTPOINT, X, Y), determines the minimum separation allowed
-     *         between unique nodes. If nodes are within the tolerance of each
-     *         other, they will be merged as a single node.  The default value
-     *         is '1.0E-4'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MIN_X MIN_X}:
-     *         Minimum x (longitude) value for spatial graph associations.  The
-     *         default value is '-180.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MAX_X MAX_X}:
-     *         Maximum x (longitude) value for spatial graph associations.  The
-     *         default value is '180.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y MIN_Y}:
-     *         Minimum y (latitude) value for spatial graph associations.  The
-     *         default value is '-90.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y MAX_Y}:
-     *         Maximum y (latitude) value for spatial graph associations.  The
-     *         default value is '90.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
-     *         RECREATE}: If set to {@code true} and the graph (using {@code
-     *         graphName}) already exists, the graph is deleted and recreated.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#MODIFY MODIFY}: If
-     *         set to {@code true}, {@code recreate} is set to {@code true},
-     *         and the graph (specified using {@code graphName}) already
-     *         exists, the graph is updated with the given components.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
-     *         EXPORT_CREATE_RESULTS}: If set to {@code true}, returns the
-     *         graph topology in the response as arrays.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *         ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
-     *         'EDGE_WKTLINE' column identifier to the specified {@code
-     *         graph_table} so the graph can be viewed via WMS; for social and
-     *         non-geospatial graphs, the 'EDGE_WKTLINE' column identifier will
-     *         be populated with spatial coordinates derived from a flattening
-     *         layout algorithm so the graph can still be viewed.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
-     *         SAVE_PERSIST}: If set to {@code true}, the graph will be saved
-     *         in the persist directory (see the <a
-     *         href="../../../../../config/index.html" target="_top">config
-     *         reference</a> for more information). If set to {@code false},
-     *         the graph will be removed when the graph server is shutdown.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB SYNC_DB}:
-     *         If set to {@code true} and {@code save_persist} is set to {@code
-     *         true}, the graph will be fully reconstructed upon a database
-     *         restart and be updated to align with any source table(s) updates
-     *         made since the creation of the graph. If dynamic graph updates
-     *         upon table inserts are desired, use {@code add_table_monitor}
-     *         instead.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
-     *         ADD_TABLE_MONITOR}: Adds a table monitor to every table used in
-     *         the creation of the graph; this table monitor will trigger the
-     *         graph to update dynamically upon inserts to the source table(s).
-     *         Note that upon database restart, if {@code save_persist} is also
-     *         set to {@code true}, the graph will be fully reconstructed and
-     *         the table monitors will be reattached. For more details on table
-     *         monitors, see {@link
-     *         com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
-     *         GRAPH_TABLE}: If specified, the created graph is also created as
-     *         a table with the given name and following identifier columns:
-     *         'EDGE_ID', 'EDGE_NODE1_ID', 'EDGE_NODE2_ID'. If left blank, no
-     *         table is created.  The default value is ''.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
-     *         REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled entities
-     *         requested, if set to true this will NOT delete the entity but
-     *         only the label associated with the entity. Otherwise (default),
-     *         it'll delete the label AND the entity.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
-     *         ADD_TURNS}: Adds dummy 'pillowed' edges around intersection
-     *         nodes where there are more than three edges so that additional
-     *         weight penalties can be imposed by the solve endpoints.
-     *         (increases the total number of edges).
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
-     *         TURN_ANGLE}: Value in degrees modifies the thresholds for
-     *         attributing right, left, sharp turns, and intersections. It is
-     *         the vertical deviation angle from the incoming edge to the
-     *         intersection node. The larger the value, the larger the
-     *         threshold for sharp turns and intersections; the smaller the
-     *         value, the larger the threshold for right and left turns; 0 <
-     *         turn_angle < 90.  The default value is '60'.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 graph.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MERGE_TOLERANCE
-     *                 MERGE_TOLERANCE}: If node geospatial positions are input
-     *                 (e.g., WKTPOINT, X, Y), determines the minimum
-     *                 separation allowed between unique nodes. If nodes are
-     *                 within the tolerance of each other, they will be merged
-     *                 as a single node.  The default value is '1.0E-4'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MIN_X
-     *                 MIN_X}: Minimum x (longitude) value for spatial graph
-     *                 associations.  The default value is '-180.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MAX_X
-     *                 MAX_X}: Maximum x (longitude) value for spatial graph
-     *                 associations.  The default value is '180.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MIN_Y
-     *                 MIN_Y}: Minimum y (latitude) value for spatial graph
-     *                 associations.  The default value is '-90.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MAX_Y
-     *                 MAX_Y}: Maximum y (latitude) value for spatial graph
-     *                 associations.  The default value is '90.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#RECREATE
-     *                 RECREATE}: If set to {@code true} and the graph (using
-     *                 {@code graphName}) already exists, the graph is deleted
-     *                 and recreated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#MODIFY
-     *                 MODIFY}: If set to {@code true}, {@code recreate} is set
-     *                 to {@code true}, and the graph (specified using {@code
-     *                 graphName}) already exists, the graph is updated with
-     *                 the given components.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#EXPORT_CREATE_RESULTS
-     *                 EXPORT_CREATE_RESULTS}: If set to {@code true}, returns
-     *                 the graph topology in the response as arrays.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *                 ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
-     *                 'EDGE_WKTLINE' column identifier to the specified {@code
-     *                 graph_table} so the graph can be viewed via WMS; for
-     *                 social and non-geospatial graphs, the 'EDGE_WKTLINE'
-     *                 column identifier will be populated with spatial
-     *                 coordinates derived from a flattening layout algorithm
-     *                 so the graph can still be viewed.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#SAVE_PERSIST
-     *                 SAVE_PERSIST}: If set to {@code true}, the graph will be
-     *                 saved in the persist directory (see the <a
-     *                 href="../../../../../config/index.html"
-     *                 target="_top">config reference</a> for more
-     *                 information). If set to {@code false}, the graph will be
-     *                 removed when the graph server is shutdown.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#SYNC_DB
-     *                 SYNC_DB}: If set to {@code true} and {@code
-     *                 save_persist} is set to {@code true}, the graph will be
-     *                 fully reconstructed upon a database restart and be
-     *                 updated to align with any source table(s) updates made
-     *                 since the creation of the graph. If dynamic graph
-     *                 updates upon table inserts are desired, use {@code
-     *                 add_table_monitor} instead.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ADD_TABLE_MONITOR
-     *                 ADD_TABLE_MONITOR}: Adds a table monitor to every table
-     *                 used in the creation of the graph; this table monitor
-     *                 will trigger the graph to update dynamically upon
-     *                 inserts to the source table(s). Note that upon database
-     *                 restart, if {@code save_persist} is also set to {@code
-     *                 true}, the graph will be fully reconstructed and the
-     *                 table monitors will be reattached. For more details on
-     *                 table monitors, see {@link
-     *                 com.gpudb.GPUdb#createTableMonitor(CreateTableMonitorRequest)}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#GRAPH_TABLE
-     *                 GRAPH_TABLE}: If specified, the created graph is also
-     *                 created as a table with the given name and following
-     *                 identifier columns: 'EDGE_ID', 'EDGE_NODE1_ID',
-     *                 'EDGE_NODE2_ID'. If left blank, no table is created.
-     *                 The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#REMOVE_LABEL_ONLY
-     *                 REMOVE_LABEL_ONLY}: When RESTRICTIONS on labeled
-     *                 entities requested, if set to true this will NOT delete
-     *                 the entity but only the label associated with the
-     *                 entity. Otherwise (default), it'll delete the label AND
-     *                 the entity.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#ADD_TURNS
-     *                 ADD_TURNS}: Adds dummy 'pillowed' edges around
-     *                 intersection nodes where there are more than three edges
-     *                 so that additional weight penalties can be imposed by
-     *                 the solve endpoints. (increases the total number of
-     *                 edges).
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.CreateGraphRequest.Options#TURN_ANGLE
-     *                 TURN_ANGLE}: Value in degrees modifies the thresholds
-     *                 for attributing right, left, sharp turns, and
-     *                 intersections. It is the vertical deviation angle from
-     *                 the incoming edge to the intersection node. The larger
-     *                 the value, the larger the threshold for sharp turns and
-     *                 intersections; the smaller the value, the larger the
-     *                 threshold for right and left turns; 0 < turn_angle < 90.
-     *                 The default value is '60'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public CreateGraphRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.graphName;
-
-            case 1:
-                return this.directedGraph;
-
-            case 2:
-                return this.nodes;
-
-            case 3:
-                return this.edges;
-
-            case 4:
-                return this.weights;
-
-            case 5:
-                return this.restrictions;
-
-            case 6:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.graphName = (String)value;
-                break;
-
-            case 1:
-                this.directedGraph = (Boolean)value;
-                break;
-
-            case 2:
-                this.nodes = (List<String>)value;
-                break;
-
-            case 3:
-                this.edges = (List<String>)value;
-                break;
-
-            case 4:
-                this.weights = (List<String>)value;
-                break;
-
-            case 5:
-                this.restrictions = (List<String>)value;
-                break;
-
-            case 6:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        CreateGraphRequest that = (CreateGraphRequest)obj;
-
-        return ( this.graphName.equals( that.graphName )
-                 && ( this.directedGraph == that.directedGraph )
-                 && this.nodes.equals( that.nodes )
-                 && this.edges.equals( that.edges )
-                 && this.weights.equals( that.weights )
-                 && this.restrictions.equals( that.restrictions )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "directedGraph" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.directedGraph ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "nodes" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.nodes ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "edges" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.edges ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "weights" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.weights ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "restrictions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.restrictions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.graphName.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.directedGraph).hashCode();
-        hashCode = (31 * hashCode) + this.nodes.hashCode();
-        hashCode = (31 * hashCode) + this.edges.hashCode();
-        hashCode = (31 * hashCode) + this.weights.hashCode();
-        hashCode = (31 * hashCode) + this.restrictions.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

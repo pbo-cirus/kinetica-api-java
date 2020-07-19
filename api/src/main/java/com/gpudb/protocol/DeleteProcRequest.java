@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -24,26 +25,11 @@ public class DeleteProcRequest implements IndexedRecord {
             .record("DeleteProcRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("procName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("procName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String procName;
     private Map<String, String> options;
-
-
     /**
      * Constructs a DeleteProcRequest object with default parameters.
      */
@@ -52,14 +38,14 @@ public class DeleteProcRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a DeleteProcRequest object with the specified parameters.
-     * 
-     * @param procName  Name of the proc to be deleted. Must be the name of a
-     *                  currently existing proc.
+     *
+     * @param procName Name of the proc to be deleted. Must be the name of a
+     *                 currently existing proc.
      * @param options  Optional parameters.  The default value is an empty
      *                 {@link Map}.
-     * 
      */
     public DeleteProcRequest(String procName, Map<String, String> options) {
         this.procName = (procName == null) ? "" : procName;
@@ -67,22 +53,27 @@ public class DeleteProcRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the proc to be deleted. Must be the name of a currently
-     *         existing proc.
-     * 
+     * existing proc.
      */
     public String getProcName() {
         return procName;
     }
 
     /**
-     * 
-     * @param procName  Name of the proc to be deleted. Must be the name of a
-     *                  currently existing proc.
-     * 
+     * @param procName Name of the proc to be deleted. Must be the name of a
+     *                 currently existing proc.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public DeleteProcRequest setProcName(String procName) {
         this.procName = (procName == null) ? "" : procName;
@@ -90,21 +81,16 @@ public class DeleteProcRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public DeleteProcRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -114,9 +100,8 @@ public class DeleteProcRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -126,13 +111,10 @@ public class DeleteProcRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -151,23 +133,21 @@ public class DeleteProcRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.procName = (String)value;
+                this.procName = (String) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -177,33 +157,33 @@ public class DeleteProcRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        DeleteProcRequest that = (DeleteProcRequest)obj;
+        DeleteProcRequest that = (DeleteProcRequest) obj;
 
-        return ( this.procName.equals( that.procName )
-                 && this.options.equals( that.options ) );
+        return (this.procName.equals(that.procName)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "procName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.procName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("procName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.procName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

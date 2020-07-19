@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class ShowTriggersResponse implements IndexedRecord {
             .record("ShowTriggersResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("triggerMap").type().map().values().map().values().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("triggerMap").type().map().values().map().values().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private Map<String, Map<String, String>> triggerMap;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowTriggersResponse object with default parameters.
      */
@@ -49,41 +35,46 @@ public class ShowTriggersResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return This dictionary contains (key, value) pairs of (trigger ID,
-     *         information map/dictionary) where the key is a Unicode string
-     *         representing a Trigger ID. The value is another embedded
-     *         dictionary containing (key, value) pairs where the keys consist
-     *         of 'table_name', 'type' and the parameter names relating to the
-     *         trigger type, e.g. *nai*, *min*, *max*. The values are unicode
-     *         strings (numeric values are also converted to strings)
-     *         representing the value of the respective parameter. If a trigger
-     *         is associated with multiple tables, then the string value for
-     *         *table_name* contains a comma separated list of table names.
-     * 
+     * information map/dictionary) where the key is a Unicode string
+     * representing a Trigger ID. The value is another embedded
+     * dictionary containing (key, value) pairs where the keys consist
+     * of 'table_name', 'type' and the parameter names relating to the
+     * trigger type, e.g. *nai*, *min*, *max*. The values are unicode
+     * strings (numeric values are also converted to strings)
+     * representing the value of the respective parameter. If a trigger
+     * is associated with multiple tables, then the string value for
+     * *table_name* contains a comma separated list of table names.
      */
     public Map<String, Map<String, String>> getTriggerMap() {
         return triggerMap;
     }
 
     /**
-     * 
-     * @param triggerMap  This dictionary contains (key, value) pairs of
-     *                    (trigger ID, information map/dictionary) where the
-     *                    key is a Unicode string representing a Trigger ID.
-     *                    The value is another embedded dictionary containing
-     *                    (key, value) pairs where the keys consist of
-     *                    'table_name', 'type' and the parameter names relating
-     *                    to the trigger type, e.g. *nai*, *min*, *max*. The
-     *                    values are unicode strings (numeric values are also
-     *                    converted to strings) representing the value of the
-     *                    respective parameter. If a trigger is associated with
-     *                    multiple tables, then the string value for
-     *                    *table_name* contains a comma separated list of table
-     *                    names.
-     * 
+     * @param triggerMap This dictionary contains (key, value) pairs of
+     *                   (trigger ID, information map/dictionary) where the
+     *                   key is a Unicode string representing a Trigger ID.
+     *                   The value is another embedded dictionary containing
+     *                   (key, value) pairs where the keys consist of
+     *                   'table_name', 'type' and the parameter names relating
+     *                   to the trigger type, e.g. *nai*, *min*, *max*. The
+     *                   values are unicode strings (numeric values are also
+     *                   converted to strings) representing the value of the
+     *                   respective parameter. If a trigger is associated with
+     *                   multiple tables, then the string value for
+     *                   *table_name* contains a comma separated list of table
+     *                   names.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTriggersResponse setTriggerMap(Map<String, Map<String, String>> triggerMap) {
         this.triggerMap = (triggerMap == null) ? new LinkedHashMap<String, Map<String, String>>() : triggerMap;
@@ -91,20 +82,15 @@ public class ShowTriggersResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTriggersResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -114,9 +100,8 @@ public class ShowTriggersResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -126,13 +111,10 @@ public class ShowTriggersResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -151,23 +133,21 @@ public class ShowTriggersResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.triggerMap = (Map<String, Map<String, String>>)value;
+                this.triggerMap = (Map<String, Map<String, String>>) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -177,33 +157,33 @@ public class ShowTriggersResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowTriggersResponse that = (ShowTriggersResponse)obj;
+        ShowTriggersResponse that = (ShowTriggersResponse) obj;
 
-        return ( this.triggerMap.equals( that.triggerMap )
-                 && this.info.equals( that.info ) );
+        return (this.triggerMap.equals(that.triggerMap)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "triggerMap" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.triggerMap ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("triggerMap"));
+        builder.append(": ");
+        builder.append(gd.toString(this.triggerMap));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

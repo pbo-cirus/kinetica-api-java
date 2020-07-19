@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -25,26 +26,11 @@ public class AdminShowAlertsRequest implements IndexedRecord {
             .record("AdminShowAlertsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("numAlerts").type().intType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("numAlerts").type().intType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private int numAlerts;
     private Map<String, String> options;
-
-
     /**
      * Constructs an AdminShowAlertsRequest object with default parameters.
      */
@@ -52,17 +38,17 @@ public class AdminShowAlertsRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs an AdminShowAlertsRequest object with the specified
      * parameters.
-     * 
-     * @param numAlerts  Number of most recent alerts to request. The response
-     *                   will include up to {@code numAlerts} depending on how
-     *                   many alerts there are in the system. A value of 0
-     *                   returns all stored alerts.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param numAlerts Number of most recent alerts to request. The response
+     *                  will include up to {@code numAlerts} depending on how
+     *                  many alerts there are in the system. A value of 0
+     *                  returns all stored alerts.
+     * @param options   Optional parameters.  The default value is an empty
+     *                  {@link Map}.
      */
     public AdminShowAlertsRequest(int numAlerts, Map<String, String> options) {
         this.numAlerts = numAlerts;
@@ -70,25 +56,30 @@ public class AdminShowAlertsRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Number of most recent alerts to request. The response will
-     *         include up to {@code numAlerts} depending on how many alerts
-     *         there are in the system. A value of 0 returns all stored alerts.
-     * 
+     * include up to {@code numAlerts} depending on how many alerts
+     * there are in the system. A value of 0 returns all stored alerts.
      */
     public int getNumAlerts() {
         return numAlerts;
     }
 
     /**
-     * 
-     * @param numAlerts  Number of most recent alerts to request. The response
-     *                   will include up to {@code numAlerts} depending on how
-     *                   many alerts there are in the system. A value of 0
-     *                   returns all stored alerts.
-     * 
+     * @param numAlerts Number of most recent alerts to request. The response
+     *                  will include up to {@code numAlerts} depending on how
+     *                  many alerts there are in the system. A value of 0
+     *                  returns all stored alerts.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowAlertsRequest setNumAlerts(int numAlerts) {
         this.numAlerts = numAlerts;
@@ -96,21 +87,16 @@ public class AdminShowAlertsRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminShowAlertsRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -120,9 +106,8 @@ public class AdminShowAlertsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -132,13 +117,10 @@ public class AdminShowAlertsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -157,23 +139,21 @@ public class AdminShowAlertsRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.numAlerts = (Integer)value;
+                this.numAlerts = (Integer) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -183,33 +163,33 @@ public class AdminShowAlertsRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminShowAlertsRequest that = (AdminShowAlertsRequest)obj;
+        AdminShowAlertsRequest that = (AdminShowAlertsRequest) obj;
 
-        return ( ( this.numAlerts == that.numAlerts )
-                 && this.options.equals( that.options ) );
+        return ((this.numAlerts == that.numAlerts)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "numAlerts" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.numAlerts ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("numAlerts"));
+        builder.append(": ");
+        builder.append(gd.toString(this.numAlerts));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

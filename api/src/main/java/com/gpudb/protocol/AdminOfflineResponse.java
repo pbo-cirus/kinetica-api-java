@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class AdminOfflineResponse implements IndexedRecord {
             .record("AdminOfflineResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("isOffline").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("isOffline").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private boolean isOffline;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AdminOfflineResponse object with default parameters.
      */
@@ -49,21 +35,26 @@ public class AdminOfflineResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Returns true if the system is offline, or false otherwise.
-     * 
      */
     public boolean getIsOffline() {
         return isOffline;
     }
 
     /**
-     * 
-     * @param isOffline  Returns true if the system is offline, or false
-     *                   otherwise.
-     * 
+     * @param isOffline Returns true if the system is offline, or false
+     *                  otherwise.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminOfflineResponse setIsOffline(boolean isOffline) {
         this.isOffline = isOffline;
@@ -71,20 +62,15 @@ public class AdminOfflineResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminOfflineResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -94,9 +80,8 @@ public class AdminOfflineResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -106,13 +91,10 @@ public class AdminOfflineResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -131,23 +113,21 @@ public class AdminOfflineResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.isOffline = (Boolean)value;
+                this.isOffline = (Boolean) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -157,33 +137,33 @@ public class AdminOfflineResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminOfflineResponse that = (AdminOfflineResponse)obj;
+        AdminOfflineResponse that = (AdminOfflineResponse) obj;
 
-        return ( ( this.isOffline == that.isOffline )
-                 && this.info.equals( that.info ) );
+        return ((this.isOffline == that.isOffline)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "isOffline" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.isOffline ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("isOffline"));
+        builder.append(": ");
+        builder.append(gd.toString(this.isOffline));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -191,7 +171,7 @@ public class AdminOfflineResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Boolean)this.isOffline).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.isOffline).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

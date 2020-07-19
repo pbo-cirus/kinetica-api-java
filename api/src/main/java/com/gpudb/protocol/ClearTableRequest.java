@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -27,23 +28,277 @@ public class ClearTableRequest implements IndexedRecord {
             .record("ClearTableRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("authorization").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("authorization").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String authorization;
+    private Map<String, String> options;
+    /**
+     * Constructs a ClearTableRequest object with default parameters.
+     */
+    public ClearTableRequest() {
+        tableName = "";
+        authorization = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a ClearTableRequest object with the specified parameters.
+     *
+     * @param tableName     Name of the table to be cleared. Must be an existing
+     *                      table. Empty string clears all available tables,
+     *                      though this behavior is be prevented by default via
+     *                      gpudb.conf parameter 'disable_clear_all'.  The default
+     *                      value is ''.
+     * @param authorization No longer used. User can pass an empty string.
+     *                      The default value is ''.
+     * @param options       Optional parameters.
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
+     *                      NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the
+     *                      table specified in {@code tableName} does not exist no
+     *                      error is returned. If {@code false} and if the table
+     *                      specified in {@code tableName} does not exist then an
+     *                      error is returned.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
+     *                              <li> {@link
+     *                      com.gpudb.protocol.ClearTableRequest.Options#FALSE
+     *                      FALSE}
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.ClearTableRequest.Options#FALSE
+     *                      FALSE}.
+     *                      </ul>
+     *                      The default value is an empty {@link Map}.
+     */
+    public ClearTableRequest(String tableName, String authorization, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.authorization = (authorization == null) ? "" : authorization;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the table to be cleared. Must be an existing table.
+     * Empty string clears all available tables, though this behavior
+     * is be prevented by default via gpudb.conf parameter
+     * 'disable_clear_all'.  The default value is ''.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Name of the table to be cleared. Must be an existing
+     *                  table. Empty string clears all available tables,
+     *                  though this behavior is be prevented by default via
+     *                  gpudb.conf parameter 'disable_clear_all'.  The default
+     *                  value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ClearTableRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return No longer used. User can pass an empty string.  The default
+     * value is ''.
+     */
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    /**
+     * @param authorization No longer used. User can pass an empty string.
+     *                      The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ClearTableRequest setAuthorization(String authorization) {
+        this.authorization = (authorization == null) ? "" : authorization;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
+     * NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the table
+     * specified in {@code tableName} does not exist no error is
+     * returned. If {@code false} and if the table specified in {@code
+     * tableName} does not exist then an error is returned.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.ClearTableRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.ClearTableRequest.Options#FALSE FALSE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
+     *                NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the
+     *                table specified in {@code tableName} does not exist no
+     *                error is returned. If {@code false} and if the table
+     *                specified in {@code tableName} does not exist then an
+     *                error is returned.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.ClearTableRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.ClearTableRequest.Options#FALSE
+     *                FALSE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public ClearTableRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.authorization;
+
+            case 2:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.authorization = (String) value;
+                break;
+
+            case 2:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        ClearTableRequest that = (ClearTableRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.authorization.equals(that.authorization)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("authorization"));
+        builder.append(": ");
+        builder.append(gd.toString(this.authorization));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.authorization.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -88,290 +343,8 @@ public class ClearTableRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String authorization;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a ClearTableRequest object with default parameters.
-     */
-    public ClearTableRequest() {
-        tableName = "";
-        authorization = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a ClearTableRequest object with the specified parameters.
-     * 
-     * @param tableName  Name of the table to be cleared. Must be an existing
-     *                   table. Empty string clears all available tables,
-     *                   though this behavior is be prevented by default via
-     *                   gpudb.conf parameter 'disable_clear_all'.  The default
-     *                   value is ''.
-     * @param authorization  No longer used. User can pass an empty string.
-     *                       The default value is ''.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
-     *                 NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the
-     *                 table specified in {@code tableName} does not exist no
-     *                 error is returned. If {@code false} and if the table
-     *                 specified in {@code tableName} does not exist then an
-     *                 error is returned.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public ClearTableRequest(String tableName, String authorization, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.authorization = (authorization == null) ? "" : authorization;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the table to be cleared. Must be an existing table.
-     *         Empty string clears all available tables, though this behavior
-     *         is be prevented by default via gpudb.conf parameter
-     *         'disable_clear_all'.  The default value is ''.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Name of the table to be cleared. Must be an existing
-     *                   table. Empty string clears all available tables,
-     *                   though this behavior is be prevented by default via
-     *                   gpudb.conf parameter 'disable_clear_all'.  The default
-     *                   value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ClearTableRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return No longer used. User can pass an empty string.  The default
-     *         value is ''.
-     * 
-     */
-    public String getAuthorization() {
-        return authorization;
-    }
-
-    /**
-     * 
-     * @param authorization  No longer used. User can pass an empty string.
-     *                       The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ClearTableRequest setAuthorization(String authorization) {
-        this.authorization = (authorization == null) ? "" : authorization;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
-     *         NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the table
-     *         specified in {@code tableName} does not exist no error is
-     *         returned. If {@code false} and if the table specified in {@code
-     *         tableName} does not exist then an error is returned.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.ClearTableRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.ClearTableRequest.Options#FALSE FALSE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#NO_ERROR_IF_NOT_EXISTS
-     *                 NO_ERROR_IF_NOT_EXISTS}: If {@code true} and if the
-     *                 table specified in {@code tableName} does not exist no
-     *                 error is returned. If {@code false} and if the table
-     *                 specified in {@code tableName} does not exist then an
-     *                 error is returned.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.ClearTableRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public ClearTableRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.authorization;
-
-            case 2:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.authorization = (String)value;
-                break;
-
-            case 2:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        ClearTableRequest that = (ClearTableRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.authorization.equals( that.authorization )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "authorization" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.authorization ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.authorization.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,32 +25,17 @@ public class UpdateRecordsResponse implements IndexedRecord {
             .record("UpdateRecordsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("countUpdated").type().longType().noDefault()
-                .name("countsUpdated").type().array().items().longType().noDefault()
-                .name("countInserted").type().longType().noDefault()
-                .name("countsInserted").type().array().items().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("countUpdated").type().longType().noDefault()
+            .name("countsUpdated").type().array().items().longType().noDefault()
+            .name("countInserted").type().longType().noDefault()
+            .name("countsInserted").type().array().items().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private long countUpdated;
     private List<Long> countsUpdated;
     private long countInserted;
     private List<Long> countsInserted;
     private Map<String, String> info;
-
-
     /**
      * Constructs an UpdateRecordsResponse object with default parameters.
      */
@@ -57,20 +43,25 @@ public class UpdateRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Total number of records updated.
-     * 
      */
     public long getCountUpdated() {
         return countUpdated;
     }
 
     /**
-     * 
-     * @param countUpdated  Total number of records updated.
-     * 
+     * @param countUpdated Total number of records updated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsResponse setCountUpdated(long countUpdated) {
         this.countUpdated = countUpdated;
@@ -78,22 +69,17 @@ public class UpdateRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total number of records updated per predicate in {@code
-     *         expressions}.
-     * 
+     * expressions}.
      */
     public List<Long> getCountsUpdated() {
         return countsUpdated;
     }
 
     /**
-     * 
-     * @param countsUpdated  Total number of records updated per predicate in
-     *                       {@code expressions}.
-     * 
+     * @param countsUpdated Total number of records updated per predicate in
+     *                      {@code expressions}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsResponse setCountsUpdated(List<Long> countsUpdated) {
         this.countsUpdated = (countsUpdated == null) ? new ArrayList<Long>() : countsUpdated;
@@ -101,22 +87,17 @@ public class UpdateRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total number of records inserted (due to expressions not
-     *         matching any existing records).
-     * 
+     * matching any existing records).
      */
     public long getCountInserted() {
         return countInserted;
     }
 
     /**
-     * 
-     * @param countInserted  Total number of records inserted (due to
-     *                       expressions not matching any existing records).
-     * 
+     * @param countInserted Total number of records inserted (due to
+     *                      expressions not matching any existing records).
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsResponse setCountInserted(long countInserted) {
         this.countInserted = countInserted;
@@ -124,23 +105,18 @@ public class UpdateRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Total number of records inserted per predicate in {@code
-     *         expressions} (will be either 0 or 1 for each expression).
-     * 
+     * expressions} (will be either 0 or 1 for each expression).
      */
     public List<Long> getCountsInserted() {
         return countsInserted;
     }
 
     /**
-     * 
-     * @param countsInserted  Total number of records inserted per predicate in
-     *                        {@code expressions} (will be either 0 or 1 for
-     *                        each expression).
-     * 
+     * @param countsInserted Total number of records inserted per predicate in
+     *                       {@code expressions} (will be either 0 or 1 for
+     *                       each expression).
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsResponse setCountsInserted(List<Long> countsInserted) {
         this.countsInserted = (countsInserted == null) ? new ArrayList<Long>() : countsInserted;
@@ -148,20 +124,15 @@ public class UpdateRecordsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public UpdateRecordsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -171,9 +142,8 @@ public class UpdateRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -183,13 +153,10 @@ public class UpdateRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -217,35 +184,33 @@ public class UpdateRecordsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.countUpdated = (Long)value;
+                this.countUpdated = (Long) value;
                 break;
 
             case 1:
-                this.countsUpdated = (List<Long>)value;
+                this.countsUpdated = (List<Long>) value;
                 break;
 
             case 2:
-                this.countInserted = (Long)value;
+                this.countInserted = (Long) value;
                 break;
 
             case 3:
-                this.countsInserted = (List<Long>)value;
+                this.countsInserted = (List<Long>) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -255,48 +220,48 @@ public class UpdateRecordsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        UpdateRecordsResponse that = (UpdateRecordsResponse)obj;
+        UpdateRecordsResponse that = (UpdateRecordsResponse) obj;
 
-        return ( ( this.countUpdated == that.countUpdated )
-                 && this.countsUpdated.equals( that.countsUpdated )
-                 && ( this.countInserted == that.countInserted )
-                 && this.countsInserted.equals( that.countsInserted )
-                 && this.info.equals( that.info ) );
+        return ((this.countUpdated == that.countUpdated)
+                && this.countsUpdated.equals(that.countsUpdated)
+                && (this.countInserted == that.countInserted)
+                && this.countsInserted.equals(that.countsInserted)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "countUpdated" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countUpdated ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countsUpdated" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countsUpdated ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countInserted" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countInserted ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "countsInserted" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.countsInserted ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("countUpdated"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countUpdated));
+        builder.append(", ");
+        builder.append(gd.toString("countsUpdated"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countsUpdated));
+        builder.append(", ");
+        builder.append(gd.toString("countInserted"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countInserted));
+        builder.append(", ");
+        builder.append(gd.toString("countsInserted"));
+        builder.append(": ");
+        builder.append(gd.toString(this.countsInserted));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -304,9 +269,9 @@ public class UpdateRecordsResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.countUpdated).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countUpdated).hashCode();
         hashCode = (31 * hashCode) + this.countsUpdated.hashCode();
-        hashCode = (31 * hashCode) + ((Long)this.countInserted).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.countInserted).hashCode();
         hashCode = (31 * hashCode) + this.countsInserted.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;

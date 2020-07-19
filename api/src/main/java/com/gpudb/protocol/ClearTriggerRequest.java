@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -26,26 +27,11 @@ public class ClearTriggerRequest implements IndexedRecord {
             .record("ClearTriggerRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("triggerId").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("triggerId").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String triggerId;
     private Map<String, String> options;
-
-
     /**
      * Constructs a ClearTriggerRequest object with default parameters.
      */
@@ -54,13 +40,13 @@ public class ClearTriggerRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a ClearTriggerRequest object with the specified parameters.
-     * 
-     * @param triggerId  ID for the trigger to be deactivated.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param triggerId ID for the trigger to be deactivated.
+     * @param options   Optional parameters.  The default value is an empty
+     *                  {@link Map}.
      */
     public ClearTriggerRequest(String triggerId, Map<String, String> options) {
         this.triggerId = (triggerId == null) ? "" : triggerId;
@@ -68,20 +54,25 @@ public class ClearTriggerRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return ID for the trigger to be deactivated.
-     * 
      */
     public String getTriggerId() {
         return triggerId;
     }
 
     /**
-     * 
-     * @param triggerId  ID for the trigger to be deactivated.
-     * 
+     * @param triggerId ID for the trigger to be deactivated.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearTriggerRequest setTriggerId(String triggerId) {
         this.triggerId = (triggerId == null) ? "" : triggerId;
@@ -89,21 +80,16 @@ public class ClearTriggerRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ClearTriggerRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -113,9 +99,8 @@ public class ClearTriggerRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -125,13 +110,10 @@ public class ClearTriggerRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -150,23 +132,21 @@ public class ClearTriggerRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.triggerId = (String)value;
+                this.triggerId = (String) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -176,33 +156,33 @@ public class ClearTriggerRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ClearTriggerRequest that = (ClearTriggerRequest)obj;
+        ClearTriggerRequest that = (ClearTriggerRequest) obj;
 
-        return ( this.triggerId.equals( that.triggerId )
-                 && this.options.equals( that.options ) );
+        return (this.triggerId.equals(that.triggerId)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "triggerId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.triggerId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("triggerId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.triggerId));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

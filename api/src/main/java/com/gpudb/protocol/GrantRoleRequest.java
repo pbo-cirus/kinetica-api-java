@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -23,28 +24,13 @@ public class GrantRoleRequest implements IndexedRecord {
             .record("GrantRoleRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("role").type().stringType().noDefault()
-                .name("member").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("role").type().stringType().noDefault()
+            .name("member").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String role;
     private String member;
     private Map<String, String> options;
-
-
     /**
      * Constructs a GrantRoleRequest object with default parameters.
      */
@@ -54,16 +40,16 @@ public class GrantRoleRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     /**
      * Constructs a GrantRoleRequest object with the specified parameters.
-     * 
-     * @param role  Name of the role in which membership will be granted. Must
-     *              be an existing role.
+     *
+     * @param role    Name of the role in which membership will be granted. Must
+     *                be an existing role.
      * @param member  Name of the user or role that will be granted membership
      *                in {@code role}. Must be an existing user or role.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      */
     public GrantRoleRequest(String role, String member, Map<String, String> options) {
         this.role = (role == null) ? "" : role;
@@ -72,22 +58,27 @@ public class GrantRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Name of the role in which membership will be granted. Must be an
-     *         existing role.
-     * 
+     * existing role.
      */
     public String getRole() {
         return role;
     }
 
     /**
-     * 
-     * @param role  Name of the role in which membership will be granted. Must
-     *              be an existing role.
-     * 
+     * @param role Name of the role in which membership will be granted. Must
+     *             be an existing role.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GrantRoleRequest setRole(String role) {
         this.role = (role == null) ? "" : role;
@@ -95,22 +86,17 @@ public class GrantRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Name of the user or role that will be granted membership in
-     *         {@code role}. Must be an existing user or role.
-     * 
+     * {@code role}. Must be an existing user or role.
      */
     public String getMember() {
         return member;
     }
 
     /**
-     * 
-     * @param member  Name of the user or role that will be granted membership
-     *                in {@code role}. Must be an existing user or role.
-     * 
+     * @param member Name of the user or role that will be granted membership
+     *               in {@code role}. Must be an existing user or role.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GrantRoleRequest setMember(String member) {
         this.member = (member == null) ? "" : member;
@@ -118,21 +104,16 @@ public class GrantRoleRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public GrantRoleRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -142,9 +123,8 @@ public class GrantRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -154,13 +134,10 @@ public class GrantRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -182,27 +159,25 @@ public class GrantRoleRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.role = (String)value;
+                this.role = (String) value;
                 break;
 
             case 1:
-                this.member = (String)value;
+                this.member = (String) value;
                 break;
 
             case 2:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -212,38 +187,38 @@ public class GrantRoleRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        GrantRoleRequest that = (GrantRoleRequest)obj;
+        GrantRoleRequest that = (GrantRoleRequest) obj;
 
-        return ( this.role.equals( that.role )
-                 && this.member.equals( that.member )
-                 && this.options.equals( that.options ) );
+        return (this.role.equals(that.role)
+                && this.member.equals(that.member)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "role" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.role ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "member" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.member ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("role"));
+        builder.append(": ");
+        builder.append(gd.toString(this.role));
+        builder.append(", ");
+        builder.append(gd.toString("member"));
+        builder.append(": ");
+        builder.append(gd.toString(this.member));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

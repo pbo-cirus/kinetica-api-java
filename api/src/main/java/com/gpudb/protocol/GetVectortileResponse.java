@@ -7,12 +7,13 @@
 package com.gpudb.protocol;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class GetVectortileResponse implements IndexedRecord {
@@ -21,21 +22,16 @@ public class GetVectortileResponse implements IndexedRecord {
             .record("GetVectortileResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("encodedData").type().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("encodedData").type().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String encodedData;
+    private Map<String, String> info;
+    public GetVectortileResponse() {
+    }
 
     public static Schema getClassSchema() {
         return schema$;
-    }
-
-
-    private String encodedData;
-    private Map<String, String> info;
-
-
-    public GetVectortileResponse() {
     }
 
     public String getEncodedData() {
@@ -80,11 +76,11 @@ public class GetVectortileResponse implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.encodedData = (String)value;
+                this.encodedData = (String) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -95,18 +91,18 @@ public class GetVectortileResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        GetVectortileResponse that = (GetVectortileResponse)obj;
+        GetVectortileResponse that = (GetVectortileResponse) obj;
 
-        return ( this.encodedData.equals( that.encodedData )
-                 && this.info.equals( that.info ) );
+        return (this.encodedData.equals(that.encodedData)
+                && this.info.equals(that.info));
     }
 
 
@@ -114,15 +110,15 @@ public class GetVectortileResponse implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "encodedData" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.encodedData ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("encodedData"));
+        builder.append(": ");
+        builder.append(gd.toString(this.encodedData));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

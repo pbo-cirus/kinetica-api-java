@@ -12,7 +12,7 @@ public class GPUdbException extends Exception {
     /**
      * Creates a new {@link GPUdbException} with the specified message.
      *
-     * @param message  the message
+     * @param message the message
      */
     public GPUdbException(String message) {
         super(message);
@@ -22,8 +22,8 @@ public class GPUdbException extends Exception {
      * Creates a new {@link GPUdbException} with the specified message and
      * cause.
      *
-     * @param message  the message
-     * @param cause    the cause
+     * @param message the message
+     * @param cause   the cause
      */
     public GPUdbException(String message, Throwable cause) {
         super(message, cause);
@@ -35,10 +35,10 @@ public class GPUdbException extends Exception {
      * cause, and a boolean flag indicating if a connection failure caused this
      * exception.
      *
-     * @param message            the message
-     * @param cause              the cause
-     * @param connectionFailure  boolean flag indicating if there was a connection
-     *                           failure which caused this exception
+     * @param message           the message
+     * @param cause             the cause
+     * @param connectionFailure boolean flag indicating if there was a connection
+     *                          failure which caused this exception
      */
     public GPUdbException(String message, Throwable cause, boolean connectionFailure) {
         super(message, cause);
@@ -50,9 +50,9 @@ public class GPUdbException extends Exception {
      * Creates a new {@link GPUdbException} with the specified message and a
      * boolean flag indicating if a connection failure caused this exception.
      *
-     * @param message            the message
-     * @param connectionFailure  boolean flag indicating if there was a connection
-     *                           failure which caused this exception
+     * @param message           the message
+     * @param connectionFailure boolean flag indicating if there was a connection
+     *                          failure which caused this exception
      */
     public GPUdbException(String message, boolean connectionFailure) {
         super(message);

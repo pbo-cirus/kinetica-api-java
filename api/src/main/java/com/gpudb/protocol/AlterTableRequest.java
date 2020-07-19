@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -77,24 +78,1184 @@ public class AlterTableRequest implements IndexedRecord {
             .record("AlterTableRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("action").type().stringType().noDefault()
-                .name("value").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("action").type().stringType().noDefault()
+            .name("value").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String tableName;
+    private String action;
+    private String value;
+    private Map<String, String> options;
+    /**
+     * Constructs an AlterTableRequest object with default parameters.
+     */
+    public AlterTableRequest() {
+        tableName = "";
+        action = "";
+        value = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs an AlterTableRequest object with the specified parameters.
+     *
+     * @param tableName Table on which the operation will be performed. Must
+     *                  be an existing table, view, or collection.
+     * @param action    Modification operation to be applied
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
+     *                  ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action
+     *                  will be ignored.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
+     *                  CREATE_INDEX}: Creates either a <a
+     *                  href="../../../../../concepts/indexes.html#column-index"
+     *                  target="_top">column (attribute) index</a> or <a
+     *                  href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *                  target="_top">chunk skip index</a>, depending on the
+     *                  specified {@code index_type}, on the column name
+     *                  specified in {@code value}. If this column already has
+     *                  the specified index, an error will be returned.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
+     *                  DELETE_INDEX}: Deletes either a <a
+     *                  href="../../../../../concepts/indexes.html#column-index"
+     *                  target="_top">column (attribute) index</a> or <a
+     *                  href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *                  target="_top">chunk skip index</a>, depending on the
+     *                  specified {@code index_type}, on the column name
+     *                  specified in {@code value}. If this column does not have
+     *                  the specified index, an error will be returned.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
+     *                  MOVE_TO_COLLECTION}: Moves a table or view into a
+     *                  collection named {@code value}.  If the collection
+     *                  provided is non-existent, the collection will be
+     *                  automatically created. If {@code value} is empty, then
+     *                  the table or view will be top-level.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
+     *                  PROTECTED}: Sets whether the given {@code tableName}
+     *                  should be <a
+     *                  href="../../../../../concepts/protection.html"
+     *                  target="_top">protected</a> or not. The {@code value}
+     *                  must be either 'true' or 'false'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
+     *                  RENAME_TABLE}: Renames a table, view or collection to
+     *                  {@code value}. Has the same naming restrictions as <a
+     *                  href="../../../../../concepts/tables.html"
+     *                  target="_top">tables</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}:
+     *                  Sets the <a href="../../../../../concepts/ttl.html"
+     *                  target="_top">time-to-live</a> in minutes of the table,
+     *                  view, or collection specified in {@code tableName}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
+     *                  ADD_COLUMN}: Adds the column specified in {@code value}
+     *                  to the table specified in {@code tableName}.  Use {@code
+     *                  column_type} and {@code column_properties} in {@code
+     *                  options} to set the column's type and properties,
+     *                  respectively.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
+     *                  CHANGE_COLUMN}: Changes type and properties of the column
+     *                  specified in {@code value}.  Use {@code column_type} and
+     *                  {@code column_properties} in {@code options} to set the
+     *                  column's type and properties, respectively. Note that
+     *                  primary key and/or shard key columns cannot be changed.
+     *                  All unchanging column properties must be listed for the
+     *                  change to take place, e.g., to add dictionary encoding to
+     *                  an existing 'char4' column, both 'char4' and 'dict' must
+     *                  be specified in the {@code options} map.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
+     *                  SET_COLUMN_COMPRESSION}: Modifies the <a
+     *                  href="../../../../../concepts/compression.html"
+     *                  target="_top">compression</a> setting on the column
+     *                  specified in {@code value} to the compression type
+     *                  specified in {@code compression_type}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
+     *                  DELETE_COLUMN}: Deletes the column specified in {@code
+     *                  value} from the table specified in {@code tableName}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
+     *                  CREATE_FOREIGN_KEY}: Creates a <a
+     *                  href="../../../../../concepts/tables.html#foreign-key"
+     *                  target="_top">foreign key</a> specified in {@code value}
+     *                  using the format '(source_column_name [, ...]) references
+     *                  target_table_name(primary_key_column_name [, ...]) [as
+     *                  foreign_key_name]'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
+     *                  DELETE_FOREIGN_KEY}: Deletes a <a
+     *                  href="../../../../../concepts/tables.html#foreign-key"
+     *                  target="_top">foreign key</a>.  The {@code value} should
+     *                  be the foreign_key_name specified when creating the key
+     *                  or the complete string used to define it.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
+     *                  ADD_PARTITION}: Adds the partition specified in {@code
+     *                  value}, to either a <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                  target="_top">range-partitioned</a> or <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *                  target="_top">manual list-partitioned</a> table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
+     *                  REMOVE_PARTITION}: Removes the partition specified in
+     *                  {@code value} (and relocates all of its data to the
+     *                  default partition) from either a <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                  target="_top">range-partitioned</a> or <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *                  target="_top">manual list-partitioned</a> table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
+     *                  DELETE_PARTITION}: Deletes the partition specified in
+     *                  {@code value} (and all of its data) from either a <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-range"
+     *                  target="_top">range-partitioned</a> or <a
+     *                  href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *                  target="_top">manual list-partitioned</a> table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
+     *                  SET_GLOBAL_ACCESS_MODE}: Sets the global access mode
+     *                  (i.e. locking) for the table specified in {@code
+     *                  tableName}. Specify the access mode in {@code value}.
+     *                  Valid modes are 'no_access', 'read_only', 'write_only'
+     *                  and 'read_write'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#REFRESH
+     *                  REFRESH}: Replays all the table creation commands
+     *                  required to create this <a
+     *                  href="../../../../../concepts/materialized_views.html"
+     *                  target="_top">materialized view</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
+     *                  SET_REFRESH_METHOD}: Sets the method by which this <a
+     *                  href="../../../../../concepts/materialized_views.html"
+     *                  target="_top">materialized view</a> is refreshed to the
+     *                  method specified in {@code value} - one of 'manual',
+     *                  'periodic', 'on_change'.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
+     *                  SET_REFRESH_START_TIME}: Sets the time to start periodic
+     *                  refreshes of this <a
+     *                  href="../../../../../concepts/materialized_views.html"
+     *                  target="_top">materialized view</a> to the datetime
+     *                  string specified in {@code value} with format 'YYYY-MM-DD
+     *                  HH:MM:SS'.  Subsequent refreshes occur at the specified
+     *                  time + N * the refresh period.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
+     *                  SET_REFRESH_PERIOD}: Sets the time interval in seconds at
+     *                  which to refresh this <a
+     *                  href="../../../../../concepts/materialized_views.html"
+     *                  target="_top">materialized view</a> to the value
+     *                  specified in {@code value}.  Also, sets the refresh
+     *                  method to periodic if not already set.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
+     *                  REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
+     *                  href="../../../../../concepts/full_text_search.html"
+     *                  target="_top">text search</a> attribute from all columns.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
+     *                  SET_STRATEGY_DEFINITION}: Sets the <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy</a> for the table and its
+     *                  columns to the one specified in {@code value}, replacing
+     *                  the existing tier strategy in its entirety. See <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy usage</a> for format and <a
+     *                  href="../../../../../rm/usage.html#tier-strategies"
+     *                  target="_top">tier strategy examples</a> for examples.
+     *                  </ul>
+     * @param value     The value of the modification, depending on {@code
+     *                  action}.  For example, if {@code action} is {@code
+     *                  add_column}, this would be the column name; while the
+     *                  column's definition would be covered by the {@code
+     *                  column_type}, {@code column_properties}, {@code
+     *                  column_default_value}, and {@code add_column_expression}
+     *                  in {@code options}.  If {@code action} is {@code ttl}, it
+     *                  would be the number of minutes for the new TTL. If {@code
+     *                  action} is {@code refresh}, this field would be blank.
+     * @param options   Optional parameters.
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#ACTION
+     *                  ACTION}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
+     *                  COLUMN_NAME}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
+     *                  TABLE_NAME}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
+     *                  COLUMN_DEFAULT_VALUE}: When adding a column, set a
+     *                  default value for existing records.  For nullable
+     *                  columns, the default value will be null, regardless of
+     *                  data type.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
+     *                  COLUMN_PROPERTIES}: When adding or changing a column,
+     *                  set the column properties (strings, separated by a
+     *                  comma: data, store_only, text_search, char8, int8 etc).
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
+     *                  COLUMN_TYPE}: When adding or changing a column, set the
+     *                  column type (strings, separated by a comma: int, double,
+     *                  string, null etc).
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
+     *                  COMPRESSION_TYPE}: When setting column compression
+     *                  ({@code set_column_compression} for {@code action}),
+     *                  compression type to use: {@code none} (to use no
+     *                  compression) or a valid compression type.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
+     *                  SNAPPY}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#LZ4HC
+     *                  LZ4HC}
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
+     *                  SNAPPY}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
+     *                  COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
+     *                  add_column_expression} instead.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
+     *                  RENAME_COLUMN}: When changing a column, specify new
+     *                  column name.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
+     *                  VALIDATE_CHANGE_COLUMN}: When changing a column,
+     *                  validate the change before applying it. If {@code true},
+     *                  then validate all values. A value too large (or too
+     *                  long) for the new type will prevent any change. If
+     *                  {@code false}, then when a value is too large or long,
+     *                  it will be truncated.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
+     *                  true
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#FALSE
+     *                  FALSE}: false
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
+     *                  UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
+     *                  href="../../../../../concepts/ttl.html"
+     *                  target="_top">time-to-live</a> (TTL) expiration
+     *                  countdown timer should be reset to the table's TTL.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
+     *                  Reset the expiration countdown timer to the table's
+     *                  configured TTL.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#FALSE
+     *                  FALSE}: Don't reset the timer; expiration countdown will
+     *                  continue from where it is, as if the table had not been
+     *                  accessed.
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
+     *                  ADD_COLUMN_EXPRESSION}: When adding a column, an
+     *                  optional expression to use for the new column's values.
+     *                  Any valid expression may be used, including one
+     *                  containing references to existing columns in the same
+     *                  table.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
+     *                  STRATEGY_DEFINITION}: Optional parameter for specifying
+     *                  the <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy</a> for the table and its
+     *                  columns when {@code action} is {@code
+     *                  set_strategy_definition}, replacing the existing tier
+     *                  strategy in its entirety. See <a
+     *                  href="../../../../../rm/concepts.html#tier-strategies"
+     *                  target="_top">tier strategy usage</a> for format and <a
+     *                  href="../../../../../rm/usage.html#tier-strategies"
+     *                  target="_top">tier strategy examples</a> for examples.
+     *                  This option will be ignored if {@code value} is also
+     *                  specified.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
+     *                  INDEX_TYPE}: Type of index to create, when {@code
+     *                  action} is {@code create_index}, or to delete, when
+     *                  {@code action} is {@code delete_index}.
+     *                  Supported values:
+     *                  <ul>
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN
+     *                  COLUMN}: Create or delete a <a
+     *                  href="../../../../../concepts/indexes.html#column-index"
+     *                  target="_top">column (attribute) index</a>.
+     *                          <li> {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
+     *                  CHUNK_SKIP}: Create or delete a <a
+     *                  href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *                  target="_top">chunk skip index</a>.
+     *                  </ul>
+     *                  The default value is {@link
+     *                  com.gpudb.protocol.AlterTableRequest.Options#COLUMN
+     *                  COLUMN}.
+     *                  </ul>
+     *                  The default value is an empty {@link Map}.
+     */
+    public AlterTableRequest(String tableName, String action, String value, Map<String, String> options) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        this.action = (action == null) ? "" : action;
+        this.value = (value == null) ? "" : value;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Table on which the operation will be performed. Must be an
+     * existing table, view, or collection.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * @param tableName Table on which the operation will be performed. Must
+     *                  be an existing table, view, or collection.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AlterTableRequest setTableName(String tableName) {
+        this.tableName = (tableName == null) ? "" : tableName;
+        return this;
+    }
+
+    /**
+     * @return Modification operation to be applied
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
+     * ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action will be
+     * ignored.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
+     * CREATE_INDEX}: Creates either a <a
+     * href="../../../../../concepts/indexes.html#column-index"
+     * target="_top">column (attribute) index</a> or <a
+     * href="../../../../../concepts/indexes.html#chunk-skip-index"
+     * target="_top">chunk skip index</a>, depending on the specified
+     * {@code index_type}, on the column name specified in {@code
+     * value}. If this column already has the specified index, an error
+     * will be returned.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
+     * DELETE_INDEX}: Deletes either a <a
+     * href="../../../../../concepts/indexes.html#column-index"
+     * target="_top">column (attribute) index</a> or <a
+     * href="../../../../../concepts/indexes.html#chunk-skip-index"
+     * target="_top">chunk skip index</a>, depending on the specified
+     * {@code index_type}, on the column name specified in {@code
+     * value}. If this column does not have the specified index, an
+     * error will be returned.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
+     * MOVE_TO_COLLECTION}: Moves a table or view into a collection
+     * named {@code value}.  If the collection provided is
+     * non-existent, the collection will be automatically created. If
+     * {@code value} is empty, then the table or view will be
+     * top-level.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
+     * PROTECTED}: Sets whether the given {@code tableName} should be
+     * <a href="../../../../../concepts/protection.html"
+     * target="_top">protected</a> or not. The {@code value} must be
+     * either 'true' or 'false'.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
+     * RENAME_TABLE}: Renames a table, view or collection to {@code
+     * value}. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}: Sets the
+     * <a href="../../../../../concepts/ttl.html"
+     * target="_top">time-to-live</a> in minutes of the table, view, or
+     * collection specified in {@code tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
+     * ADD_COLUMN}: Adds the column specified in {@code value} to the
+     * table specified in {@code tableName}.  Use {@code column_type}
+     * and {@code column_properties} in {@code options} to set the
+     * column's type and properties, respectively.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
+     * CHANGE_COLUMN}: Changes type and properties of the column
+     * specified in {@code value}.  Use {@code column_type} and {@code
+     * column_properties} in {@code options} to set the column's type
+     * and properties, respectively. Note that primary key and/or shard
+     * key columns cannot be changed. All unchanging column properties
+     * must be listed for the change to take place, e.g., to add
+     * dictionary encoding to an existing 'char4' column, both 'char4'
+     * and 'dict' must be specified in the {@code options} map.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
+     * SET_COLUMN_COMPRESSION}: Modifies the <a
+     * href="../../../../../concepts/compression.html"
+     * target="_top">compression</a> setting on the column specified in
+     * {@code value} to the compression type specified in {@code
+     * compression_type}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
+     * DELETE_COLUMN}: Deletes the column specified in {@code value}
+     * from the table specified in {@code tableName}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
+     * CREATE_FOREIGN_KEY}: Creates a <a
+     * href="../../../../../concepts/tables.html#foreign-key"
+     * target="_top">foreign key</a> specified in {@code value} using
+     * the format '(source_column_name [, ...]) references
+     * target_table_name(primary_key_column_name [, ...]) [as
+     * foreign_key_name]'.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
+     * DELETE_FOREIGN_KEY}: Deletes a <a
+     * href="../../../../../concepts/tables.html#foreign-key"
+     * target="_top">foreign key</a>.  The {@code value} should be the
+     * foreign_key_name specified when creating the key or the complete
+     * string used to define it.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
+     * ADD_PARTITION}: Adds the partition specified in {@code value},
+     * to either a <a
+     * href="../../../../../concepts/tables.html#partitioning-by-range"
+     * target="_top">range-partitioned</a> or <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     * target="_top">manual list-partitioned</a> table.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
+     * REMOVE_PARTITION}: Removes the partition specified in {@code
+     * value} (and relocates all of its data to the default partition)
+     * from either a <a
+     * href="../../../../../concepts/tables.html#partitioning-by-range"
+     * target="_top">range-partitioned</a> or <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     * target="_top">manual list-partitioned</a> table.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
+     * DELETE_PARTITION}: Deletes the partition specified in {@code
+     * value} (and all of its data) from either a <a
+     * href="../../../../../concepts/tables.html#partitioning-by-range"
+     * target="_top">range-partitioned</a> or <a
+     * href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     * target="_top">manual list-partitioned</a> table.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
+     * SET_GLOBAL_ACCESS_MODE}: Sets the global access mode (i.e.
+     * locking) for the table specified in {@code tableName}. Specify
+     * the access mode in {@code value}. Valid modes are 'no_access',
+     * 'read_only', 'write_only' and 'read_write'.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#REFRESH REFRESH}:
+     * Replays all the table creation commands required to create this
+     * <a href="../../../../../concepts/materialized_views.html"
+     * target="_top">materialized view</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
+     * SET_REFRESH_METHOD}: Sets the method by which this <a
+     * href="../../../../../concepts/materialized_views.html"
+     * target="_top">materialized view</a> is refreshed to the method
+     * specified in {@code value} - one of 'manual', 'periodic',
+     * 'on_change'.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
+     * SET_REFRESH_START_TIME}: Sets the time to start periodic
+     * refreshes of this <a
+     * href="../../../../../concepts/materialized_views.html"
+     * target="_top">materialized view</a> to the datetime string
+     * specified in {@code value} with format 'YYYY-MM-DD HH:MM:SS'.
+     * Subsequent refreshes occur at the specified time + N * the
+     * refresh period.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
+     * SET_REFRESH_PERIOD}: Sets the time interval in seconds at which
+     * to refresh this <a
+     * href="../../../../../concepts/materialized_views.html"
+     * target="_top">materialized view</a> to the value specified in
+     * {@code value}.  Also, sets the refresh method to periodic if not
+     * already set.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
+     * REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
+     * href="../../../../../concepts/full_text_search.html"
+     * target="_top">text search</a> attribute from all columns.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
+     * SET_STRATEGY_DEFINITION}: Sets the <a
+     * href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy</a> for the table and its columns to
+     * the one specified in {@code value}, replacing the existing tier
+     * strategy in its entirety. See <a
+     * href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy usage</a> for format and <a
+     * href="../../../../../rm/usage.html#tier-strategies"
+     * target="_top">tier strategy examples</a> for examples.
+     * </ul>
+     */
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * @param action Modification operation to be applied
+     *               Supported values:
+     *               <ul>
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
+     *               ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action
+     *               will be ignored.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
+     *               CREATE_INDEX}: Creates either a <a
+     *               href="../../../../../concepts/indexes.html#column-index"
+     *               target="_top">column (attribute) index</a> or <a
+     *               href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *               target="_top">chunk skip index</a>, depending on the
+     *               specified {@code index_type}, on the column name
+     *               specified in {@code value}. If this column already has
+     *               the specified index, an error will be returned.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
+     *               DELETE_INDEX}: Deletes either a <a
+     *               href="../../../../../concepts/indexes.html#column-index"
+     *               target="_top">column (attribute) index</a> or <a
+     *               href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *               target="_top">chunk skip index</a>, depending on the
+     *               specified {@code index_type}, on the column name
+     *               specified in {@code value}. If this column does not have
+     *               the specified index, an error will be returned.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
+     *               MOVE_TO_COLLECTION}: Moves a table or view into a
+     *               collection named {@code value}.  If the collection
+     *               provided is non-existent, the collection will be
+     *               automatically created. If {@code value} is empty, then
+     *               the table or view will be top-level.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
+     *               PROTECTED}: Sets whether the given {@code tableName}
+     *               should be <a
+     *               href="../../../../../concepts/protection.html"
+     *               target="_top">protected</a> or not. The {@code value}
+     *               must be either 'true' or 'false'.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
+     *               RENAME_TABLE}: Renames a table, view or collection to
+     *               {@code value}. Has the same naming restrictions as <a
+     *               href="../../../../../concepts/tables.html"
+     *               target="_top">tables</a>.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}:
+     *               Sets the <a href="../../../../../concepts/ttl.html"
+     *               target="_top">time-to-live</a> in minutes of the table,
+     *               view, or collection specified in {@code tableName}.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
+     *               ADD_COLUMN}: Adds the column specified in {@code value}
+     *               to the table specified in {@code tableName}.  Use {@code
+     *               column_type} and {@code column_properties} in {@code
+     *               options} to set the column's type and properties,
+     *               respectively.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
+     *               CHANGE_COLUMN}: Changes type and properties of the column
+     *               specified in {@code value}.  Use {@code column_type} and
+     *               {@code column_properties} in {@code options} to set the
+     *               column's type and properties, respectively. Note that
+     *               primary key and/or shard key columns cannot be changed.
+     *               All unchanging column properties must be listed for the
+     *               change to take place, e.g., to add dictionary encoding to
+     *               an existing 'char4' column, both 'char4' and 'dict' must
+     *               be specified in the {@code options} map.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
+     *               SET_COLUMN_COMPRESSION}: Modifies the <a
+     *               href="../../../../../concepts/compression.html"
+     *               target="_top">compression</a> setting on the column
+     *               specified in {@code value} to the compression type
+     *               specified in {@code compression_type}.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
+     *               DELETE_COLUMN}: Deletes the column specified in {@code
+     *               value} from the table specified in {@code tableName}.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
+     *               CREATE_FOREIGN_KEY}: Creates a <a
+     *               href="../../../../../concepts/tables.html#foreign-key"
+     *               target="_top">foreign key</a> specified in {@code value}
+     *               using the format '(source_column_name [, ...]) references
+     *               target_table_name(primary_key_column_name [, ...]) [as
+     *               foreign_key_name]'.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
+     *               DELETE_FOREIGN_KEY}: Deletes a <a
+     *               href="../../../../../concepts/tables.html#foreign-key"
+     *               target="_top">foreign key</a>.  The {@code value} should
+     *               be the foreign_key_name specified when creating the key
+     *               or the complete string used to define it.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
+     *               ADD_PARTITION}: Adds the partition specified in {@code
+     *               value}, to either a <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-range"
+     *               target="_top">range-partitioned</a> or <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *               target="_top">manual list-partitioned</a> table.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
+     *               REMOVE_PARTITION}: Removes the partition specified in
+     *               {@code value} (and relocates all of its data to the
+     *               default partition) from either a <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-range"
+     *               target="_top">range-partitioned</a> or <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *               target="_top">manual list-partitioned</a> table.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
+     *               DELETE_PARTITION}: Deletes the partition specified in
+     *               {@code value} (and all of its data) from either a <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-range"
+     *               target="_top">range-partitioned</a> or <a
+     *               href="../../../../../concepts/tables.html#partitioning-by-list-manual"
+     *               target="_top">manual list-partitioned</a> table.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
+     *               SET_GLOBAL_ACCESS_MODE}: Sets the global access mode
+     *               (i.e. locking) for the table specified in {@code
+     *               tableName}. Specify the access mode in {@code value}.
+     *               Valid modes are 'no_access', 'read_only', 'write_only'
+     *               and 'read_write'.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#REFRESH
+     *               REFRESH}: Replays all the table creation commands
+     *               required to create this <a
+     *               href="../../../../../concepts/materialized_views.html"
+     *               target="_top">materialized view</a>.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
+     *               SET_REFRESH_METHOD}: Sets the method by which this <a
+     *               href="../../../../../concepts/materialized_views.html"
+     *               target="_top">materialized view</a> is refreshed to the
+     *               method specified in {@code value} - one of 'manual',
+     *               'periodic', 'on_change'.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
+     *               SET_REFRESH_START_TIME}: Sets the time to start periodic
+     *               refreshes of this <a
+     *               href="../../../../../concepts/materialized_views.html"
+     *               target="_top">materialized view</a> to the datetime
+     *               string specified in {@code value} with format 'YYYY-MM-DD
+     *               HH:MM:SS'.  Subsequent refreshes occur at the specified
+     *               time + N * the refresh period.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
+     *               SET_REFRESH_PERIOD}: Sets the time interval in seconds at
+     *               which to refresh this <a
+     *               href="../../../../../concepts/materialized_views.html"
+     *               target="_top">materialized view</a> to the value
+     *               specified in {@code value}.  Also, sets the refresh
+     *               method to periodic if not already set.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
+     *               REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
+     *               href="../../../../../concepts/full_text_search.html"
+     *               target="_top">text search</a> attribute from all columns.
+     *                       <li> {@link
+     *               com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
+     *               SET_STRATEGY_DEFINITION}: Sets the <a
+     *               href="../../../../../rm/concepts.html#tier-strategies"
+     *               target="_top">tier strategy</a> for the table and its
+     *               columns to the one specified in {@code value}, replacing
+     *               the existing tier strategy in its entirety. See <a
+     *               href="../../../../../rm/concepts.html#tier-strategies"
+     *               target="_top">tier strategy usage</a> for format and <a
+     *               href="../../../../../rm/usage.html#tier-strategies"
+     *               target="_top">tier strategy examples</a> for examples.
+     *               </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AlterTableRequest setAction(String action) {
+        this.action = (action == null) ? "" : action;
+        return this;
+    }
+
+    /**
+     * @return The value of the modification, depending on {@code action}.  For
+     * example, if {@code action} is {@code add_column}, this would be
+     * the column name; while the column's definition would be covered
+     * by the {@code column_type}, {@code column_properties}, {@code
+     * column_default_value}, and {@code add_column_expression} in
+     * {@code options}.  If {@code action} is {@code ttl}, it would be
+     * the number of minutes for the new TTL. If {@code action} is
+     * {@code refresh}, this field would be blank.
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * @param value The value of the modification, depending on {@code
+     *              action}.  For example, if {@code action} is {@code
+     *              add_column}, this would be the column name; while the
+     *              column's definition would be covered by the {@code
+     *              column_type}, {@code column_properties}, {@code
+     *              column_default_value}, and {@code add_column_expression}
+     *              in {@code options}.  If {@code action} is {@code ttl}, it
+     *              would be the number of minutes for the new TTL. If {@code
+     *              action} is {@code refresh}, this field would be blank.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AlterTableRequest setValue(String value) {
+        this.value = (value == null) ? "" : value;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#ACTION ACTION}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
+     * COLUMN_NAME}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
+     * TABLE_NAME}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
+     * COLUMN_DEFAULT_VALUE}: When adding a column, set a default value
+     * for existing records.  For nullable columns, the default value
+     * will be null, regardless of data type.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
+     * COLUMN_PROPERTIES}: When adding or changing a column, set the
+     * column properties (strings, separated by a comma: data,
+     * store_only, text_search, char8, int8 etc).
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
+     * COLUMN_TYPE}: When adding or changing a column, set the column
+     * type (strings, separated by a comma: int, double, string, null
+     * etc).
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
+     * COMPRESSION_TYPE}: When setting column compression ({@code
+     * set_column_compression} for {@code action}), compression type to
+     * use: {@code none} (to use no compression) or a valid compression
+     * type.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#SNAPPY SNAPPY}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#LZ4HC LZ4HC}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#SNAPPY SNAPPY}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
+     * COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
+     * add_column_expression} instead.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
+     * RENAME_COLUMN}: When changing a column, specify new column name.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
+     * VALIDATE_CHANGE_COLUMN}: When changing a column, validate the
+     * change before applying it. If {@code true}, then validate all
+     * values. A value too large (or too long) for the new type will
+     * prevent any change. If {@code false}, then when a value is too
+     * large or long, it will be truncated.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}: true
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#FALSE FALSE}: false
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
+     * UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
+     * href="../../../../../concepts/ttl.html"
+     * target="_top">time-to-live</a> (TTL) expiration countdown timer
+     * should be reset to the table's TTL.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}: Reset
+     * the expiration countdown timer to the table's configured TTL.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#FALSE FALSE}: Don't
+     * reset the timer; expiration countdown will continue from where
+     * it is, as if the table had not been accessed.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
+     * ADD_COLUMN_EXPRESSION}: When adding a column, an optional
+     * expression to use for the new column's values. Any valid
+     * expression may be used, including one containing references to
+     * existing columns in the same table.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
+     * STRATEGY_DEFINITION}: Optional parameter for specifying the <a
+     * href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy</a> for the table and its columns
+     * when {@code action} is {@code set_strategy_definition},
+     * replacing the existing tier strategy in its entirety. See <a
+     * href="../../../../../rm/concepts.html#tier-strategies"
+     * target="_top">tier strategy usage</a> for format and <a
+     * href="../../../../../rm/usage.html#tier-strategies"
+     * target="_top">tier strategy examples</a> for examples.  This
+     * option will be ignored if {@code value} is also specified.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
+     * INDEX_TYPE}: Type of index to create, when {@code action} is
+     * {@code create_index}, or to delete, when {@code action} is
+     * {@code delete_index}.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN COLUMN}:
+     * Create or delete a <a
+     * href="../../../../../concepts/indexes.html#column-index"
+     * target="_top">column (attribute) index</a>.
+     *         <li> {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
+     * CHUNK_SKIP}: Create or delete a <a
+     * href="../../../../../concepts/indexes.html#chunk-skip-index"
+     * target="_top">chunk skip index</a>.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AlterTableRequest.Options#COLUMN COLUMN}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#ACTION
+     *                ACTION}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
+     *                COLUMN_NAME}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
+     *                TABLE_NAME}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
+     *                COLUMN_DEFAULT_VALUE}: When adding a column, set a
+     *                default value for existing records.  For nullable
+     *                columns, the default value will be null, regardless of
+     *                data type.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
+     *                COLUMN_PROPERTIES}: When adding or changing a column,
+     *                set the column properties (strings, separated by a
+     *                comma: data, store_only, text_search, char8, int8 etc).
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
+     *                COLUMN_TYPE}: When adding or changing a column, set the
+     *                column type (strings, separated by a comma: int, double,
+     *                string, null etc).
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
+     *                COMPRESSION_TYPE}: When setting column compression
+     *                ({@code set_column_compression} for {@code action}),
+     *                compression type to use: {@code none} (to use no
+     *                compression) or a valid compression type.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
+     *                SNAPPY}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#LZ4HC
+     *                LZ4HC}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
+     *                SNAPPY}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
+     *                COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
+     *                add_column_expression} instead.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
+     *                RENAME_COLUMN}: When changing a column, specify new
+     *                column name.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
+     *                VALIDATE_CHANGE_COLUMN}: When changing a column,
+     *                validate the change before applying it. If {@code true},
+     *                then validate all values. A value too large (or too
+     *                long) for the new type will prevent any change. If
+     *                {@code false}, then when a value is too large or long,
+     *                it will be truncated.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
+     *                true
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#FALSE
+     *                FALSE}: false
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
+     *                UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
+     *                href="../../../../../concepts/ttl.html"
+     *                target="_top">time-to-live</a> (TTL) expiration
+     *                countdown timer should be reset to the table's TTL.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
+     *                Reset the expiration countdown timer to the table's
+     *                configured TTL.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#FALSE
+     *                FALSE}: Don't reset the timer; expiration countdown will
+     *                continue from where it is, as if the table had not been
+     *                accessed.
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
+     *                ADD_COLUMN_EXPRESSION}: When adding a column, an
+     *                optional expression to use for the new column's values.
+     *                Any valid expression may be used, including one
+     *                containing references to existing columns in the same
+     *                table.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
+     *                STRATEGY_DEFINITION}: Optional parameter for specifying
+     *                the <a
+     *                href="../../../../../rm/concepts.html#tier-strategies"
+     *                target="_top">tier strategy</a> for the table and its
+     *                columns when {@code action} is {@code
+     *                set_strategy_definition}, replacing the existing tier
+     *                strategy in its entirety. See <a
+     *                href="../../../../../rm/concepts.html#tier-strategies"
+     *                target="_top">tier strategy usage</a> for format and <a
+     *                href="../../../../../rm/usage.html#tier-strategies"
+     *                target="_top">tier strategy examples</a> for examples.
+     *                This option will be ignored if {@code value} is also
+     *                specified.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
+     *                INDEX_TYPE}: Type of index to create, when {@code
+     *                action} is {@code create_index}, or to delete, when
+     *                {@code action} is {@code delete_index}.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN
+     *                COLUMN}: Create or delete a <a
+     *                href="../../../../../concepts/indexes.html#column-index"
+     *                target="_top">column (attribute) index</a>.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
+     *                CHUNK_SKIP}: Create or delete a <a
+     *                href="../../../../../concepts/indexes.html#chunk-skip-index"
+     *                target="_top">chunk skip index</a>.
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AlterTableRequest.Options#COLUMN
+     *                COLUMN}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AlterTableRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.tableName;
+
+            case 1:
+                return this.action;
+
+            case 2:
+                return this.value;
+
+            case 3:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.tableName = (String) value;
+                break;
+
+            case 1:
+                this.action = (String) value;
+                break;
+
+            case 2:
+                this.value = (String) value;
+                break;
+
+            case 3:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        AlterTableRequest that = (AlterTableRequest) obj;
+
+        return (this.tableName.equals(that.tableName)
+                && this.action.equals(that.action)
+                && this.value.equals(that.value)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("action"));
+        builder.append(": ");
+        builder.append(gd.toString(this.action));
+        builder.append(", ");
+        builder.append(gd.toString("value"));
+        builder.append(": ");
+        builder.append(gd.toString(this.value));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.tableName.hashCode();
+        hashCode = (31 * hashCode) + this.action.hashCode();
+        hashCode = (31 * hashCode) + this.value.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Modification operation to be applied
@@ -452,9 +1613,9 @@ public class AlterTableRequest implements IndexedRecord {
          */
         public static final String SET_STRATEGY_DEFINITION = "set_strategy_definition";
 
-        private Action() {  }
+        private Action() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -739,1201 +1900,8 @@ public class AlterTableRequest implements IndexedRecord {
          */
         public static final String CHUNK_SKIP = "chunk_skip";
 
-        private Options() {  }
-    }
-
-    private String tableName;
-    private String action;
-    private String value;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs an AlterTableRequest object with default parameters.
-     */
-    public AlterTableRequest() {
-        tableName = "";
-        action = "";
-        value = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs an AlterTableRequest object with the specified parameters.
-     * 
-     * @param tableName  Table on which the operation will be performed. Must
-     *                   be an existing table, view, or collection.
-     * @param action  Modification operation to be applied
-     *                Supported values:
-     *                <ul>
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
-     *                ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action
-     *                will be ignored.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
-     *                CREATE_INDEX}: Creates either a <a
-     *                href="../../../../../concepts/indexes.html#column-index"
-     *                target="_top">column (attribute) index</a> or <a
-     *                href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                target="_top">chunk skip index</a>, depending on the
-     *                specified {@code index_type}, on the column name
-     *                specified in {@code value}. If this column already has
-     *                the specified index, an error will be returned.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
-     *                DELETE_INDEX}: Deletes either a <a
-     *                href="../../../../../concepts/indexes.html#column-index"
-     *                target="_top">column (attribute) index</a> or <a
-     *                href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                target="_top">chunk skip index</a>, depending on the
-     *                specified {@code index_type}, on the column name
-     *                specified in {@code value}. If this column does not have
-     *                the specified index, an error will be returned.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
-     *                MOVE_TO_COLLECTION}: Moves a table or view into a
-     *                collection named {@code value}.  If the collection
-     *                provided is non-existent, the collection will be
-     *                automatically created. If {@code value} is empty, then
-     *                the table or view will be top-level.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
-     *                PROTECTED}: Sets whether the given {@code tableName}
-     *                should be <a
-     *                href="../../../../../concepts/protection.html"
-     *                target="_top">protected</a> or not. The {@code value}
-     *                must be either 'true' or 'false'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
-     *                RENAME_TABLE}: Renames a table, view or collection to
-     *                {@code value}. Has the same naming restrictions as <a
-     *                href="../../../../../concepts/tables.html"
-     *                target="_top">tables</a>.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}:
-     *                Sets the <a href="../../../../../concepts/ttl.html"
-     *                target="_top">time-to-live</a> in minutes of the table,
-     *                view, or collection specified in {@code tableName}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
-     *                ADD_COLUMN}: Adds the column specified in {@code value}
-     *                to the table specified in {@code tableName}.  Use {@code
-     *                column_type} and {@code column_properties} in {@code
-     *                options} to set the column's type and properties,
-     *                respectively.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
-     *                CHANGE_COLUMN}: Changes type and properties of the column
-     *                specified in {@code value}.  Use {@code column_type} and
-     *                {@code column_properties} in {@code options} to set the
-     *                column's type and properties, respectively. Note that
-     *                primary key and/or shard key columns cannot be changed.
-     *                All unchanging column properties must be listed for the
-     *                change to take place, e.g., to add dictionary encoding to
-     *                an existing 'char4' column, both 'char4' and 'dict' must
-     *                be specified in the {@code options} map.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
-     *                SET_COLUMN_COMPRESSION}: Modifies the <a
-     *                href="../../../../../concepts/compression.html"
-     *                target="_top">compression</a> setting on the column
-     *                specified in {@code value} to the compression type
-     *                specified in {@code compression_type}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
-     *                DELETE_COLUMN}: Deletes the column specified in {@code
-     *                value} from the table specified in {@code tableName}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
-     *                CREATE_FOREIGN_KEY}: Creates a <a
-     *                href="../../../../../concepts/tables.html#foreign-key"
-     *                target="_top">foreign key</a> specified in {@code value}
-     *                using the format '(source_column_name [, ...]) references
-     *                target_table_name(primary_key_column_name [, ...]) [as
-     *                foreign_key_name]'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
-     *                DELETE_FOREIGN_KEY}: Deletes a <a
-     *                href="../../../../../concepts/tables.html#foreign-key"
-     *                target="_top">foreign key</a>.  The {@code value} should
-     *                be the foreign_key_name specified when creating the key
-     *                or the complete string used to define it.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
-     *                ADD_PARTITION}: Adds the partition specified in {@code
-     *                value}, to either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
-     *                REMOVE_PARTITION}: Removes the partition specified in
-     *                {@code value} (and relocates all of its data to the
-     *                default partition) from either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
-     *                DELETE_PARTITION}: Deletes the partition specified in
-     *                {@code value} (and all of its data) from either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
-     *                SET_GLOBAL_ACCESS_MODE}: Sets the global access mode
-     *                (i.e. locking) for the table specified in {@code
-     *                tableName}. Specify the access mode in {@code value}.
-     *                Valid modes are 'no_access', 'read_only', 'write_only'
-     *                and 'read_write'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REFRESH
-     *                REFRESH}: Replays all the table creation commands
-     *                required to create this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a>.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
-     *                SET_REFRESH_METHOD}: Sets the method by which this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> is refreshed to the
-     *                method specified in {@code value} - one of 'manual',
-     *                'periodic', 'on_change'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
-     *                SET_REFRESH_START_TIME}: Sets the time to start periodic
-     *                refreshes of this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> to the datetime
-     *                string specified in {@code value} with format 'YYYY-MM-DD
-     *                HH:MM:SS'.  Subsequent refreshes occur at the specified
-     *                time + N * the refresh period.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
-     *                SET_REFRESH_PERIOD}: Sets the time interval in seconds at
-     *                which to refresh this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> to the value
-     *                specified in {@code value}.  Also, sets the refresh
-     *                method to periodic if not already set.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
-     *                REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
-     *                href="../../../../../concepts/full_text_search.html"
-     *                target="_top">text search</a> attribute from all columns.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
-     *                SET_STRATEGY_DEFINITION}: Sets the <a
-     *                href="../../../../../rm/concepts.html#tier-strategies"
-     *                target="_top">tier strategy</a> for the table and its
-     *                columns to the one specified in {@code value}, replacing
-     *                the existing tier strategy in its entirety. See <a
-     *                href="../../../../../rm/concepts.html#tier-strategies"
-     *                target="_top">tier strategy usage</a> for format and <a
-     *                href="../../../../../rm/usage.html#tier-strategies"
-     *                target="_top">tier strategy examples</a> for examples.
-     *                </ul>
-     * @param value  The value of the modification, depending on {@code
-     *               action}.  For example, if {@code action} is {@code
-     *               add_column}, this would be the column name; while the
-     *               column's definition would be covered by the {@code
-     *               column_type}, {@code column_properties}, {@code
-     *               column_default_value}, and {@code add_column_expression}
-     *               in {@code options}.  If {@code action} is {@code ttl}, it
-     *               would be the number of minutes for the new TTL. If {@code
-     *               action} is {@code refresh}, this field would be blank.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#ACTION
-     *                 ACTION}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
-     *                 COLUMN_NAME}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
-     *                 TABLE_NAME}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
-     *                 COLUMN_DEFAULT_VALUE}: When adding a column, set a
-     *                 default value for existing records.  For nullable
-     *                 columns, the default value will be null, regardless of
-     *                 data type.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
-     *                 COLUMN_PROPERTIES}: When adding or changing a column,
-     *                 set the column properties (strings, separated by a
-     *                 comma: data, store_only, text_search, char8, int8 etc).
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
-     *                 COLUMN_TYPE}: When adding or changing a column, set the
-     *                 column type (strings, separated by a comma: int, double,
-     *                 string, null etc).
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
-     *                 COMPRESSION_TYPE}: When setting column compression
-     *                 ({@code set_column_compression} for {@code action}),
-     *                 compression type to use: {@code none} (to use no
-     *                 compression) or a valid compression type.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
-     *                 SNAPPY}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#LZ4HC
-     *                 LZ4HC}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
-     *                 SNAPPY}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
-     *                 COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
-     *                 add_column_expression} instead.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
-     *                 RENAME_COLUMN}: When changing a column, specify new
-     *                 column name.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
-     *                 VALIDATE_CHANGE_COLUMN}: When changing a column,
-     *                 validate the change before applying it. If {@code true},
-     *                 then validate all values. A value too large (or too
-     *                 long) for the new type will prevent any change. If
-     *                 {@code false}, then when a value is too large or long,
-     *                 it will be truncated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
-     *                 true
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#FALSE
-     *                 FALSE}: false
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
-     *                 UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">time-to-live</a> (TTL) expiration
-     *                 countdown timer should be reset to the table's TTL.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
-     *                 Reset the expiration countdown timer to the table's
-     *                 configured TTL.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#FALSE
-     *                 FALSE}: Don't reset the timer; expiration countdown will
-     *                 continue from where it is, as if the table had not been
-     *                 accessed.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
-     *                 ADD_COLUMN_EXPRESSION}: When adding a column, an
-     *                 optional expression to use for the new column's values.
-     *                 Any valid expression may be used, including one
-     *                 containing references to existing columns in the same
-     *                 table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
-     *                 STRATEGY_DEFINITION}: Optional parameter for specifying
-     *                 the <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy</a> for the table and its
-     *                 columns when {@code action} is {@code
-     *                 set_strategy_definition}, replacing the existing tier
-     *                 strategy in its entirety. See <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy usage</a> for format and <a
-     *                 href="../../../../../rm/usage.html#tier-strategies"
-     *                 target="_top">tier strategy examples</a> for examples.
-     *                 This option will be ignored if {@code value} is also
-     *                 specified.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
-     *                 INDEX_TYPE}: Type of index to create, when {@code
-     *                 action} is {@code create_index}, or to delete, when
-     *                 {@code action} is {@code delete_index}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN
-     *                 COLUMN}: Create or delete a <a
-     *                 href="../../../../../concepts/indexes.html#column-index"
-     *                 target="_top">column (attribute) index</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
-     *                 CHUNK_SKIP}: Create or delete a <a
-     *                 href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                 target="_top">chunk skip index</a>.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN
-     *                 COLUMN}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public AlterTableRequest(String tableName, String action, String value, Map<String, String> options) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        this.action = (action == null) ? "" : action;
-        this.value = (value == null) ? "" : value;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Table on which the operation will be performed. Must be an
-     *         existing table, view, or collection.
-     * 
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * 
-     * @param tableName  Table on which the operation will be performed. Must
-     *                   be an existing table, view, or collection.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AlterTableRequest setTableName(String tableName) {
-        this.tableName = (tableName == null) ? "" : tableName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Modification operation to be applied
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
-     *         ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action will be
-     *         ignored.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
-     *         CREATE_INDEX}: Creates either a <a
-     *         href="../../../../../concepts/indexes.html#column-index"
-     *         target="_top">column (attribute) index</a> or <a
-     *         href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *         target="_top">chunk skip index</a>, depending on the specified
-     *         {@code index_type}, on the column name specified in {@code
-     *         value}. If this column already has the specified index, an error
-     *         will be returned.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
-     *         DELETE_INDEX}: Deletes either a <a
-     *         href="../../../../../concepts/indexes.html#column-index"
-     *         target="_top">column (attribute) index</a> or <a
-     *         href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *         target="_top">chunk skip index</a>, depending on the specified
-     *         {@code index_type}, on the column name specified in {@code
-     *         value}. If this column does not have the specified index, an
-     *         error will be returned.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
-     *         MOVE_TO_COLLECTION}: Moves a table or view into a collection
-     *         named {@code value}.  If the collection provided is
-     *         non-existent, the collection will be automatically created. If
-     *         {@code value} is empty, then the table or view will be
-     *         top-level.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
-     *         PROTECTED}: Sets whether the given {@code tableName} should be
-     *         <a href="../../../../../concepts/protection.html"
-     *         target="_top">protected</a> or not. The {@code value} must be
-     *         either 'true' or 'false'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
-     *         RENAME_TABLE}: Renames a table, view or collection to {@code
-     *         value}. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}: Sets the
-     *         <a href="../../../../../concepts/ttl.html"
-     *         target="_top">time-to-live</a> in minutes of the table, view, or
-     *         collection specified in {@code tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
-     *         ADD_COLUMN}: Adds the column specified in {@code value} to the
-     *         table specified in {@code tableName}.  Use {@code column_type}
-     *         and {@code column_properties} in {@code options} to set the
-     *         column's type and properties, respectively.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
-     *         CHANGE_COLUMN}: Changes type and properties of the column
-     *         specified in {@code value}.  Use {@code column_type} and {@code
-     *         column_properties} in {@code options} to set the column's type
-     *         and properties, respectively. Note that primary key and/or shard
-     *         key columns cannot be changed. All unchanging column properties
-     *         must be listed for the change to take place, e.g., to add
-     *         dictionary encoding to an existing 'char4' column, both 'char4'
-     *         and 'dict' must be specified in the {@code options} map.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
-     *         SET_COLUMN_COMPRESSION}: Modifies the <a
-     *         href="../../../../../concepts/compression.html"
-     *         target="_top">compression</a> setting on the column specified in
-     *         {@code value} to the compression type specified in {@code
-     *         compression_type}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
-     *         DELETE_COLUMN}: Deletes the column specified in {@code value}
-     *         from the table specified in {@code tableName}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
-     *         CREATE_FOREIGN_KEY}: Creates a <a
-     *         href="../../../../../concepts/tables.html#foreign-key"
-     *         target="_top">foreign key</a> specified in {@code value} using
-     *         the format '(source_column_name [, ...]) references
-     *         target_table_name(primary_key_column_name [, ...]) [as
-     *         foreign_key_name]'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
-     *         DELETE_FOREIGN_KEY}: Deletes a <a
-     *         href="../../../../../concepts/tables.html#foreign-key"
-     *         target="_top">foreign key</a>.  The {@code value} should be the
-     *         foreign_key_name specified when creating the key or the complete
-     *         string used to define it.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
-     *         ADD_PARTITION}: Adds the partition specified in {@code value},
-     *         to either a <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-range"
-     *         target="_top">range-partitioned</a> or <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *         target="_top">manual list-partitioned</a> table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
-     *         REMOVE_PARTITION}: Removes the partition specified in {@code
-     *         value} (and relocates all of its data to the default partition)
-     *         from either a <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-range"
-     *         target="_top">range-partitioned</a> or <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *         target="_top">manual list-partitioned</a> table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
-     *         DELETE_PARTITION}: Deletes the partition specified in {@code
-     *         value} (and all of its data) from either a <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-range"
-     *         target="_top">range-partitioned</a> or <a
-     *         href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *         target="_top">manual list-partitioned</a> table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
-     *         SET_GLOBAL_ACCESS_MODE}: Sets the global access mode (i.e.
-     *         locking) for the table specified in {@code tableName}. Specify
-     *         the access mode in {@code value}. Valid modes are 'no_access',
-     *         'read_only', 'write_only' and 'read_write'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#REFRESH REFRESH}:
-     *         Replays all the table creation commands required to create this
-     *         <a href="../../../../../concepts/materialized_views.html"
-     *         target="_top">materialized view</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
-     *         SET_REFRESH_METHOD}: Sets the method by which this <a
-     *         href="../../../../../concepts/materialized_views.html"
-     *         target="_top">materialized view</a> is refreshed to the method
-     *         specified in {@code value} - one of 'manual', 'periodic',
-     *         'on_change'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
-     *         SET_REFRESH_START_TIME}: Sets the time to start periodic
-     *         refreshes of this <a
-     *         href="../../../../../concepts/materialized_views.html"
-     *         target="_top">materialized view</a> to the datetime string
-     *         specified in {@code value} with format 'YYYY-MM-DD HH:MM:SS'.
-     *         Subsequent refreshes occur at the specified time + N * the
-     *         refresh period.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
-     *         SET_REFRESH_PERIOD}: Sets the time interval in seconds at which
-     *         to refresh this <a
-     *         href="../../../../../concepts/materialized_views.html"
-     *         target="_top">materialized view</a> to the value specified in
-     *         {@code value}.  Also, sets the refresh method to periodic if not
-     *         already set.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
-     *         REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
-     *         href="../../../../../concepts/full_text_search.html"
-     *         target="_top">text search</a> attribute from all columns.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
-     *         SET_STRATEGY_DEFINITION}: Sets the <a
-     *         href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy</a> for the table and its columns to
-     *         the one specified in {@code value}, replacing the existing tier
-     *         strategy in its entirety. See <a
-     *         href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy usage</a> for format and <a
-     *         href="../../../../../rm/usage.html#tier-strategies"
-     *         target="_top">tier strategy examples</a> for examples.
-     *         </ul>
-     * 
-     */
-    public String getAction() {
-        return action;
-    }
-
-    /**
-     * 
-     * @param action  Modification operation to be applied
-     *                Supported values:
-     *                <ul>
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ALLOW_HOMOGENEOUS_TABLES
-     *                ALLOW_HOMOGENEOUS_TABLES}: No longer supported; action
-     *                will be ignored.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CREATE_INDEX
-     *                CREATE_INDEX}: Creates either a <a
-     *                href="../../../../../concepts/indexes.html#column-index"
-     *                target="_top">column (attribute) index</a> or <a
-     *                href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                target="_top">chunk skip index</a>, depending on the
-     *                specified {@code index_type}, on the column name
-     *                specified in {@code value}. If this column already has
-     *                the specified index, an error will be returned.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_INDEX
-     *                DELETE_INDEX}: Deletes either a <a
-     *                href="../../../../../concepts/indexes.html#column-index"
-     *                target="_top">column (attribute) index</a> or <a
-     *                href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                target="_top">chunk skip index</a>, depending on the
-     *                specified {@code index_type}, on the column name
-     *                specified in {@code value}. If this column does not have
-     *                the specified index, an error will be returned.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#MOVE_TO_COLLECTION
-     *                MOVE_TO_COLLECTION}: Moves a table or view into a
-     *                collection named {@code value}.  If the collection
-     *                provided is non-existent, the collection will be
-     *                automatically created. If {@code value} is empty, then
-     *                the table or view will be top-level.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#PROTECTED
-     *                PROTECTED}: Sets whether the given {@code tableName}
-     *                should be <a
-     *                href="../../../../../concepts/protection.html"
-     *                target="_top">protected</a> or not. The {@code value}
-     *                must be either 'true' or 'false'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#RENAME_TABLE
-     *                RENAME_TABLE}: Renames a table, view or collection to
-     *                {@code value}. Has the same naming restrictions as <a
-     *                href="../../../../../concepts/tables.html"
-     *                target="_top">tables</a>.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#TTL TTL}:
-     *                Sets the <a href="../../../../../concepts/ttl.html"
-     *                target="_top">time-to-live</a> in minutes of the table,
-     *                view, or collection specified in {@code tableName}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ADD_COLUMN
-     *                ADD_COLUMN}: Adds the column specified in {@code value}
-     *                to the table specified in {@code tableName}.  Use {@code
-     *                column_type} and {@code column_properties} in {@code
-     *                options} to set the column's type and properties,
-     *                respectively.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CHANGE_COLUMN
-     *                CHANGE_COLUMN}: Changes type and properties of the column
-     *                specified in {@code value}.  Use {@code column_type} and
-     *                {@code column_properties} in {@code options} to set the
-     *                column's type and properties, respectively. Note that
-     *                primary key and/or shard key columns cannot be changed.
-     *                All unchanging column properties must be listed for the
-     *                change to take place, e.g., to add dictionary encoding to
-     *                an existing 'char4' column, both 'char4' and 'dict' must
-     *                be specified in the {@code options} map.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_COLUMN_COMPRESSION
-     *                SET_COLUMN_COMPRESSION}: Modifies the <a
-     *                href="../../../../../concepts/compression.html"
-     *                target="_top">compression</a> setting on the column
-     *                specified in {@code value} to the compression type
-     *                specified in {@code compression_type}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_COLUMN
-     *                DELETE_COLUMN}: Deletes the column specified in {@code
-     *                value} from the table specified in {@code tableName}.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#CREATE_FOREIGN_KEY
-     *                CREATE_FOREIGN_KEY}: Creates a <a
-     *                href="../../../../../concepts/tables.html#foreign-key"
-     *                target="_top">foreign key</a> specified in {@code value}
-     *                using the format '(source_column_name [, ...]) references
-     *                target_table_name(primary_key_column_name [, ...]) [as
-     *                foreign_key_name]'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_FOREIGN_KEY
-     *                DELETE_FOREIGN_KEY}: Deletes a <a
-     *                href="../../../../../concepts/tables.html#foreign-key"
-     *                target="_top">foreign key</a>.  The {@code value} should
-     *                be the foreign_key_name specified when creating the key
-     *                or the complete string used to define it.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#ADD_PARTITION
-     *                ADD_PARTITION}: Adds the partition specified in {@code
-     *                value}, to either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REMOVE_PARTITION
-     *                REMOVE_PARTITION}: Removes the partition specified in
-     *                {@code value} (and relocates all of its data to the
-     *                default partition) from either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#DELETE_PARTITION
-     *                DELETE_PARTITION}: Deletes the partition specified in
-     *                {@code value} (and all of its data) from either a <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-range"
-     *                target="_top">range-partitioned</a> or <a
-     *                href="../../../../../concepts/tables.html#partitioning-by-list-manual"
-     *                target="_top">manual list-partitioned</a> table.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_GLOBAL_ACCESS_MODE
-     *                SET_GLOBAL_ACCESS_MODE}: Sets the global access mode
-     *                (i.e. locking) for the table specified in {@code
-     *                tableName}. Specify the access mode in {@code value}.
-     *                Valid modes are 'no_access', 'read_only', 'write_only'
-     *                and 'read_write'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REFRESH
-     *                REFRESH}: Replays all the table creation commands
-     *                required to create this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a>.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_METHOD
-     *                SET_REFRESH_METHOD}: Sets the method by which this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> is refreshed to the
-     *                method specified in {@code value} - one of 'manual',
-     *                'periodic', 'on_change'.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_START_TIME
-     *                SET_REFRESH_START_TIME}: Sets the time to start periodic
-     *                refreshes of this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> to the datetime
-     *                string specified in {@code value} with format 'YYYY-MM-DD
-     *                HH:MM:SS'.  Subsequent refreshes occur at the specified
-     *                time + N * the refresh period.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_REFRESH_PERIOD
-     *                SET_REFRESH_PERIOD}: Sets the time interval in seconds at
-     *                which to refresh this <a
-     *                href="../../../../../concepts/materialized_views.html"
-     *                target="_top">materialized view</a> to the value
-     *                specified in {@code value}.  Also, sets the refresh
-     *                method to periodic if not already set.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#REMOVE_TEXT_SEARCH_ATTRIBUTES
-     *                REMOVE_TEXT_SEARCH_ATTRIBUTES}: Removes <a
-     *                href="../../../../../concepts/full_text_search.html"
-     *                target="_top">text search</a> attribute from all columns.
-     *                        <li> {@link
-     *                com.gpudb.protocol.AlterTableRequest.Action#SET_STRATEGY_DEFINITION
-     *                SET_STRATEGY_DEFINITION}: Sets the <a
-     *                href="../../../../../rm/concepts.html#tier-strategies"
-     *                target="_top">tier strategy</a> for the table and its
-     *                columns to the one specified in {@code value}, replacing
-     *                the existing tier strategy in its entirety. See <a
-     *                href="../../../../../rm/concepts.html#tier-strategies"
-     *                target="_top">tier strategy usage</a> for format and <a
-     *                href="../../../../../rm/usage.html#tier-strategies"
-     *                target="_top">tier strategy examples</a> for examples.
-     *                </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AlterTableRequest setAction(String action) {
-        this.action = (action == null) ? "" : action;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The value of the modification, depending on {@code action}.  For
-     *         example, if {@code action} is {@code add_column}, this would be
-     *         the column name; while the column's definition would be covered
-     *         by the {@code column_type}, {@code column_properties}, {@code
-     *         column_default_value}, and {@code add_column_expression} in
-     *         {@code options}.  If {@code action} is {@code ttl}, it would be
-     *         the number of minutes for the new TTL. If {@code action} is
-     *         {@code refresh}, this field would be blank.
-     * 
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * 
-     * @param value  The value of the modification, depending on {@code
-     *               action}.  For example, if {@code action} is {@code
-     *               add_column}, this would be the column name; while the
-     *               column's definition would be covered by the {@code
-     *               column_type}, {@code column_properties}, {@code
-     *               column_default_value}, and {@code add_column_expression}
-     *               in {@code options}.  If {@code action} is {@code ttl}, it
-     *               would be the number of minutes for the new TTL. If {@code
-     *               action} is {@code refresh}, this field would be blank.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AlterTableRequest setValue(String value) {
-        this.value = (value == null) ? "" : value;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#ACTION ACTION}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
-     *         COLUMN_NAME}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
-     *         TABLE_NAME}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
-     *         COLUMN_DEFAULT_VALUE}: When adding a column, set a default value
-     *         for existing records.  For nullable columns, the default value
-     *         will be null, regardless of data type.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
-     *         COLUMN_PROPERTIES}: When adding or changing a column, set the
-     *         column properties (strings, separated by a comma: data,
-     *         store_only, text_search, char8, int8 etc).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
-     *         COLUMN_TYPE}: When adding or changing a column, set the column
-     *         type (strings, separated by a comma: int, double, string, null
-     *         etc).
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
-     *         COMPRESSION_TYPE}: When setting column compression ({@code
-     *         set_column_compression} for {@code action}), compression type to
-     *         use: {@code none} (to use no compression) or a valid compression
-     *         type.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#SNAPPY SNAPPY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#LZ4HC LZ4HC}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#SNAPPY SNAPPY}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
-     *         COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
-     *         add_column_expression} instead.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
-     *         RENAME_COLUMN}: When changing a column, specify new column name.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
-     *         VALIDATE_CHANGE_COLUMN}: When changing a column, validate the
-     *         change before applying it. If {@code true}, then validate all
-     *         values. A value too large (or too long) for the new type will
-     *         prevent any change. If {@code false}, then when a value is too
-     *         large or long, it will be truncated.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}: true
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#FALSE FALSE}: false
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
-     *         UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
-     *         href="../../../../../concepts/ttl.html"
-     *         target="_top">time-to-live</a> (TTL) expiration countdown timer
-     *         should be reset to the table's TTL.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}: Reset
-     *         the expiration countdown timer to the table's configured TTL.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#FALSE FALSE}: Don't
-     *         reset the timer; expiration countdown will continue from where
-     *         it is, as if the table had not been accessed.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
-     *         ADD_COLUMN_EXPRESSION}: When adding a column, an optional
-     *         expression to use for the new column's values. Any valid
-     *         expression may be used, including one containing references to
-     *         existing columns in the same table.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
-     *         STRATEGY_DEFINITION}: Optional parameter for specifying the <a
-     *         href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy</a> for the table and its columns
-     *         when {@code action} is {@code set_strategy_definition},
-     *         replacing the existing tier strategy in its entirety. See <a
-     *         href="../../../../../rm/concepts.html#tier-strategies"
-     *         target="_top">tier strategy usage</a> for format and <a
-     *         href="../../../../../rm/usage.html#tier-strategies"
-     *         target="_top">tier strategy examples</a> for examples.  This
-     *         option will be ignored if {@code value} is also specified.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
-     *         INDEX_TYPE}: Type of index to create, when {@code action} is
-     *         {@code create_index}, or to delete, when {@code action} is
-     *         {@code delete_index}.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN COLUMN}:
-     *         Create or delete a <a
-     *         href="../../../../../concepts/indexes.html#column-index"
-     *         target="_top">column (attribute) index</a>.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
-     *         CHUNK_SKIP}: Create or delete a <a
-     *         href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *         target="_top">chunk skip index</a>.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AlterTableRequest.Options#COLUMN COLUMN}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#ACTION
-     *                 ACTION}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_NAME
-     *                 COLUMN_NAME}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TABLE_NAME
-     *                 TABLE_NAME}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_DEFAULT_VALUE
-     *                 COLUMN_DEFAULT_VALUE}: When adding a column, set a
-     *                 default value for existing records.  For nullable
-     *                 columns, the default value will be null, regardless of
-     *                 data type.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_PROPERTIES
-     *                 COLUMN_PROPERTIES}: When adding or changing a column,
-     *                 set the column properties (strings, separated by a
-     *                 comma: data, store_only, text_search, char8, int8 etc).
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN_TYPE
-     *                 COLUMN_TYPE}: When adding or changing a column, set the
-     *                 column type (strings, separated by a comma: int, double,
-     *                 string, null etc).
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COMPRESSION_TYPE
-     *                 COMPRESSION_TYPE}: When setting column compression
-     *                 ({@code set_column_compression} for {@code action}),
-     *                 compression type to use: {@code none} (to use no
-     *                 compression) or a valid compression type.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#NONE NONE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
-     *                 SNAPPY}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#LZ4 LZ4}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#LZ4HC
-     *                 LZ4HC}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#SNAPPY
-     *                 SNAPPY}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COPY_VALUES_FROM_COLUMN
-     *                 COPY_VALUES_FROM_COLUMN}: Deprecated.  Please use {@code
-     *                 add_column_expression} instead.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#RENAME_COLUMN
-     *                 RENAME_COLUMN}: When changing a column, specify new
-     *                 column name.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#VALIDATE_CHANGE_COLUMN
-     *                 VALIDATE_CHANGE_COLUMN}: When changing a column,
-     *                 validate the change before applying it. If {@code true},
-     *                 then validate all values. A value too large (or too
-     *                 long) for the new type will prevent any change. If
-     *                 {@code false}, then when a value is too large or long,
-     *                 it will be truncated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
-     *                 true
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#FALSE
-     *                 FALSE}: false
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#UPDATE_LAST_ACCESS_TIME
-     *                 UPDATE_LAST_ACCESS_TIME}: Indicates whether the <a
-     *                 href="../../../../../concepts/ttl.html"
-     *                 target="_top">time-to-live</a> (TTL) expiration
-     *                 countdown timer should be reset to the table's TTL.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}:
-     *                 Reset the expiration countdown timer to the table's
-     *                 configured TTL.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#FALSE
-     *                 FALSE}: Don't reset the timer; expiration countdown will
-     *                 continue from where it is, as if the table had not been
-     *                 accessed.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#ADD_COLUMN_EXPRESSION
-     *                 ADD_COLUMN_EXPRESSION}: When adding a column, an
-     *                 optional expression to use for the new column's values.
-     *                 Any valid expression may be used, including one
-     *                 containing references to existing columns in the same
-     *                 table.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#STRATEGY_DEFINITION
-     *                 STRATEGY_DEFINITION}: Optional parameter for specifying
-     *                 the <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy</a> for the table and its
-     *                 columns when {@code action} is {@code
-     *                 set_strategy_definition}, replacing the existing tier
-     *                 strategy in its entirety. See <a
-     *                 href="../../../../../rm/concepts.html#tier-strategies"
-     *                 target="_top">tier strategy usage</a> for format and <a
-     *                 href="../../../../../rm/usage.html#tier-strategies"
-     *                 target="_top">tier strategy examples</a> for examples.
-     *                 This option will be ignored if {@code value} is also
-     *                 specified.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#INDEX_TYPE
-     *                 INDEX_TYPE}: Type of index to create, when {@code
-     *                 action} is {@code create_index}, or to delete, when
-     *                 {@code action} is {@code delete_index}.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN
-     *                 COLUMN}: Create or delete a <a
-     *                 href="../../../../../concepts/indexes.html#column-index"
-     *                 target="_top">column (attribute) index</a>.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#CHUNK_SKIP
-     *                 CHUNK_SKIP}: Create or delete a <a
-     *                 href="../../../../../concepts/indexes.html#chunk-skip-index"
-     *                 target="_top">chunk skip index</a>.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AlterTableRequest.Options#COLUMN
-     *                 COLUMN}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AlterTableRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.tableName;
-
-            case 1:
-                return this.action;
-
-            case 2:
-                return this.value;
-
-            case 3:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.tableName = (String)value;
-                break;
-
-            case 1:
-                this.action = (String)value;
-                break;
-
-            case 2:
-                this.value = (String)value;
-                break;
-
-            case 3:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        AlterTableRequest that = (AlterTableRequest)obj;
-
-        return ( this.tableName.equals( that.tableName )
-                 && this.action.equals( that.action )
-                 && this.value.equals( that.value )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "action" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.action ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "value" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.value ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.tableName.hashCode();
-        hashCode = (31 * hashCode) + this.action.hashCode();
-        hashCode = (31 * hashCode) + this.value.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

@@ -7,12 +7,13 @@
 package com.gpudb.protocol;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class ShowGraphGrammarRequest implements IndexedRecord {
@@ -21,15 +22,8 @@ public class ShowGraphGrammarRequest implements IndexedRecord {
             .record("ShowGraphGrammarRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private Map<String, String> options;
 
 
@@ -37,8 +31,13 @@ public class ShowGraphGrammarRequest implements IndexedRecord {
         options = new LinkedHashMap<>();
     }
 
+
     public ShowGraphGrammarRequest(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public Map<String, String> getOptions() {
@@ -71,7 +70,7 @@ public class ShowGraphGrammarRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -82,17 +81,17 @@ public class ShowGraphGrammarRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowGraphGrammarRequest that = (ShowGraphGrammarRequest)obj;
+        ShowGraphGrammarRequest that = (ShowGraphGrammarRequest) obj;
 
-        return ( this.options.equals( that.options ) );
+        return (this.options.equals(that.options));
     }
 
 
@@ -100,11 +99,11 @@ public class ShowGraphGrammarRequest implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }

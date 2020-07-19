@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,30 +25,15 @@ public class AdminAlterJobsResponse implements IndexedRecord {
             .record("AdminAlterJobsResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("jobIds").type().array().items().longType().noDefault()
-                .name("action").type().stringType().noDefault()
-                .name("status").type().array().items().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("jobIds").type().array().items().longType().noDefault()
+            .name("action").type().stringType().noDefault()
+            .name("status").type().array().items().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<Long> jobIds;
     private String action;
     private List<String> status;
     private Map<String, String> info;
-
-
     /**
      * Constructs an AdminAlterJobsResponse object with default parameters.
      */
@@ -55,20 +41,25 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Jobs on which the action was performed.
-     * 
      */
     public List<Long> getJobIds() {
         return jobIds;
     }
 
     /**
-     * 
-     * @param jobIds  Jobs on which the action was performed.
-     * 
+     * @param jobIds Jobs on which the action was performed.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsResponse setJobIds(List<Long> jobIds) {
         this.jobIds = (jobIds == null) ? new ArrayList<Long>() : jobIds;
@@ -76,20 +67,15 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Action requested on the jobs.
-     * 
      */
     public String getAction() {
         return action;
     }
 
     /**
-     * 
-     * @param action  Action requested on the jobs.
-     * 
+     * @param action Action requested on the jobs.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsResponse setAction(String action) {
         this.action = (action == null) ? "" : action;
@@ -97,20 +83,15 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Status of the requested action for each job.
-     * 
      */
     public List<String> getStatus() {
         return status;
     }
 
     /**
-     * 
-     * @param status  Status of the requested action for each job.
-     * 
+     * @param status Status of the requested action for each job.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsResponse setStatus(List<String> status) {
         this.status = (status == null) ? new ArrayList<String>() : status;
@@ -118,20 +99,15 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public AdminAlterJobsResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -141,9 +117,8 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -153,13 +128,10 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -184,31 +156,29 @@ public class AdminAlterJobsResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.jobIds = (List<Long>)value;
+                this.jobIds = (List<Long>) value;
                 break;
 
             case 1:
-                this.action = (String)value;
+                this.action = (String) value;
                 break;
 
             case 2:
-                this.status = (List<String>)value;
+                this.status = (List<String>) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -218,43 +188,43 @@ public class AdminAlterJobsResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        AdminAlterJobsResponse that = (AdminAlterJobsResponse)obj;
+        AdminAlterJobsResponse that = (AdminAlterJobsResponse) obj;
 
-        return ( this.jobIds.equals( that.jobIds )
-                 && this.action.equals( that.action )
-                 && this.status.equals( that.status )
-                 && this.info.equals( that.info ) );
+        return (this.jobIds.equals(that.jobIds)
+                && this.action.equals(that.action)
+                && this.status.equals(that.status)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "jobIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "action" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.action ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "status" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.status ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("jobIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobIds));
+        builder.append(", ");
+        builder.append(gd.toString("action"));
+        builder.append(": ");
+        builder.append(gd.toString(this.action));
+        builder.append(", ");
+        builder.append(gd.toString("status"));
+        builder.append(": ");
+        builder.append(gd.toString(this.status));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,28 +25,13 @@ public class SolveGraphResponse implements IndexedRecord {
             .record("SolveGraphResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("result").type().booleanType().noDefault()
-                .name("resultPerDestinationNode").type().array().items().floatType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("result").type().booleanType().noDefault()
+            .name("resultPerDestinationNode").type().array().items().floatType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private boolean result;
     private List<Float> resultPerDestinationNode;
     private Map<String, String> info;
-
-
     /**
      * Constructs a SolveGraphResponse object with default parameters.
      */
@@ -53,20 +39,25 @@ public class SolveGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Indicates a successful solution.
-     * 
      */
     public boolean getResult() {
         return result;
     }
 
     /**
-     * 
-     * @param result  Indicates a successful solution.
-     * 
+     * @param result Indicates a successful solution.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public SolveGraphResponse setResult(boolean result) {
         this.result = result;
@@ -74,26 +65,21 @@ public class SolveGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Cost or Pagerank (based on solver type) for each destination
-     *         node requested. Only populated if {@code export_solve_results}
-     *         is set to {@code true}.
-     * 
+     * node requested. Only populated if {@code export_solve_results}
+     * is set to {@code true}.
      */
     public List<Float> getResultPerDestinationNode() {
         return resultPerDestinationNode;
     }
 
     /**
-     * 
-     * @param resultPerDestinationNode  Cost or Pagerank (based on solver type)
-     *                                  for each destination node requested.
-     *                                  Only populated if {@code
-     *                                  export_solve_results} is set to {@code
-     *                                  true}.
-     * 
+     * @param resultPerDestinationNode Cost or Pagerank (based on solver type)
+     *                                 for each destination node requested.
+     *                                 Only populated if {@code
+     *                                 export_solve_results} is set to {@code
+     *                                 true}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public SolveGraphResponse setResultPerDestinationNode(List<Float> resultPerDestinationNode) {
         this.resultPerDestinationNode = (resultPerDestinationNode == null) ? new ArrayList<Float>() : resultPerDestinationNode;
@@ -101,20 +87,15 @@ public class SolveGraphResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public SolveGraphResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -124,9 +105,8 @@ public class SolveGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -136,13 +116,10 @@ public class SolveGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -164,27 +141,25 @@ public class SolveGraphResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.result = (Boolean)value;
+                this.result = (Boolean) value;
                 break;
 
             case 1:
-                this.resultPerDestinationNode = (List<Float>)value;
+                this.resultPerDestinationNode = (List<Float>) value;
                 break;
 
             case 2:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -194,38 +169,38 @@ public class SolveGraphResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        SolveGraphResponse that = (SolveGraphResponse)obj;
+        SolveGraphResponse that = (SolveGraphResponse) obj;
 
-        return ( ( this.result == that.result )
-                 && this.resultPerDestinationNode.equals( that.resultPerDestinationNode )
-                 && this.info.equals( that.info ) );
+        return ((this.result == that.result)
+                && this.resultPerDestinationNode.equals(that.resultPerDestinationNode)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "result" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.result ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "resultPerDestinationNode" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.resultPerDestinationNode ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("result"));
+        builder.append(": ");
+        builder.append(gd.toString(this.result));
+        builder.append(", ");
+        builder.append(gd.toString("resultPerDestinationNode"));
+        builder.append(": ");
+        builder.append(gd.toString(this.resultPerDestinationNode));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -233,7 +208,7 @@ public class SolveGraphResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Boolean)this.result).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.result).hashCode();
         hashCode = (31 * hashCode) + this.resultPerDestinationNode.hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;

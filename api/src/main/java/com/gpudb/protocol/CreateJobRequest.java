@@ -5,13 +5,14 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -27,130 +28,94 @@ public class CreateJobRequest implements IndexedRecord {
             .record("CreateJobRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("endpoint").type().stringType().noDefault()
-                .name("requestEncoding").type().stringType().noDefault()
-                .name("data").type().bytesType().noDefault()
-                .name("dataStr").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("endpoint").type().stringType().noDefault()
+            .name("requestEncoding").type().stringType().noDefault()
+            .name("data").type().bytesType().noDefault()
+            .name("dataStr").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    /**
-     * The encoding of the request payload for the job.
-     * Supported values:
-     * <ul>
-     *         <li> {@link
-     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY BINARY}
-     *         <li> {@link
-     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON JSON}
-     *         <li> {@link
-     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY SNAPPY}
-     * </ul>
-     * The default value is {@link
-     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY BINARY}.
-     * A set of string constants for the parameter {@code requestEncoding}.
-     */
-    public static final class RequestEncoding {
-        public static final String BINARY = "binary";
-        public static final String JSON = "json";
-        public static final String SNAPPY = "snappy";
-
-        private RequestEncoding() {  }
-    }
-
     private String endpoint;
     private String requestEncoding;
     private ByteBuffer data;
     private String dataStr;
     private Map<String, String> options;
-
-
     /**
      * Constructs a CreateJobRequest object with default parameters.
      */
     public CreateJobRequest() {
         endpoint = "";
         requestEncoding = "";
-        data = ByteBuffer.wrap( new byte[0] );
+        data = ByteBuffer.wrap(new byte[0]);
         dataStr = "";
         options = new LinkedHashMap<>();
     }
-
     /**
      * Constructs a CreateJobRequest object with the specified parameters.
-     * 
-     * @param endpoint  Indicates which endpoint to execute, e.g.
-     *                  '/alter/table'.
-     * @param requestEncoding  The encoding of the request payload for the job.
-     *                         Supported values:
-     *                         <ul>
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *                         BINARY}
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON
-     *                         JSON}
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
-     *                         SNAPPY}
-     *                         </ul>
-     *                         The default value is {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *                         BINARY}.
-     * @param data  Binary-encoded payload for the job to be run
-     *              asynchronously.  The payload must contain the relevant
-     *              input parameters for the endpoint indicated in {@code
-     *              endpoint}.  Please see the documentation for the
-     *              appropriate endpoint to see what values must (or can) be
-     *              specified.  If this parameter is used, then {@code
-     *              requestEncoding} must be {@code binary} or {@code snappy}.
-     * @param dataStr  JSON-encoded payload for the job to be run
-     *                 asynchronously.  The payload must contain the relevant
-     *                 input parameters for the endpoint indicated in {@code
-     *                 endpoint}.  Please see the documentation for the
-     *                 appropriate endpoint to see what values must (or can) be
-     *                 specified.  If this parameter is used, then {@code
-     *                 requestEncoding} must be {@code json}.
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     *
+     * @param endpoint        Indicates which endpoint to execute, e.g.
+     *                        '/alter/table'.
+     * @param requestEncoding The encoding of the request payload for the job.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     *                        BINARY}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON
+     *                        JSON}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
+     *                        SNAPPY}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     *                        BINARY}.
+     * @param data            Binary-encoded payload for the job to be run
+     *                        asynchronously.  The payload must contain the relevant
+     *                        input parameters for the endpoint indicated in {@code
+     *                        endpoint}.  Please see the documentation for the
+     *                        appropriate endpoint to see what values must (or can) be
+     *                        specified.  If this parameter is used, then {@code
+     *                        requestEncoding} must be {@code binary} or {@code snappy}.
+     * @param dataStr         JSON-encoded payload for the job to be run
+     *                        asynchronously.  The payload must contain the relevant
+     *                        input parameters for the endpoint indicated in {@code
+     *                        endpoint}.  Please see the documentation for the
+     *                        appropriate endpoint to see what values must (or can) be
+     *                        specified.  If this parameter is used, then {@code
+     *                        requestEncoding} must be {@code json}.
+     * @param options         Optional parameters.  The default value is an empty
+     *                        {@link Map}.
      */
     public CreateJobRequest(String endpoint, String requestEncoding, ByteBuffer data, String dataStr, Map<String, String> options) {
         this.endpoint = (endpoint == null) ? "" : endpoint;
         this.requestEncoding = (requestEncoding == null) ? "" : requestEncoding;
-        this.data = (data == null) ? ByteBuffer.wrap( new byte[0] ) : data;
+        this.data = (data == null) ? ByteBuffer.wrap(new byte[0]) : data;
         this.dataStr = (dataStr == null) ? "" : dataStr;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Indicates which endpoint to execute, e.g. '/alter/table'.
-     * 
      */
     public String getEndpoint() {
         return endpoint;
     }
 
     /**
-     * 
-     * @param endpoint  Indicates which endpoint to execute, e.g.
-     *                  '/alter/table'.
-     * 
+     * @param endpoint Indicates which endpoint to execute, e.g.
+     *                 '/alter/table'.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobRequest setEndpoint(String endpoint) {
         this.endpoint = (endpoint == null) ? "" : endpoint;
@@ -158,49 +123,44 @@ public class CreateJobRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return The encoding of the request payload for the job.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *         BINARY}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON JSON}
-     *                 <li> {@link
-     *         com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
-     *         SNAPPY}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *         BINARY}.
-     * 
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     * BINARY}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON JSON}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
+     * SNAPPY}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     * BINARY}.
      */
     public String getRequestEncoding() {
         return requestEncoding;
     }
 
     /**
-     * 
-     * @param requestEncoding  The encoding of the request payload for the job.
-     *                         Supported values:
-     *                         <ul>
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *                         BINARY}
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON
-     *                         JSON}
-     *                                 <li> {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
-     *                         SNAPPY}
-     *                         </ul>
-     *                         The default value is {@link
-     *                         com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
-     *                         BINARY}.
-     * 
+     * @param requestEncoding The encoding of the request payload for the job.
+     *                        Supported values:
+     *                        <ul>
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     *                        BINARY}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON
+     *                        JSON}
+     *                                <li> {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY
+     *                        SNAPPY}
+     *                        </ul>
+     *                        The default value is {@link
+     *                        com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY
+     *                        BINARY}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobRequest setRequestEncoding(String requestEncoding) {
         this.requestEncoding = (requestEncoding == null) ? "" : requestEncoding;
@@ -208,64 +168,54 @@ public class CreateJobRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Binary-encoded payload for the job to be run asynchronously.
-     *         The payload must contain the relevant input parameters for the
-     *         endpoint indicated in {@code endpoint}.  Please see the
-     *         documentation for the appropriate endpoint to see what values
-     *         must (or can) be specified.  If this parameter is used, then
-     *         {@code requestEncoding} must be {@code binary} or {@code
-     *         snappy}.
-     * 
+     * The payload must contain the relevant input parameters for the
+     * endpoint indicated in {@code endpoint}.  Please see the
+     * documentation for the appropriate endpoint to see what values
+     * must (or can) be specified.  If this parameter is used, then
+     * {@code requestEncoding} must be {@code binary} or {@code
+     * snappy}.
      */
     public ByteBuffer getData() {
         return data;
     }
 
     /**
-     * 
-     * @param data  Binary-encoded payload for the job to be run
-     *              asynchronously.  The payload must contain the relevant
-     *              input parameters for the endpoint indicated in {@code
-     *              endpoint}.  Please see the documentation for the
-     *              appropriate endpoint to see what values must (or can) be
-     *              specified.  If this parameter is used, then {@code
-     *              requestEncoding} must be {@code binary} or {@code snappy}.
-     * 
+     * @param data Binary-encoded payload for the job to be run
+     *             asynchronously.  The payload must contain the relevant
+     *             input parameters for the endpoint indicated in {@code
+     *             endpoint}.  Please see the documentation for the
+     *             appropriate endpoint to see what values must (or can) be
+     *             specified.  If this parameter is used, then {@code
+     *             requestEncoding} must be {@code binary} or {@code snappy}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobRequest setData(ByteBuffer data) {
-        this.data = (data == null) ? ByteBuffer.wrap( new byte[0] ) : data;
+        this.data = (data == null) ? ByteBuffer.wrap(new byte[0]) : data;
         return this;
     }
 
     /**
-     * 
      * @return JSON-encoded payload for the job to be run asynchronously.  The
-     *         payload must contain the relevant input parameters for the
-     *         endpoint indicated in {@code endpoint}.  Please see the
-     *         documentation for the appropriate endpoint to see what values
-     *         must (or can) be specified.  If this parameter is used, then
-     *         {@code requestEncoding} must be {@code json}.
-     * 
+     * payload must contain the relevant input parameters for the
+     * endpoint indicated in {@code endpoint}.  Please see the
+     * documentation for the appropriate endpoint to see what values
+     * must (or can) be specified.  If this parameter is used, then
+     * {@code requestEncoding} must be {@code json}.
      */
     public String getDataStr() {
         return dataStr;
     }
 
     /**
-     * 
-     * @param dataStr  JSON-encoded payload for the job to be run
-     *                 asynchronously.  The payload must contain the relevant
-     *                 input parameters for the endpoint indicated in {@code
-     *                 endpoint}.  Please see the documentation for the
-     *                 appropriate endpoint to see what values must (or can) be
-     *                 specified.  If this parameter is used, then {@code
-     *                 requestEncoding} must be {@code json}.
-     * 
+     * @param dataStr JSON-encoded payload for the job to be run
+     *                asynchronously.  The payload must contain the relevant
+     *                input parameters for the endpoint indicated in {@code
+     *                endpoint}.  Please see the documentation for the
+     *                appropriate endpoint to see what values must (or can) be
+     *                specified.  If this parameter is used, then {@code
+     *                requestEncoding} must be {@code json}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobRequest setDataStr(String dataStr) {
         this.dataStr = (dataStr == null) ? "" : dataStr;
@@ -273,21 +223,16 @@ public class CreateJobRequest implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Optional parameters.  The default value is an empty {@link Map}.
-     * 
      */
     public Map<String, String> getOptions() {
         return options;
     }
 
     /**
-     * 
-     * @param options  Optional parameters.  The default value is an empty
-     *                 {@link Map}.
-     * 
+     * @param options Optional parameters.  The default value is an empty
+     *                {@link Map}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobRequest setOptions(Map<String, String> options) {
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
@@ -297,9 +242,8 @@ public class CreateJobRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -309,13 +253,10 @@ public class CreateJobRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -343,35 +284,33 @@ public class CreateJobRequest implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.endpoint = (String)value;
+                this.endpoint = (String) value;
                 break;
 
             case 1:
-                this.requestEncoding = (String)value;
+                this.requestEncoding = (String) value;
                 break;
 
             case 2:
-                this.data = (ByteBuffer)value;
+                this.data = (ByteBuffer) value;
                 break;
 
             case 3:
-                this.dataStr = (String)value;
+                this.dataStr = (String) value;
                 break;
 
             case 4:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -381,48 +320,48 @@ public class CreateJobRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateJobRequest that = (CreateJobRequest)obj;
+        CreateJobRequest that = (CreateJobRequest) obj;
 
-        return ( this.endpoint.equals( that.endpoint )
-                 && this.requestEncoding.equals( that.requestEncoding )
-                 && this.data.equals( that.data )
-                 && this.dataStr.equals( that.dataStr )
-                 && this.options.equals( that.options ) );
+        return (this.endpoint.equals(that.endpoint)
+                && this.requestEncoding.equals(that.requestEncoding)
+                && this.data.equals(that.data)
+                && this.dataStr.equals(that.dataStr)
+                && this.options.equals(that.options));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "endpoint" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endpoint ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "requestEncoding" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.requestEncoding ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "data" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.data ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "dataStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.dataStr ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("endpoint"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endpoint));
+        builder.append(", ");
+        builder.append(gd.toString("requestEncoding"));
+        builder.append(": ");
+        builder.append(gd.toString(this.requestEncoding));
+        builder.append(", ");
+        builder.append(gd.toString("data"));
+        builder.append(": ");
+        builder.append(gd.toString(this.data));
+        builder.append(", ");
+        builder.append(gd.toString("dataStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.dataStr));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -436,6 +375,30 @@ public class CreateJobRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.dataStr.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    /**
+     * The encoding of the request payload for the job.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY BINARY}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#JSON JSON}
+     *         <li> {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#SNAPPY SNAPPY}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.CreateJobRequest.RequestEncoding#BINARY BINARY}.
+     * A set of string constants for the parameter {@code requestEncoding}.
+     */
+    public static final class RequestEncoding {
+        public static final String BINARY = "binary";
+        public static final String JSON = "json";
+        public static final String SNAPPY = "snappy";
+
+        private RequestEncoding() {
+        }
     }
 
 }

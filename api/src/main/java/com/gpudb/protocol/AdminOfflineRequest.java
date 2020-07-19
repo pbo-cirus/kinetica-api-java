@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -25,22 +26,239 @@ public class AdminOfflineRequest implements IndexedRecord {
             .record("AdminOfflineRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("offline").type().booleanType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("offline").type().booleanType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
+    private boolean offline;
+    private Map<String, String> options;
 
+
+    /**
+     * Constructs an AdminOfflineRequest object with default parameters.
+     */
+    public AdminOfflineRequest() {
+        options = new LinkedHashMap<>();
+    }
+
+    /**
+     * Constructs an AdminOfflineRequest object with the specified parameters.
+     *
+     * @param offline Set to true if desired state is offline.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE
+     *                FALSE}
+     *                </ul>
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
+     *                FLUSH_TO_DISK}: Flush to disk when going offline
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     */
+    public AdminOfflineRequest(boolean offline, Map<String, String> options) {
+        this.offline = offline;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Set to true if desired state is offline.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE FALSE}
+     * </ul>
+     */
+    public boolean getOffline() {
+        return offline;
+    }
+
+    /**
+     * @param offline Set to true if desired state is offline.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE
+     *                FALSE}
+     *                </ul>
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AdminOfflineRequest setOffline(boolean offline) {
+        this.offline = offline;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
+     * FLUSH_TO_DISK}: Flush to disk when going offline
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminOfflineRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminOfflineRequest.Options#FALSE FALSE}
+     * </ul>
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
+     *                FLUSH_TO_DISK}: Flush to disk when going offline
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminOfflineRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AdminOfflineRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.offline;
+
+            case 1:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.offline = (Boolean) value;
+                break;
+
+            case 1:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        AdminOfflineRequest that = (AdminOfflineRequest) obj;
+
+        return ((this.offline == that.offline)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("offline"));
+        builder.append(": ");
+        builder.append(gd.toString(this.offline));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + ((Boolean) this.offline).hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Set to true if desired state is offline.
@@ -57,9 +275,9 @@ public class AdminOfflineRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private Offline() {  }
+        private Offline() {
+        }
     }
-
 
     /**
      * Optional parameters.
@@ -94,245 +312,8 @@ public class AdminOfflineRequest implements IndexedRecord {
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
-        private Options() {  }
-    }
-
-    private boolean offline;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs an AdminOfflineRequest object with default parameters.
-     */
-    public AdminOfflineRequest() {
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs an AdminOfflineRequest object with the specified parameters.
-     * 
-     * @param offline  Set to true if desired state is offline.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE
-     *                 FALSE}
-     *                 </ul>
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
-     *                 FLUSH_TO_DISK}: Flush to disk when going offline
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public AdminOfflineRequest(boolean offline, Map<String, String> options) {
-        this.offline = offline;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Set to true if desired state is offline.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE FALSE}
-     *         </ul>
-     * 
-     */
-    public boolean getOffline() {
-        return offline;
-    }
-
-    /**
-     * 
-     * @param offline  Set to true if desired state is offline.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Offline#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Offline#FALSE
-     *                 FALSE}
-     *                 </ul>
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AdminOfflineRequest setOffline(boolean offline) {
-        this.offline = offline;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
-     *         FLUSH_TO_DISK}: Flush to disk when going offline
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminOfflineRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminOfflineRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#FLUSH_TO_DISK
-     *                 FLUSH_TO_DISK}: Flush to disk when going offline
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminOfflineRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AdminOfflineRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.offline;
-
-            case 1:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.offline = (Boolean)value;
-                break;
-
-            case 1:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        AdminOfflineRequest that = (AdminOfflineRequest)obj;
-
-        return ( ( this.offline == that.offline )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "offline" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.offline ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Boolean)this.offline).hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

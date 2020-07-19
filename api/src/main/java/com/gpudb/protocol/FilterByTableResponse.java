@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class FilterByTableResponse implements IndexedRecord {
             .record("FilterByTableResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("count").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("count").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private long count;
     private Map<String, String> info;
-
-
     /**
      * Constructs a FilterByTableResponse object with default parameters.
      */
@@ -49,24 +35,29 @@ public class FilterByTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return The number of records in {@code tableName} that have {@code
-     *         columnName} values matching {@code sourceTableColumnName} values
-     *         in {@code sourceTableName}.
-     * 
+     * columnName} values matching {@code sourceTableColumnName} values
+     * in {@code sourceTableName}.
      */
     public long getCount() {
         return count;
     }
 
     /**
-     * 
-     * @param count  The number of records in {@code tableName} that have
-     *               {@code columnName} values matching {@code
-     *               sourceTableColumnName} values in {@code sourceTableName}.
-     * 
+     * @param count The number of records in {@code tableName} that have
+     *              {@code columnName} values matching {@code
+     *              sourceTableColumnName} values in {@code sourceTableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByTableResponse setCount(long count) {
         this.count = count;
@@ -74,20 +65,15 @@ public class FilterByTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public FilterByTableResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -97,9 +83,8 @@ public class FilterByTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -109,13 +94,10 @@ public class FilterByTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -134,23 +116,21 @@ public class FilterByTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.count = (Long)value;
+                this.count = (Long) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -160,33 +140,33 @@ public class FilterByTableResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        FilterByTableResponse that = (FilterByTableResponse)obj;
+        FilterByTableResponse that = (FilterByTableResponse) obj;
 
-        return ( ( this.count == that.count )
-                 && this.info.equals( that.info ) );
+        return ((this.count == that.count)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "count" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.count ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("count"));
+        builder.append(": ");
+        builder.append(gd.toString(this.count));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -194,7 +174,7 @@ public class FilterByTableResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.count).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.count).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

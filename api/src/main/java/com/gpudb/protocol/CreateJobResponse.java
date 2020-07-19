@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,26 +23,11 @@ public class CreateJobResponse implements IndexedRecord {
             .record("CreateJobResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("jobId").type().longType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("jobId").type().longType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private long jobId;
     private Map<String, String> info;
-
-
     /**
      * Constructs a CreateJobResponse object with default parameters.
      */
@@ -49,20 +35,25 @@ public class CreateJobResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return An identifier for the job created by this call.
-     * 
      */
     public long getJobId() {
         return jobId;
     }
 
     /**
-     * 
-     * @param jobId  An identifier for the job created by this call.
-     * 
+     * @param jobId An identifier for the job created by this call.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobResponse setJobId(long jobId) {
         this.jobId = jobId;
@@ -70,20 +61,15 @@ public class CreateJobResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateJobResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -93,9 +79,8 @@ public class CreateJobResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -105,13 +90,10 @@ public class CreateJobResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -130,23 +112,21 @@ public class CreateJobResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.jobId = (Long)value;
+                this.jobId = (Long) value;
                 break;
 
             case 1:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -156,33 +136,33 @@ public class CreateJobResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateJobResponse that = (CreateJobResponse)obj;
+        CreateJobResponse that = (CreateJobResponse) obj;
 
-        return ( ( this.jobId == that.jobId )
-                 && this.info.equals( that.info ) );
+        return ((this.jobId == that.jobId)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "jobId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("jobId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobId));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -190,7 +170,7 @@ public class CreateJobResponse implements IndexedRecord {
     @Override
     public int hashCode() {
         int hashCode = 1;
-        hashCode = (31 * hashCode) + ((Long)this.jobId).hashCode();
+        hashCode = (31 * hashCode) + ((Long) this.jobId).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

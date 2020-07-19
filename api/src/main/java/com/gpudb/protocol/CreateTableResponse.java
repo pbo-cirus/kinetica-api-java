@@ -5,12 +5,13 @@
  */
 package com.gpudb.protocol;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -22,30 +23,15 @@ public class CreateTableResponse implements IndexedRecord {
             .record("CreateTableResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("typeId").type().stringType().noDefault()
-                .name("isCollection").type().booleanType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("typeId").type().stringType().noDefault()
+            .name("isCollection").type().booleanType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String tableName;
     private String typeId;
     private boolean isCollection;
     private Map<String, String> info;
-
-
     /**
      * Constructs a CreateTableResponse object with default parameters.
      */
@@ -53,20 +39,25 @@ public class CreateTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return Value of {@code tableName}.
-     * 
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * 
-     * @param tableName  Value of {@code tableName}.
-     * 
+     * @param tableName Value of {@code tableName}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableResponse setTableName(String tableName) {
         this.tableName = (tableName == null) ? "" : tableName;
@@ -74,20 +65,15 @@ public class CreateTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Value of {@code typeId}.
-     * 
      */
     public String getTypeId() {
         return typeId;
     }
 
     /**
-     * 
-     * @param typeId  Value of {@code typeId}.
-     * 
+     * @param typeId Value of {@code typeId}.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableResponse setTypeId(String typeId) {
         this.typeId = (typeId == null) ? "" : typeId;
@@ -95,20 +81,15 @@ public class CreateTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Indicates if the created entity is a collection.
-     * 
      */
     public boolean getIsCollection() {
         return isCollection;
     }
 
     /**
-     * 
-     * @param isCollection  Indicates if the created entity is a collection.
-     * 
+     * @param isCollection Indicates if the created entity is a collection.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableResponse setIsCollection(boolean isCollection) {
         this.isCollection = isCollection;
@@ -116,20 +97,15 @@ public class CreateTableResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public CreateTableResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -139,9 +115,8 @@ public class CreateTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -151,13 +126,10 @@ public class CreateTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -182,31 +154,29 @@ public class CreateTableResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.typeId = (String)value;
+                this.typeId = (String) value;
                 break;
 
             case 2:
-                this.isCollection = (Boolean)value;
+                this.isCollection = (Boolean) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -216,43 +186,43 @@ public class CreateTableResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        CreateTableResponse that = (CreateTableResponse)obj;
+        CreateTableResponse that = (CreateTableResponse) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.typeId.equals( that.typeId )
-                 && ( this.isCollection == that.isCollection )
-                 && this.info.equals( that.info ) );
+        return (this.tableName.equals(that.tableName)
+                && this.typeId.equals(that.typeId)
+                && (this.isCollection == that.isCollection)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeId" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeId ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "isCollection" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.isCollection ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("typeId"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeId));
+        builder.append(", ");
+        builder.append(gd.toString("isCollection"));
+        builder.append(": ");
+        builder.append(gd.toString(this.isCollection));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }
@@ -262,7 +232,7 @@ public class CreateTableResponse implements IndexedRecord {
         int hashCode = 1;
         hashCode = (31 * hashCode) + this.tableName.hashCode();
         hashCode = (31 * hashCode) + this.typeId.hashCode();
-        hashCode = (31 * hashCode) + ((Boolean)this.isCollection).hashCode();
+        hashCode = (31 * hashCode) + ((Boolean) this.isCollection).hashCode();
         hashCode = (31 * hashCode) + this.info.hashCode();
         return hashCode;
     }

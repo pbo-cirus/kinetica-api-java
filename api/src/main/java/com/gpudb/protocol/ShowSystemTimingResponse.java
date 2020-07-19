@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,30 +25,15 @@ public class ShowSystemTimingResponse implements IndexedRecord {
             .record("ShowSystemTimingResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("endpoints").type().array().items().stringType().noDefault()
-                .name("timeInMs").type().array().items().floatType().noDefault()
-                .name("jobids").type().array().items().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("endpoints").type().array().items().stringType().noDefault()
+            .name("timeInMs").type().array().items().floatType().noDefault()
+            .name("jobids").type().array().items().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> endpoints;
     private List<Float> timeInMs;
     private List<String> jobids;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowSystemTimingResponse object with default parameters.
      */
@@ -55,20 +41,25 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     }
 
     /**
-     * 
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
+    /**
      * @return List of recently called endpoints, most recent first.
-     * 
      */
     public List<String> getEndpoints() {
         return endpoints;
     }
 
     /**
-     * 
-     * @param endpoints  List of recently called endpoints, most recent first.
-     * 
+     * @param endpoints List of recently called endpoints, most recent first.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSystemTimingResponse setEndpoints(List<String> endpoints) {
         this.endpoints = (endpoints == null) ? new ArrayList<String>() : endpoints;
@@ -76,20 +67,15 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return List of time (in ms) of the recent requests.
-     * 
      */
     public List<Float> getTimeInMs() {
         return timeInMs;
     }
 
     /**
-     * 
-     * @param timeInMs  List of time (in ms) of the recent requests.
-     * 
+     * @param timeInMs List of time (in ms) of the recent requests.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSystemTimingResponse setTimeInMs(List<Float> timeInMs) {
         this.timeInMs = (timeInMs == null) ? new ArrayList<Float>() : timeInMs;
@@ -97,20 +83,15 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return List of the internal job ids for the recent requests.
-     * 
      */
     public List<String> getJobids() {
         return jobids;
     }
 
     /**
-     * 
-     * @param jobids  List of the internal job ids for the recent requests.
-     * 
+     * @param jobids List of the internal job ids for the recent requests.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSystemTimingResponse setJobids(List<String> jobids) {
         this.jobids = (jobids == null) ? new ArrayList<String>() : jobids;
@@ -118,20 +99,15 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowSystemTimingResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -141,9 +117,8 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -153,13 +128,10 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -184,31 +156,29 @@ public class ShowSystemTimingResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.endpoints = (List<String>)value;
+                this.endpoints = (List<String>) value;
                 break;
 
             case 1:
-                this.timeInMs = (List<Float>)value;
+                this.timeInMs = (List<Float>) value;
                 break;
 
             case 2:
-                this.jobids = (List<String>)value;
+                this.jobids = (List<String>) value;
                 break;
 
             case 3:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -218,43 +188,43 @@ public class ShowSystemTimingResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowSystemTimingResponse that = (ShowSystemTimingResponse)obj;
+        ShowSystemTimingResponse that = (ShowSystemTimingResponse) obj;
 
-        return ( this.endpoints.equals( that.endpoints )
-                 && this.timeInMs.equals( that.timeInMs )
-                 && this.jobids.equals( that.jobids )
-                 && this.info.equals( that.info ) );
+        return (this.endpoints.equals(that.endpoints)
+                && this.timeInMs.equals(that.timeInMs)
+                && this.jobids.equals(that.jobids)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "endpoints" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.endpoints ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "timeInMs" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.timeInMs ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "jobids" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.jobids ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("endpoints"));
+        builder.append(": ");
+        builder.append(gd.toString(this.endpoints));
+        builder.append(", ");
+        builder.append(gd.toString("timeInMs"));
+        builder.append(": ");
+        builder.append(gd.toString(this.timeInMs));
+        builder.append(", ");
+        builder.append(gd.toString("jobids"));
+        builder.append(": ");
+        builder.append(gd.toString(this.jobids));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

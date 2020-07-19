@@ -7,12 +7,13 @@
 package com.gpudb.protocol;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class VisualizeImageLabelsRequest implements IndexedRecord {
@@ -21,65 +22,33 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
             .record("VisualizeImageLabelsRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("tableName").type().stringType().noDefault()
-                .name("xColumnName").type().stringType().noDefault()
-                .name("yColumnName").type().stringType().noDefault()
-                .name("xOffset").type().stringType().noDefault()
-                .name("yOffset").type().stringType().noDefault()
-                .name("textString").type().stringType().noDefault()
-                .name("font").type().stringType().noDefault()
-                .name("textColor").type().stringType().noDefault()
-                .name("textAngle").type().stringType().noDefault()
-                .name("textScale").type().stringType().noDefault()
-                .name("drawBox").type().stringType().noDefault()
-                .name("drawLeader").type().stringType().noDefault()
-                .name("lineWidth").type().stringType().noDefault()
-                .name("lineColor").type().stringType().noDefault()
-                .name("fillColor").type().stringType().noDefault()
-                .name("leaderXColumnName").type().stringType().noDefault()
-                .name("leaderYColumnName").type().stringType().noDefault()
-                .name("filter").type().stringType().noDefault()
-                .name("minX").type().doubleType().noDefault()
-                .name("maxX").type().doubleType().noDefault()
-                .name("minY").type().doubleType().noDefault()
-                .name("maxY").type().doubleType().noDefault()
-                .name("width").type().intType().noDefault()
-                .name("height").type().intType().noDefault()
-                .name("projection").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("tableName").type().stringType().noDefault()
+            .name("xColumnName").type().stringType().noDefault()
+            .name("yColumnName").type().stringType().noDefault()
+            .name("xOffset").type().stringType().noDefault()
+            .name("yOffset").type().stringType().noDefault()
+            .name("textString").type().stringType().noDefault()
+            .name("font").type().stringType().noDefault()
+            .name("textColor").type().stringType().noDefault()
+            .name("textAngle").type().stringType().noDefault()
+            .name("textScale").type().stringType().noDefault()
+            .name("drawBox").type().stringType().noDefault()
+            .name("drawLeader").type().stringType().noDefault()
+            .name("lineWidth").type().stringType().noDefault()
+            .name("lineColor").type().stringType().noDefault()
+            .name("fillColor").type().stringType().noDefault()
+            .name("leaderXColumnName").type().stringType().noDefault()
+            .name("leaderYColumnName").type().stringType().noDefault()
+            .name("filter").type().stringType().noDefault()
+            .name("minX").type().doubleType().noDefault()
+            .name("maxX").type().doubleType().noDefault()
+            .name("minY").type().doubleType().noDefault()
+            .name("maxY").type().doubleType().noDefault()
+            .name("width").type().intType().noDefault()
+            .name("height").type().intType().noDefault()
+            .name("projection").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
-    public static final class Projection {
-
-        public static final String EPSG_4326 = "EPSG:4326";
-
-        public static final String PLATE_CARREE = "PLATE_CARREE";
-
-        public static final String _900913 = "900913";
-
-        public static final String EPSG_900913 = "EPSG:900913";
-
-        public static final String _102100 = "102100";
-
-        public static final String EPSG_102100 = "EPSG:102100";
-
-        public static final String _3857 = "3857";
-
-        public static final String EPSG_3857 = "EPSG:3857";
-
-        public static final String WEB_MERCATOR = "WEB_MERCATOR";
-
-
-        private Projection() {  }
-    }
-
-
     private String tableName;
     private String xColumnName;
     private String yColumnName;
@@ -106,8 +75,6 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
     private int height;
     private String projection;
     private Map<String, String> options;
-
-
     public VisualizeImageLabelsRequest() {
         tableName = "";
         xColumnName = "";
@@ -130,7 +97,6 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
         projection = "";
         options = new LinkedHashMap<>();
     }
-
     public VisualizeImageLabelsRequest(String tableName, String xColumnName, String yColumnName, String xOffset, String yOffset, String textString, String font, String textColor, String textAngle, String textScale, String drawBox, String drawLeader, String lineWidth, String lineColor, String fillColor, String leaderXColumnName, String leaderYColumnName, String filter, double minX, double maxX, double minY, double maxY, int width, int height, String projection, Map<String, String> options) {
         this.tableName = (tableName == null) ? "" : tableName;
         this.xColumnName = (xColumnName == null) ? "" : xColumnName;
@@ -158,6 +124,10 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
         this.height = height;
         this.projection = (projection == null) ? "" : projection;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public String getTableName() {
@@ -490,107 +460,107 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.tableName = (String)value;
+                this.tableName = (String) value;
                 break;
 
             case 1:
-                this.xColumnName = (String)value;
+                this.xColumnName = (String) value;
                 break;
 
             case 2:
-                this.yColumnName = (String)value;
+                this.yColumnName = (String) value;
                 break;
 
             case 3:
-                this.xOffset = (String)value;
+                this.xOffset = (String) value;
                 break;
 
             case 4:
-                this.yOffset = (String)value;
+                this.yOffset = (String) value;
                 break;
 
             case 5:
-                this.textString = (String)value;
+                this.textString = (String) value;
                 break;
 
             case 6:
-                this.font = (String)value;
+                this.font = (String) value;
                 break;
 
             case 7:
-                this.textColor = (String)value;
+                this.textColor = (String) value;
                 break;
 
             case 8:
-                this.textAngle = (String)value;
+                this.textAngle = (String) value;
                 break;
 
             case 9:
-                this.textScale = (String)value;
+                this.textScale = (String) value;
                 break;
 
             case 10:
-                this.drawBox = (String)value;
+                this.drawBox = (String) value;
                 break;
 
             case 11:
-                this.drawLeader = (String)value;
+                this.drawLeader = (String) value;
                 break;
 
             case 12:
-                this.lineWidth = (String)value;
+                this.lineWidth = (String) value;
                 break;
 
             case 13:
-                this.lineColor = (String)value;
+                this.lineColor = (String) value;
                 break;
 
             case 14:
-                this.fillColor = (String)value;
+                this.fillColor = (String) value;
                 break;
 
             case 15:
-                this.leaderXColumnName = (String)value;
+                this.leaderXColumnName = (String) value;
                 break;
 
             case 16:
-                this.leaderYColumnName = (String)value;
+                this.leaderYColumnName = (String) value;
                 break;
 
             case 17:
-                this.filter = (String)value;
+                this.filter = (String) value;
                 break;
 
             case 18:
-                this.minX = (Double)value;
+                this.minX = (Double) value;
                 break;
 
             case 19:
-                this.maxX = (Double)value;
+                this.maxX = (Double) value;
                 break;
 
             case 20:
-                this.minY = (Double)value;
+                this.minY = (Double) value;
                 break;
 
             case 21:
-                this.maxY = (Double)value;
+                this.maxY = (Double) value;
                 break;
 
             case 22:
-                this.width = (Integer)value;
+                this.width = (Integer) value;
                 break;
 
             case 23:
-                this.height = (Integer)value;
+                this.height = (Integer) value;
                 break;
 
             case 24:
-                this.projection = (String)value;
+                this.projection = (String) value;
                 break;
 
             case 25:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -598,161 +568,158 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
         }
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        VisualizeImageLabelsRequest that = (VisualizeImageLabelsRequest)obj;
+        VisualizeImageLabelsRequest that = (VisualizeImageLabelsRequest) obj;
 
-        return ( this.tableName.equals( that.tableName )
-                 && this.xColumnName.equals( that.xColumnName )
-                 && this.yColumnName.equals( that.yColumnName )
-                 && this.xOffset.equals( that.xOffset )
-                 && this.yOffset.equals( that.yOffset )
-                 && this.textString.equals( that.textString )
-                 && this.font.equals( that.font )
-                 && this.textColor.equals( that.textColor )
-                 && this.textAngle.equals( that.textAngle )
-                 && this.textScale.equals( that.textScale )
-                 && this.drawBox.equals( that.drawBox )
-                 && this.drawLeader.equals( that.drawLeader )
-                 && this.lineWidth.equals( that.lineWidth )
-                 && this.lineColor.equals( that.lineColor )
-                 && this.fillColor.equals( that.fillColor )
-                 && this.leaderXColumnName.equals( that.leaderXColumnName )
-                 && this.leaderYColumnName.equals( that.leaderYColumnName )
-                 && this.filter.equals( that.filter )
-                 && ( (Double)this.minX ).equals( (Double)that.minX )
-                 && ( (Double)this.maxX ).equals( (Double)that.maxX )
-                 && ( (Double)this.minY ).equals( (Double)that.minY )
-                 && ( (Double)this.maxY ).equals( (Double)that.maxY )
-                 && ( this.width == that.width )
-                 && ( this.height == that.height )
-                 && this.projection.equals( that.projection )
-                 && this.options.equals( that.options ) );
+        return (this.tableName.equals(that.tableName)
+                && this.xColumnName.equals(that.xColumnName)
+                && this.yColumnName.equals(that.yColumnName)
+                && this.xOffset.equals(that.xOffset)
+                && this.yOffset.equals(that.yOffset)
+                && this.textString.equals(that.textString)
+                && this.font.equals(that.font)
+                && this.textColor.equals(that.textColor)
+                && this.textAngle.equals(that.textAngle)
+                && this.textScale.equals(that.textScale)
+                && this.drawBox.equals(that.drawBox)
+                && this.drawLeader.equals(that.drawLeader)
+                && this.lineWidth.equals(that.lineWidth)
+                && this.lineColor.equals(that.lineColor)
+                && this.fillColor.equals(that.fillColor)
+                && this.leaderXColumnName.equals(that.leaderXColumnName)
+                && this.leaderYColumnName.equals(that.leaderYColumnName)
+                && this.filter.equals(that.filter)
+                && ((Double) this.minX).equals((Double) that.minX)
+                && ((Double) this.maxX).equals((Double) that.maxX)
+                && ((Double) this.minY).equals((Double) that.minY)
+                && ((Double) this.maxY).equals((Double) that.maxY)
+                && (this.width == that.width)
+                && (this.height == that.height)
+                && this.projection.equals(that.projection)
+                && this.options.equals(that.options));
     }
-
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "tableName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.tableName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "xOffset" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.xOffset ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "yOffset" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.yOffset ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "textString" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.textString ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "font" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.font ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "textColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.textColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "textAngle" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.textAngle ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "textScale" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.textScale ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "drawBox" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.drawBox ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "drawLeader" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.drawLeader ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "lineWidth" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.lineWidth ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "lineColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.lineColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "fillColor" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.fillColor ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "leaderXColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.leaderXColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "leaderYColumnName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.leaderYColumnName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "filter" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.filter ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxX" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxX ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "minY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.minY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "maxY" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.maxY ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "width" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.width ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "height" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.height ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "projection" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.projection ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("tableName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.tableName));
+        builder.append(", ");
+        builder.append(gd.toString("xColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("yColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("xOffset"));
+        builder.append(": ");
+        builder.append(gd.toString(this.xOffset));
+        builder.append(", ");
+        builder.append(gd.toString("yOffset"));
+        builder.append(": ");
+        builder.append(gd.toString(this.yOffset));
+        builder.append(", ");
+        builder.append(gd.toString("textString"));
+        builder.append(": ");
+        builder.append(gd.toString(this.textString));
+        builder.append(", ");
+        builder.append(gd.toString("font"));
+        builder.append(": ");
+        builder.append(gd.toString(this.font));
+        builder.append(", ");
+        builder.append(gd.toString("textColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.textColor));
+        builder.append(", ");
+        builder.append(gd.toString("textAngle"));
+        builder.append(": ");
+        builder.append(gd.toString(this.textAngle));
+        builder.append(", ");
+        builder.append(gd.toString("textScale"));
+        builder.append(": ");
+        builder.append(gd.toString(this.textScale));
+        builder.append(", ");
+        builder.append(gd.toString("drawBox"));
+        builder.append(": ");
+        builder.append(gd.toString(this.drawBox));
+        builder.append(", ");
+        builder.append(gd.toString("drawLeader"));
+        builder.append(": ");
+        builder.append(gd.toString(this.drawLeader));
+        builder.append(", ");
+        builder.append(gd.toString("lineWidth"));
+        builder.append(": ");
+        builder.append(gd.toString(this.lineWidth));
+        builder.append(", ");
+        builder.append(gd.toString("lineColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.lineColor));
+        builder.append(", ");
+        builder.append(gd.toString("fillColor"));
+        builder.append(": ");
+        builder.append(gd.toString(this.fillColor));
+        builder.append(", ");
+        builder.append(gd.toString("leaderXColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.leaderXColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("leaderYColumnName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.leaderYColumnName));
+        builder.append(", ");
+        builder.append(gd.toString("filter"));
+        builder.append(": ");
+        builder.append(gd.toString(this.filter));
+        builder.append(", ");
+        builder.append(gd.toString("minX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minX));
+        builder.append(", ");
+        builder.append(gd.toString("maxX"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxX));
+        builder.append(", ");
+        builder.append(gd.toString("minY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.minY));
+        builder.append(", ");
+        builder.append(gd.toString("maxY"));
+        builder.append(": ");
+        builder.append(gd.toString(this.maxY));
+        builder.append(", ");
+        builder.append(gd.toString("width"));
+        builder.append(": ");
+        builder.append(gd.toString(this.width));
+        builder.append(", ");
+        builder.append(gd.toString("height"));
+        builder.append(": ");
+        builder.append(gd.toString(this.height));
+        builder.append(", ");
+        builder.append(gd.toString("projection"));
+        builder.append(": ");
+        builder.append(gd.toString(this.projection));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
-
 
     @Override
     public int hashCode() {
@@ -775,15 +742,40 @@ public class VisualizeImageLabelsRequest implements IndexedRecord {
         hashCode = (31 * hashCode) + this.leaderXColumnName.hashCode();
         hashCode = (31 * hashCode) + this.leaderYColumnName.hashCode();
         hashCode = (31 * hashCode) + this.filter.hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxX).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.minY).hashCode();
-        hashCode = (31 * hashCode) + ((Double)this.maxY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxX).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.minY).hashCode();
+        hashCode = (31 * hashCode) + ((Double) this.maxY).hashCode();
         hashCode = (31 * hashCode) + this.width;
         hashCode = (31 * hashCode) + this.height;
         hashCode = (31 * hashCode) + this.projection.hashCode();
         hashCode = (31 * hashCode) + this.options.hashCode();
         return hashCode;
+    }
+
+    public static final class Projection {
+
+        public static final String EPSG_4326 = "EPSG:4326";
+
+        public static final String PLATE_CARREE = "PLATE_CARREE";
+
+        public static final String _900913 = "900913";
+
+        public static final String EPSG_900913 = "EPSG:900913";
+
+        public static final String _102100 = "102100";
+
+        public static final String EPSG_102100 = "EPSG:102100";
+
+        public static final String _3857 = "3857";
+
+        public static final String EPSG_3857 = "EPSG:3857";
+
+        public static final String WEB_MERCATOR = "WEB_MERCATOR";
+
+
+        private Projection() {
+        }
     }
 
 

@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,26 +53,742 @@ public class QueryGraphRequest implements IndexedRecord {
             .record("QueryGraphRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("queries").type().array().items().stringType().noDefault()
-                .name("restrictions").type().array().items().stringType().noDefault()
-                .name("adjacencyTable").type().stringType().noDefault()
-                .name("rings").type().intType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("queries").type().array().items().stringType().noDefault()
+            .name("restrictions").type().array().items().stringType().noDefault()
+            .name("adjacencyTable").type().stringType().noDefault()
+            .name("rings").type().intType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String graphName;
+    private List<String> queries;
+    private List<String> restrictions;
+    private String adjacencyTable;
+    private int rings;
+    private Map<String, String> options;
+    /**
+     * Constructs a QueryGraphRequest object with default parameters.
+     */
+    public QueryGraphRequest() {
+        graphName = "";
+        queries = new ArrayList<>();
+        restrictions = new ArrayList<>();
+        adjacencyTable = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a QueryGraphRequest object with the specified parameters.
+     *
+     * @param graphName      Name of the graph resource to query.
+     * @param queries        Nodes or edges to be queried specified using <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     *                       target="_top">query identifiers</a>. Identifiers can be
+     *                       used with existing column names, e.g., 'table.column AS
+     *                       QUERY_NODE_ID', raw values, e.g., '{0, 2} AS
+     *                       QUERY_NODE_ID', or expressions, e.g.,
+     *                       'ST_MAKEPOINT(table.x, table.y) AS QUERY_NODE_WKTPOINT'.
+     *                       Multiple values can be provided as long as the same
+     *                       identifier is used for all values. If using raw values
+     *                       in an identifier combination, the number of values
+     *                       specified must match across the combination.
+     * @param restrictions   Additional restrictions to apply to the nodes/edges
+     *                       of an existing graph. Restrictions must be
+     *                       specified using <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                       target="_top">identifiers</a>; identifiers are
+     *                       grouped as <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                       target="_top">combinations</a>. Identifiers can be
+     *                       used with existing column names, e.g.,
+     *                       'table.column AS RESTRICTIONS_EDGE_ID',
+     *                       expressions, e.g., 'column/2 AS
+     *                       RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                       '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                       using raw values in an identifier combination, the
+     *                       number of values specified must match across the
+     *                       combination.  The default value is an empty {@link
+     *                       List}.
+     * @param adjacencyTable Name of the table to store the resulting
+     *                       adjacencies. If left blank, the query results are
+     *                       instead returned in the response even if {@code
+     *                       export_query_results} is set to {@code false}. If
+     *                       the 'QUERY_TARGET_NODE_LABEL' <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     *                       target="_top">query identifier</a> is used in
+     *                       {@code queries}, then two additional columns will
+     *                       be available: 'PATH_ID' and 'RING_ID'. See
+     *                       <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#using-labels"
+     *                       target="_top">Using Labels</a> for more
+     *                       information.  The default value is ''.
+     * @param rings          Sets the number of rings around the node to query for
+     *                       adjacency, with '1' being the edges directly attached to
+     *                       the queried node. Also known as number of hops. For
+     *                       example, if it is set to '2', the edge(s) directly
+     *                       attached to the queried node(s) will be returned; in
+     *                       addition, the edge(s) attached to the node(s) attached to
+     *                       the initial ring of edge(s) surrounding the queried
+     *                       node(s) will be returned. If the value is set to '0', any
+     *                       nodes that meet the criteria in {@code queries} and {@code
+     *                       restrictions} will be returned. This parameter is only
+     *                       applicable when querying nodes.  The default value is 1.
+     * @param options        Additional parameters
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
+     *                       FORCE_UNDIRECTED}: If set to {@code true}, all inbound
+     *                       edges and outbound edges relative to the node will be
+     *                       returned. If set to {@code false}, only outbound edges
+     *                       relative to the node will be returned. This parameter is
+     *                       only applicable if the queried graph {@code graphName}
+     *                       is directed and when querying nodes. Consult <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     *                       target="_top">Directed Graphs</a> for more details.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#LIMIT
+     *                       LIMIT}: When specified, limits the number of query
+     *                       results. Note that if the {@code target_nodes_table} is
+     *                       provided, the size of the corresponding table will be
+     *                       limited by the {@code limit} value.  The default value
+     *                       is an empty {@link Map}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
+     *                       TARGET_NODES_TABLE}: Name of the table to store the list
+     *                       of the final nodes reached during the traversal. If this
+     *                       value is left as the default, the table name will
+     *                       default to the {@code adjacencyTable} value plus a
+     *                       '_nodes' suffix, e.g., '<adjacency_table_name>_nodes'.
+     *                       The default value is ''.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                       RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                       comparison. Any node or edge with a
+     *                       RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                       restriction_threshold_value} will not be included in the
+     *                       solution.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
+     *                       EXPORT_QUERY_RESULTS}: Returns query results in the
+     *                       response. If set to {@code true}, the {@code
+     *                       adjacencyListIntArray} (if the query was based on IDs),
+     *                       {@code adjacencyListStringArray} (if the query was based
+     *                       on names), or {@code adjacencyListWktArray} (if the
+     *                       query was based on WKTs) will be populated with the
+     *                       results. If set to {@code false}, none of the arrays
+     *                       will be populated.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
+     *                       ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
+     *                       WKT-type column named 'QUERY_EDGE_WKTLINE' to the given
+     *                       {@code adjacencyTable} and inputs WKT values from the
+     *                       source graph (if available) or auto-generated WKT values
+     *                       (if there are no WKT values in the source graph). A
+     *                       subsequent call to the <a
+     *                       href="../../../../../api/rest/wms_rest.html"
+     *                       target="_top">/wms</a> endpoint can then be made to
+     *                       display the query results on a map.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}.
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
+     *                       AND_LABELS}: If set to {@code true}, the result of the
+     *                       query has entities that satisfy all of the target
+     *                       labels, instead of any.
+     *                       Supported values:
+     *                       <ul>
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                               <li> {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}
+     *                       </ul>
+     *                       The default value is {@link
+     *                       com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                       FALSE}.
+     *                       </ul>
+     *                       The default value is an empty {@link Map}.
+     */
+    public QueryGraphRequest(String graphName, List<String> queries, List<String> restrictions, String adjacencyTable, int rings, Map<String, String> options) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        this.queries = (queries == null) ? new ArrayList<String>() : queries;
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        this.adjacencyTable = (adjacencyTable == null) ? "" : adjacencyTable;
+        this.rings = rings;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the graph resource to query.
+     */
+    public String getGraphName() {
+        return graphName;
+    }
+
+    /**
+     * @param graphName Name of the graph resource to query.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setGraphName(String graphName) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        return this;
+    }
+
+    /**
+     * @return Nodes or edges to be queried specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     * target="_top">query identifiers</a>. Identifiers can be used
+     * with existing column names, e.g., 'table.column AS
+     * QUERY_NODE_ID', raw values, e.g., '{0, 2} AS QUERY_NODE_ID', or
+     * expressions, e.g., 'ST_MAKEPOINT(table.x, table.y) AS
+     * QUERY_NODE_WKTPOINT'. Multiple values can be provided as long as
+     * the same identifier is used for all values. If using raw values
+     * in an identifier combination, the number of values specified
+     * must match across the combination.
+     */
+    public List<String> getQueries() {
+        return queries;
+    }
+
+    /**
+     * @param queries Nodes or edges to be queried specified using <a
+     *                href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     *                target="_top">query identifiers</a>. Identifiers can be
+     *                used with existing column names, e.g., 'table.column AS
+     *                QUERY_NODE_ID', raw values, e.g., '{0, 2} AS
+     *                QUERY_NODE_ID', or expressions, e.g.,
+     *                'ST_MAKEPOINT(table.x, table.y) AS QUERY_NODE_WKTPOINT'.
+     *                Multiple values can be provided as long as the same
+     *                identifier is used for all values. If using raw values
+     *                in an identifier combination, the number of values
+     *                specified must match across the combination.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setQueries(List<String> queries) {
+        this.queries = (queries == null) ? new ArrayList<String>() : queries;
+        return this;
+    }
+
+    /**
+     * @return Additional restrictions to apply to the nodes/edges of an
+     * existing graph. Restrictions must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     * target="_top">combinations</a>. Identifiers can be used with
+     * existing column names, e.g., 'table.column AS
+     * RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
+     * RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
+     * AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
+     * identifier combination, the number of values specified must
+     * match across the combination.  The default value is an empty
+     * {@link List}.
+     */
+    public List<String> getRestrictions() {
+        return restrictions;
+    }
+
+    /**
+     * @param restrictions Additional restrictions to apply to the nodes/edges
+     *                     of an existing graph. Restrictions must be
+     *                     specified using <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#identifiers"
+     *                     target="_top">identifiers</a>; identifiers are
+     *                     grouped as <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#id-combos"
+     *                     target="_top">combinations</a>. Identifiers can be
+     *                     used with existing column names, e.g.,
+     *                     'table.column AS RESTRICTIONS_EDGE_ID',
+     *                     expressions, e.g., 'column/2 AS
+     *                     RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
+     *                     '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
+     *                     using raw values in an identifier combination, the
+     *                     number of values specified must match across the
+     *                     combination.  The default value is an empty {@link
+     *                     List}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setRestrictions(List<String> restrictions) {
+        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
+        return this;
+    }
+
+    /**
+     * @return Name of the table to store the resulting adjacencies. If left
+     * blank, the query results are instead returned in the response
+     * even if {@code export_query_results} is set to {@code false}. If
+     * the 'QUERY_TARGET_NODE_LABEL' <a
+     * href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     * target="_top">query identifier</a> is used in {@code queries},
+     * then two additional columns will be available: 'PATH_ID' and
+     * 'RING_ID'. See
+     * <a
+     * href="../../../../../graph_solver/network_graph_solver.html#using-labels"
+     * target="_top">Using Labels</a> for more information.  The
+     * default value is ''.
+     */
+    public String getAdjacencyTable() {
+        return adjacencyTable;
+    }
+
+    /**
+     * @param adjacencyTable Name of the table to store the resulting
+     *                       adjacencies. If left blank, the query results are
+     *                       instead returned in the response even if {@code
+     *                       export_query_results} is set to {@code false}. If
+     *                       the 'QUERY_TARGET_NODE_LABEL' <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
+     *                       target="_top">query identifier</a> is used in
+     *                       {@code queries}, then two additional columns will
+     *                       be available: 'PATH_ID' and 'RING_ID'. See
+     *                       <a
+     *                       href="../../../../../graph_solver/network_graph_solver.html#using-labels"
+     *                       target="_top">Using Labels</a> for more
+     *                       information.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setAdjacencyTable(String adjacencyTable) {
+        this.adjacencyTable = (adjacencyTable == null) ? "" : adjacencyTable;
+        return this;
+    }
+
+    /**
+     * @return Sets the number of rings around the node to query for adjacency,
+     * with '1' being the edges directly attached to the queried node.
+     * Also known as number of hops. For example, if it is set to '2',
+     * the edge(s) directly attached to the queried node(s) will be
+     * returned; in addition, the edge(s) attached to the node(s)
+     * attached to the initial ring of edge(s) surrounding the queried
+     * node(s) will be returned. If the value is set to '0', any nodes
+     * that meet the criteria in {@code queries} and {@code
+     * restrictions} will be returned. This parameter is only
+     * applicable when querying nodes.  The default value is 1.
+     */
+    public int getRings() {
+        return rings;
+    }
+
+    /**
+     * @param rings Sets the number of rings around the node to query for
+     *              adjacency, with '1' being the edges directly attached to
+     *              the queried node. Also known as number of hops. For
+     *              example, if it is set to '2', the edge(s) directly
+     *              attached to the queried node(s) will be returned; in
+     *              addition, the edge(s) attached to the node(s) attached to
+     *              the initial ring of edge(s) surrounding the queried
+     *              node(s) will be returned. If the value is set to '0', any
+     *              nodes that meet the criteria in {@code queries} and {@code
+     *              restrictions} will be returned. This parameter is only
+     *              applicable when querying nodes.  The default value is 1.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setRings(int rings) {
+        this.rings = rings;
+        return this;
+    }
+
+    /**
+     * @return Additional parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
+     * FORCE_UNDIRECTED}: If set to {@code true}, all inbound edges and
+     * outbound edges relative to the node will be returned. If set to
+     * {@code false}, only outbound edges relative to the node will be
+     * returned. This parameter is only applicable if the queried graph
+     * {@code graphName} is directed and when querying nodes. Consult
+     * <a
+     * href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     * target="_top">Directed Graphs</a> for more details.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#LIMIT LIMIT}: When
+     * specified, limits the number of query results. Note that if the
+     * {@code target_nodes_table} is provided, the size of the
+     * corresponding table will be limited by the {@code limit} value.
+     * The default value is an empty {@link Map}.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
+     * TARGET_NODES_TABLE}: Name of the table to store the list of the
+     * final nodes reached during the traversal. If this value is left
+     * as the default, the table name will default to the {@code
+     * adjacencyTable} value plus a '_nodes' suffix, e.g.,
+     * '<adjacency_table_name>_nodes'.  The default value is ''.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     * RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     * comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
+     * value greater than the {@code restriction_threshold_value} will
+     * not be included in the solution.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
+     * EXPORT_QUERY_RESULTS}: Returns query results in the response. If
+     * set to {@code true}, the {@code adjacencyListIntArray} (if the
+     * query was based on IDs), {@code adjacencyListStringArray} (if
+     * the query was based on names), or {@code adjacencyListWktArray}
+     * (if the query was based on WKTs) will be populated with the
+     * results. If set to {@code false}, none of the arrays will be
+     * populated.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
+     * ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a WKT-type
+     * column named 'QUERY_EDGE_WKTLINE' to the given {@code
+     * adjacencyTable} and inputs WKT values from the source graph (if
+     * available) or auto-generated WKT values (if there are no WKT
+     * values in the source graph). A subsequent call to the <a
+     * href="../../../../../api/rest/wms_rest.html"
+     * target="_top">/wms</a> endpoint can then be made to display the
+     * query results on a map.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
+     * AND_LABELS}: If set to {@code true}, the result of the query has
+     * entities that satisfy all of the target labels, instead of any.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Additional parameters
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
+     *                FORCE_UNDIRECTED}: If set to {@code true}, all inbound
+     *                edges and outbound edges relative to the node will be
+     *                returned. If set to {@code false}, only outbound edges
+     *                relative to the node will be returned. This parameter is
+     *                only applicable if the queried graph {@code graphName}
+     *                is directed and when querying nodes. Consult <a
+     *                href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
+     *                target="_top">Directed Graphs</a> for more details.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#LIMIT
+     *                LIMIT}: When specified, limits the number of query
+     *                results. Note that if the {@code target_nodes_table} is
+     *                provided, the size of the corresponding table will be
+     *                limited by the {@code limit} value.  The default value
+     *                is an empty {@link Map}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
+     *                TARGET_NODES_TABLE}: Name of the table to store the list
+     *                of the final nodes reached during the traversal. If this
+     *                value is left as the default, the table name will
+     *                default to the {@code adjacencyTable} value plus a
+     *                '_nodes' suffix, e.g., '<adjacency_table_name>_nodes'.
+     *                The default value is ''.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
+     *                RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
+     *                comparison. Any node or edge with a
+     *                RESTRICTIONS_VALUECOMPARED value greater than the {@code
+     *                restriction_threshold_value} will not be included in the
+     *                solution.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
+     *                EXPORT_QUERY_RESULTS}: Returns query results in the
+     *                response. If set to {@code true}, the {@code
+     *                adjacencyListIntArray} (if the query was based on IDs),
+     *                {@code adjacencyListStringArray} (if the query was based
+     *                on names), or {@code adjacencyListWktArray} (if the
+     *                query was based on WKTs) will be populated with the
+     *                results. If set to {@code false}, none of the arrays
+     *                will be populated.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
+     *                ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
+     *                WKT-type column named 'QUERY_EDGE_WKTLINE' to the given
+     *                {@code adjacencyTable} and inputs WKT values from the
+     *                source graph (if available) or auto-generated WKT values
+     *                (if there are no WKT values in the source graph). A
+     *                subsequent call to the <a
+     *                href="../../../../../api/rest/wms_rest.html"
+     *                target="_top">/wms</a> endpoint can then be made to
+     *                display the query results on a map.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
+     *                AND_LABELS}: If set to {@code true}, the result of the
+     *                query has entities that satisfy all of the target
+     *                labels, instead of any.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.QueryGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public QueryGraphRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.graphName;
+
+            case 1:
+                return this.queries;
+
+            case 2:
+                return this.restrictions;
+
+            case 3:
+                return this.adjacencyTable;
+
+            case 4:
+                return this.rings;
+
+            case 5:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.graphName = (String) value;
+                break;
+
+            case 1:
+                this.queries = (List<String>) value;
+                break;
+
+            case 2:
+                this.restrictions = (List<String>) value;
+                break;
+
+            case 3:
+                this.adjacencyTable = (String) value;
+                break;
+
+            case 4:
+                this.rings = (Integer) value;
+                break;
+
+            case 5:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        QueryGraphRequest that = (QueryGraphRequest) obj;
+
+        return (this.graphName.equals(that.graphName)
+                && this.queries.equals(that.queries)
+                && this.restrictions.equals(that.restrictions)
+                && this.adjacencyTable.equals(that.adjacencyTable)
+                && (this.rings == that.rings)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("queries"));
+        builder.append(": ");
+        builder.append(gd.toString(this.queries));
+        builder.append(", ");
+        builder.append(gd.toString("restrictions"));
+        builder.append(": ");
+        builder.append(gd.toString(this.restrictions));
+        builder.append(", ");
+        builder.append(gd.toString("adjacencyTable"));
+        builder.append(": ");
+        builder.append(gd.toString(this.adjacencyTable));
+        builder.append(", ");
+        builder.append(gd.toString("rings"));
+        builder.append(": ");
+        builder.append(gd.toString(this.rings));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.graphName.hashCode();
+        hashCode = (31 * hashCode) + this.queries.hashCode();
+        hashCode = (31 * hashCode) + this.restrictions.hashCode();
+        hashCode = (31 * hashCode) + this.adjacencyTable.hashCode();
+        hashCode = (31 * hashCode) + this.rings;
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Additional parameters
@@ -266,767 +983,8 @@ public class QueryGraphRequest implements IndexedRecord {
          */
         public static final String AND_LABELS = "and_labels";
 
-        private Options() {  }
-    }
-
-    private String graphName;
-    private List<String> queries;
-    private List<String> restrictions;
-    private String adjacencyTable;
-    private int rings;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a QueryGraphRequest object with default parameters.
-     */
-    public QueryGraphRequest() {
-        graphName = "";
-        queries = new ArrayList<>();
-        restrictions = new ArrayList<>();
-        adjacencyTable = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a QueryGraphRequest object with the specified parameters.
-     * 
-     * @param graphName  Name of the graph resource to query.
-     * @param queries  Nodes or edges to be queried specified using <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *                 target="_top">query identifiers</a>. Identifiers can be
-     *                 used with existing column names, e.g., 'table.column AS
-     *                 QUERY_NODE_ID', raw values, e.g., '{0, 2} AS
-     *                 QUERY_NODE_ID', or expressions, e.g.,
-     *                 'ST_MAKEPOINT(table.x, table.y) AS QUERY_NODE_WKTPOINT'.
-     *                 Multiple values can be provided as long as the same
-     *                 identifier is used for all values. If using raw values
-     *                 in an identifier combination, the number of values
-     *                 specified must match across the combination.
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination.  The default value is an empty {@link
-     *                      List}.
-     * @param adjacencyTable  Name of the table to store the resulting
-     *                        adjacencies. If left blank, the query results are
-     *                        instead returned in the response even if {@code
-     *                        export_query_results} is set to {@code false}. If
-     *                        the 'QUERY_TARGET_NODE_LABEL' <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *                        target="_top">query identifier</a> is used in
-     *                        {@code queries}, then two additional columns will
-     *                        be available: 'PATH_ID' and 'RING_ID'. See
-     *                                    <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#using-labels"
-     *                        target="_top">Using Labels</a> for more
-     *                        information.  The default value is ''.
-     * @param rings  Sets the number of rings around the node to query for
-     *               adjacency, with '1' being the edges directly attached to
-     *               the queried node. Also known as number of hops. For
-     *               example, if it is set to '2', the edge(s) directly
-     *               attached to the queried node(s) will be returned; in
-     *               addition, the edge(s) attached to the node(s) attached to
-     *               the initial ring of edge(s) surrounding the queried
-     *               node(s) will be returned. If the value is set to '0', any
-     *               nodes that meet the criteria in {@code queries} and {@code
-     *               restrictions} will be returned. This parameter is only
-     *               applicable when querying nodes.  The default value is 1.
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
-     *                 FORCE_UNDIRECTED}: If set to {@code true}, all inbound
-     *                 edges and outbound edges relative to the node will be
-     *                 returned. If set to {@code false}, only outbound edges
-     *                 relative to the node will be returned. This parameter is
-     *                 only applicable if the queried graph {@code graphName}
-     *                 is directed and when querying nodes. Consult <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *                 target="_top">Directed Graphs</a> for more details.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#LIMIT
-     *                 LIMIT}: When specified, limits the number of query
-     *                 results. Note that if the {@code target_nodes_table} is
-     *                 provided, the size of the corresponding table will be
-     *                 limited by the {@code limit} value.  The default value
-     *                 is an empty {@link Map}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
-     *                 TARGET_NODES_TABLE}: Name of the table to store the list
-     *                 of the final nodes reached during the traversal. If this
-     *                 value is left as the default, the table name will
-     *                 default to the {@code adjacencyTable} value plus a
-     *                 '_nodes' suffix, e.g., '<adjacency_table_name>_nodes'.
-     *                 The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 solution.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
-     *                 EXPORT_QUERY_RESULTS}: Returns query results in the
-     *                 response. If set to {@code true}, the {@code
-     *                 adjacencyListIntArray} (if the query was based on IDs),
-     *                 {@code adjacencyListStringArray} (if the query was based
-     *                 on names), or {@code adjacencyListWktArray} (if the
-     *                 query was based on WKTs) will be populated with the
-     *                 results. If set to {@code false}, none of the arrays
-     *                 will be populated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *                 ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
-     *                 WKT-type column named 'QUERY_EDGE_WKTLINE' to the given
-     *                 {@code adjacencyTable} and inputs WKT values from the
-     *                 source graph (if available) or auto-generated WKT values
-     *                 (if there are no WKT values in the source graph). A
-     *                 subsequent call to the <a
-     *                 href="../../../../../api/rest/wms_rest.html"
-     *                 target="_top">/wms</a> endpoint can then be made to
-     *                 display the query results on a map.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
-     *                 AND_LABELS}: If set to {@code true}, the result of the
-     *                 query has entities that satisfy all of the target
-     *                 labels, instead of any.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public QueryGraphRequest(String graphName, List<String> queries, List<String> restrictions, String adjacencyTable, int rings, Map<String, String> options) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        this.queries = (queries == null) ? new ArrayList<String>() : queries;
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        this.adjacencyTable = (adjacencyTable == null) ? "" : adjacencyTable;
-        this.rings = rings;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the graph resource to query.
-     * 
-     */
-    public String getGraphName() {
-        return graphName;
-    }
-
-    /**
-     * 
-     * @param graphName  Name of the graph resource to query.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setGraphName(String graphName) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Nodes or edges to be queried specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *         target="_top">query identifiers</a>. Identifiers can be used
-     *         with existing column names, e.g., 'table.column AS
-     *         QUERY_NODE_ID', raw values, e.g., '{0, 2} AS QUERY_NODE_ID', or
-     *         expressions, e.g., 'ST_MAKEPOINT(table.x, table.y) AS
-     *         QUERY_NODE_WKTPOINT'. Multiple values can be provided as long as
-     *         the same identifier is used for all values. If using raw values
-     *         in an identifier combination, the number of values specified
-     *         must match across the combination.
-     * 
-     */
-    public List<String> getQueries() {
-        return queries;
-    }
-
-    /**
-     * 
-     * @param queries  Nodes or edges to be queried specified using <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *                 target="_top">query identifiers</a>. Identifiers can be
-     *                 used with existing column names, e.g., 'table.column AS
-     *                 QUERY_NODE_ID', raw values, e.g., '{0, 2} AS
-     *                 QUERY_NODE_ID', or expressions, e.g.,
-     *                 'ST_MAKEPOINT(table.x, table.y) AS QUERY_NODE_WKTPOINT'.
-     *                 Multiple values can be provided as long as the same
-     *                 identifier is used for all values. If using raw values
-     *                 in an identifier combination, the number of values
-     *                 specified must match across the combination.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setQueries(List<String> queries) {
-        this.queries = (queries == null) ? new ArrayList<String>() : queries;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional restrictions to apply to the nodes/edges of an
-     *         existing graph. Restrictions must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *         target="_top">combinations</a>. Identifiers can be used with
-     *         existing column names, e.g., 'table.column AS
-     *         RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS
-     *         RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1}
-     *         AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an
-     *         identifier combination, the number of values specified must
-     *         match across the combination.  The default value is an empty
-     *         {@link List}.
-     * 
-     */
-    public List<String> getRestrictions() {
-        return restrictions;
-    }
-
-    /**
-     * 
-     * @param restrictions  Additional restrictions to apply to the nodes/edges
-     *                      of an existing graph. Restrictions must be
-     *                      specified using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#id-combos"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with existing column names, e.g.,
-     *                      'table.column AS RESTRICTIONS_EDGE_ID',
-     *                      expressions, e.g., 'column/2 AS
-     *                      RESTRICTIONS_VALUECOMPARED', or raw values, e.g.,
-     *                      '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If
-     *                      using raw values in an identifier combination, the
-     *                      number of values specified must match across the
-     *                      combination.  The default value is an empty {@link
-     *                      List}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setRestrictions(List<String> restrictions) {
-        this.restrictions = (restrictions == null) ? new ArrayList<String>() : restrictions;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Name of the table to store the resulting adjacencies. If left
-     *         blank, the query results are instead returned in the response
-     *         even if {@code export_query_results} is set to {@code false}. If
-     *         the 'QUERY_TARGET_NODE_LABEL' <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *         target="_top">query identifier</a> is used in {@code queries},
-     *         then two additional columns will be available: 'PATH_ID' and
-     *         'RING_ID'. See
-     *                     <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#using-labels"
-     *         target="_top">Using Labels</a> for more information.  The
-     *         default value is ''.
-     * 
-     */
-    public String getAdjacencyTable() {
-        return adjacencyTable;
-    }
-
-    /**
-     * 
-     * @param adjacencyTable  Name of the table to store the resulting
-     *                        adjacencies. If left blank, the query results are
-     *                        instead returned in the response even if {@code
-     *                        export_query_results} is set to {@code false}. If
-     *                        the 'QUERY_TARGET_NODE_LABEL' <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#query-identifiers"
-     *                        target="_top">query identifier</a> is used in
-     *                        {@code queries}, then two additional columns will
-     *                        be available: 'PATH_ID' and 'RING_ID'. See
-     *                                    <a
-     *                        href="../../../../../graph_solver/network_graph_solver.html#using-labels"
-     *                        target="_top">Using Labels</a> for more
-     *                        information.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setAdjacencyTable(String adjacencyTable) {
-        this.adjacencyTable = (adjacencyTable == null) ? "" : adjacencyTable;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Sets the number of rings around the node to query for adjacency,
-     *         with '1' being the edges directly attached to the queried node.
-     *         Also known as number of hops. For example, if it is set to '2',
-     *         the edge(s) directly attached to the queried node(s) will be
-     *         returned; in addition, the edge(s) attached to the node(s)
-     *         attached to the initial ring of edge(s) surrounding the queried
-     *         node(s) will be returned. If the value is set to '0', any nodes
-     *         that meet the criteria in {@code queries} and {@code
-     *         restrictions} will be returned. This parameter is only
-     *         applicable when querying nodes.  The default value is 1.
-     * 
-     */
-    public int getRings() {
-        return rings;
-    }
-
-    /**
-     * 
-     * @param rings  Sets the number of rings around the node to query for
-     *               adjacency, with '1' being the edges directly attached to
-     *               the queried node. Also known as number of hops. For
-     *               example, if it is set to '2', the edge(s) directly
-     *               attached to the queried node(s) will be returned; in
-     *               addition, the edge(s) attached to the node(s) attached to
-     *               the initial ring of edge(s) surrounding the queried
-     *               node(s) will be returned. If the value is set to '0', any
-     *               nodes that meet the criteria in {@code queries} and {@code
-     *               restrictions} will be returned. This parameter is only
-     *               applicable when querying nodes.  The default value is 1.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setRings(int rings) {
-        this.rings = rings;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
-     *         FORCE_UNDIRECTED}: If set to {@code true}, all inbound edges and
-     *         outbound edges relative to the node will be returned. If set to
-     *         {@code false}, only outbound edges relative to the node will be
-     *         returned. This parameter is only applicable if the queried graph
-     *         {@code graphName} is directed and when querying nodes. Consult
-     *         <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *         target="_top">Directed Graphs</a> for more details.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#LIMIT LIMIT}: When
-     *         specified, limits the number of query results. Note that if the
-     *         {@code target_nodes_table} is provided, the size of the
-     *         corresponding table will be limited by the {@code limit} value.
-     *         The default value is an empty {@link Map}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
-     *         TARGET_NODES_TABLE}: Name of the table to store the list of the
-     *         final nodes reached during the traversal. If this value is left
-     *         as the default, the table name will default to the {@code
-     *         adjacencyTable} value plus a '_nodes' suffix, e.g.,
-     *         '<adjacency_table_name>_nodes'.  The default value is ''.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *         RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *         comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED
-     *         value greater than the {@code restriction_threshold_value} will
-     *         not be included in the solution.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
-     *         EXPORT_QUERY_RESULTS}: Returns query results in the response. If
-     *         set to {@code true}, the {@code adjacencyListIntArray} (if the
-     *         query was based on IDs), {@code adjacencyListStringArray} (if
-     *         the query was based on names), or {@code adjacencyListWktArray}
-     *         (if the query was based on WKTs) will be populated with the
-     *         results. If set to {@code false}, none of the arrays will be
-     *         populated.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *         ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a WKT-type
-     *         column named 'QUERY_EDGE_WKTLINE' to the given {@code
-     *         adjacencyTable} and inputs WKT values from the source graph (if
-     *         available) or auto-generated WKT values (if there are no WKT
-     *         values in the source graph). A subsequent call to the <a
-     *         href="../../../../../api/rest/wms_rest.html"
-     *         target="_top">/wms</a> endpoint can then be made to display the
-     *         query results on a map.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
-     *         AND_LABELS}: If set to {@code true}, the result of the query has
-     *         entities that satisfy all of the target labels, instead of any.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.QueryGraphRequest.Options#FALSE FALSE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FORCE_UNDIRECTED
-     *                 FORCE_UNDIRECTED}: If set to {@code true}, all inbound
-     *                 edges and outbound edges relative to the node will be
-     *                 returned. If set to {@code false}, only outbound edges
-     *                 relative to the node will be returned. This parameter is
-     *                 only applicable if the queried graph {@code graphName}
-     *                 is directed and when querying nodes. Consult <a
-     *                 href="../../../../../graph_solver/network_graph_solver.html#directed-graphs"
-     *                 target="_top">Directed Graphs</a> for more details.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#LIMIT
-     *                 LIMIT}: When specified, limits the number of query
-     *                 results. Note that if the {@code target_nodes_table} is
-     *                 provided, the size of the corresponding table will be
-     *                 limited by the {@code limit} value.  The default value
-     *                 is an empty {@link Map}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TARGET_NODES_TABLE
-     *                 TARGET_NODES_TABLE}: Name of the table to store the list
-     *                 of the final nodes reached during the traversal. If this
-     *                 value is left as the default, the table name will
-     *                 default to the {@code adjacencyTable} value plus a
-     *                 '_nodes' suffix, e.g., '<adjacency_table_name>_nodes'.
-     *                 The default value is ''.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#RESTRICTION_THRESHOLD_VALUE
-     *                 RESTRICTION_THRESHOLD_VALUE}: Value-based restriction
-     *                 comparison. Any node or edge with a
-     *                 RESTRICTIONS_VALUECOMPARED value greater than the {@code
-     *                 restriction_threshold_value} will not be included in the
-     *                 solution.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#EXPORT_QUERY_RESULTS
-     *                 EXPORT_QUERY_RESULTS}: Returns query results in the
-     *                 response. If set to {@code true}, the {@code
-     *                 adjacencyListIntArray} (if the query was based on IDs),
-     *                 {@code adjacencyListStringArray} (if the query was based
-     *                 on names), or {@code adjacencyListWktArray} (if the
-     *                 query was based on WKTs) will be populated with the
-     *                 results. If set to {@code false}, none of the arrays
-     *                 will be populated.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#ENABLE_GRAPH_DRAW
-     *                 ENABLE_GRAPH_DRAW}: If set to {@code true}, adds a
-     *                 WKT-type column named 'QUERY_EDGE_WKTLINE' to the given
-     *                 {@code adjacencyTable} and inputs WKT values from the
-     *                 source graph (if available) or auto-generated WKT values
-     *                 (if there are no WKT values in the source graph). A
-     *                 subsequent call to the <a
-     *                 href="../../../../../api/rest/wms_rest.html"
-     *                 target="_top">/wms</a> endpoint can then be made to
-     *                 display the query results on a map.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#AND_LABELS
-     *                 AND_LABELS}: If set to {@code true}, the result of the
-     *                 query has entities that satisfy all of the target
-     *                 labels, instead of any.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#TRUE TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.QueryGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public QueryGraphRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.graphName;
-
-            case 1:
-                return this.queries;
-
-            case 2:
-                return this.restrictions;
-
-            case 3:
-                return this.adjacencyTable;
-
-            case 4:
-                return this.rings;
-
-            case 5:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.graphName = (String)value;
-                break;
-
-            case 1:
-                this.queries = (List<String>)value;
-                break;
-
-            case 2:
-                this.restrictions = (List<String>)value;
-                break;
-
-            case 3:
-                this.adjacencyTable = (String)value;
-                break;
-
-            case 4:
-                this.rings = (Integer)value;
-                break;
-
-            case 5:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        QueryGraphRequest that = (QueryGraphRequest)obj;
-
-        return ( this.graphName.equals( that.graphName )
-                 && this.queries.equals( that.queries )
-                 && this.restrictions.equals( that.restrictions )
-                 && this.adjacencyTable.equals( that.adjacencyTable )
-                 && ( this.rings == that.rings )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "queries" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.queries ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "restrictions" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.restrictions ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "adjacencyTable" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.adjacencyTable ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "rings" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.rings ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.graphName.hashCode();
-        hashCode = (31 * hashCode) + this.queries.hashCode();
-        hashCode = (31 * hashCode) + this.restrictions.hashCode();
-        hashCode = (31 * hashCode) + this.adjacencyTable.hashCode();
-        hashCode = (31 * hashCode) + this.rings;
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

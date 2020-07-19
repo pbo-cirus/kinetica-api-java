@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -21,7 +22,7 @@ import org.apache.avro.generic.IndexedRecord;
  * <p>
  * Matches a directed route implied by a given set of latitude/longitude points
  * to an existing underlying road network graph using a given solution type.
-
+ * <p>
  * IMPORTANT: It's highly recommended that you review the <a
  * href="../../../../../graph_solver/network_graph_solver.html"
  * target="_top">Network Graphs & Solvers</a> concepts documentation, the <a
@@ -35,25 +36,966 @@ public class MatchGraphRequest implements IndexedRecord {
             .record("MatchGraphRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("samplePoints").type().array().items().stringType().noDefault()
-                .name("solveMethod").type().stringType().noDefault()
-                .name("solutionTable").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("samplePoints").type().array().items().stringType().noDefault()
+            .name("solveMethod").type().stringType().noDefault()
+            .name("solutionTable").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
+    private String graphName;
+    private List<String> samplePoints;
+    private String solveMethod;
+    private String solutionTable;
+    private Map<String, String> options;
+    /**
+     * Constructs a MatchGraphRequest object with default parameters.
+     */
+    public MatchGraphRequest() {
+        graphName = "";
+        samplePoints = new ArrayList<>();
+        solveMethod = "";
+        solutionTable = "";
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs a MatchGraphRequest object with the specified parameters.
+     *
+     * @param graphName     Name of the underlying geospatial graph resource to
+     *                      match to using {@code samplePoints}.
+     * @param samplePoints  Sample points used to match to an underlying
+     *                      geospatial graph. Sample points must be specified
+     *                      using <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
+     *                      target="_top">identifiers</a>; identifiers are
+     *                      grouped as <a
+     *                      href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
+     *                      target="_top">combinations</a>. Identifiers can be
+     *                      used with: existing column names, e.g.,
+     *                      'table.column AS SAMPLE_X'; expressions, e.g.,
+     *                      'ST_MAKEPOINT(table.x, table.y) AS
+     *                      SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10}
+     *                      AS SAMPLE_TRIPID'.
+     * @param solveMethod   The type of solver to use for graph matching.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     *                      MARKOV_CHAIN}: Matches {@code samplePoints} to the
+     *                      graph using the Hidden Markov Model (HMM)-based
+     *                      method, which conducts a range-tree closest-edge
+     *                      search to find the best combinations of possible
+     *                      road segments ({@code num_segments}) for each sample
+     *                      point to create the best route. The route is secured
+     *                      one point at a time while looking ahead {@code
+     *                      chain_width} number of points, so the prediction is
+     *                      corrected after each point. This solution type is
+     *                      the most accurate but also the most computationally
+     *                      intensive. Related options: {@code num_segments} and
+     *                      {@code chain_width}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
+     *                      MATCH_OD_PAIRS}: Matches {@code samplePoints} to
+     *                      find the most probable path between origin and
+     *                      destination pairs with cost constraints.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
+     *                      MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints}
+     *                      to optimize scheduling multiple supplies (trucks)
+     *                      with varying sizes to varying demand sites with
+     *                      varying capacities per depot. Related options:
+     *                      {@code partial_loading} and {@code
+     *                      max_combinations}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
+     *                      MATCH_BATCH_SOLVES}: Matches {@code samplePoints}
+     *                      source and destination pairs for the shortest path
+     *                      solves in batch mode.
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     *                      MARKOV_CHAIN}.
+     * @param solutionTable The name of the table used to store the results;
+     *                      this table contains a <a
+     *                      href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
+     *                      target="_top">track</a> of geospatial points for
+     *                      the matched portion of the graph, a track ID, and
+     *                      a score value. Also outputs a details table
+     *                      containing a trip ID (that matches the track ID),
+     *                      the latitude/longitude pair, the timestamp the
+     *                      point was recorded at, and an edge ID
+     *                      corresponding to the matched road segment. Has the
+     *                      same naming restrictions as <a
+     *                      href="../../../../../concepts/tables.html"
+     *                      target="_top">tables</a>. Must not be an existing
+     *                      table of the same name.  The default value is ''.
+     * @param options       Additional parameters
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
+     *                      GPS_NOISE}: GPS noise value (in meters) to remove
+     *                      redundant sample points. Use -1 to disable noise
+     *                      reduction. The default value accounts for 95% of point
+     *                      variation (+ or -5 meters).  The default value is '5.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
+     *                      NUM_SEGMENTS}: Maximum number of potentially matching
+     *                      road segments for each sample point. For the {@code
+     *                      markov_chain} solver, the default is 3.  The default
+     *                      value is '3'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
+     *                      SEARCH_RADIUS}: Maximum search radius used when snapping
+     *                      sample points onto potentially matching surrounding
+     *                      segments. The default value corresponds to approximately
+     *                      100 meters.  The default value is '0.001'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
+     *                      CHAIN_WIDTH}: For the {@code markov_chain} solver only.
+     *                      Length of the sample points lookahead window within the
+     *                      Markov kernel; the larger the number, the more accurate
+     *                      the solution.  The default value is '9'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#SOURCE
+     *                      SOURCE}: Optional WKT starting point from {@code
+     *                      samplePoints} for the solver. The default behavior for
+     *                      the endpoint is to use time to determine the starting
+     *                      point.  The default value is 'POINT NULL'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
+     *                      DESTINATION}: Optional WKT ending point from {@code
+     *                      samplePoints} for the solver. The default behavior for
+     *                      the endpoint is to use time to determine the destination
+     *                      point.  The default value is 'POINT NULL'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
+     *                      PARTIAL_LOADING}: For the {@code match_supply_demand}
+     *                      solver only. When false (non-default), trucks do not
+     *                      off-load at the demand (store) side if the remainder is
+     *                      less than the store's need
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                      Partial off-loading at multiple store (demand) locations
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                      FALSE}: No partial off-loading allowed if supply is less
+     *                      than the store's demand.
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
+     *                      MAX_COMBINATIONS}: For the {@code match_supply_demand}
+     *                      solver only. This is the cutoff for the number of
+     *                      generated combinations for sequencing the demand
+     *                      locations - can increase this up to 2M.  The default
+     *                      value is '10000'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
+     *                      LEFT_TURN_PENALTY}: This will add an additonal weight
+     *                      over the edges labelled as 'left turn' if the 'add_turn'
+     *                      option parameter of the {@link
+     *                      com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                      invoked at graph creation.  The default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
+     *                      RIGHT_TURN_PENALTY}: This will add an additonal weight
+     *                      over the edges labelled as' right turn' if the
+     *                      'add_turn' option parameter of the {@link
+     *                      com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                      invoked at graph creation.  The default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
+     *                      INTERSECTION_PENALTY}: This will add an additonal weight
+     *                      over the edges labelled as 'intersection' if the
+     *                      'add_turn' option parameter of the {@link
+     *                      com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                      invoked at graph creation.  The default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
+     *                      SHARP_TURN_PENALTY}: This will add an additonal weight
+     *                      over the edges labelled as 'sharp turn' or 'u-turn' if
+     *                      the 'add_turn' option parameter of the {@link
+     *                      com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                      invoked at graph creation.  The default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
+     *                      AGGREGATED_OUTPUT}: For the {@code match_supply_demand}
+     *                      solver only. When it is true (default), each record in
+     *                      the output table shows a particular truck's scheduled
+     *                      cumulative round trip path (MULTILINESTRING) and the
+     *                      corresponding aggregated cost. Otherwise, each record
+     *                      shows a single scheduled truck route (LINESTRING)
+     *                      towards a particular demand location (store id) with its
+     *                      corresponding cost.  The default value is 'true'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
+     *                      MAX_TRIP_COST}: For the {@code match_supply_demand}
+     *                      solver only. If this constraint is greater than zero
+     *                      (default) then the trucks will skip travelling from one
+     *                      demand location to another if the cost between them is
+     *                      greater than this number (distance or time). Zero
+     *                      (default) value means no check is performed.  The
+     *                      default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
+     *                      FILTER_FOLDING_PATHS}: For the {@code markov_chain}
+     *                      solver only. When true (non-default), the paths per
+     *                      sequence combination is checked for folding over
+     *                      patterns and can significantly increase the execution
+     *                      time depending on the chain width and the number of gps
+     *                      samples.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                      Filter out the folded paths.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                      FALSE}: Do not filter out the folded paths
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
+     *                      UNIT_UNLOADING_COST}: For the {@code
+     *                      match_supply_demand} solver only. The unit cost per load
+     *                      amount to be delivered. If this value is greater than
+     *                      zero (default) then the additional cost of this unit
+     *                      load multiplied by the total dropped load will be added
+     *                      over to the trip cost to the demand location.  The
+     *                      default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
+     *                      MAX_NUM_THREADS}: For the {@code markov_chain} solver
+     *                      only. If specified (greater than zero), the maximum
+     *                      number of threads will not be greater than the specified
+     *                      value. It can be lower due to the memory and the number
+     *                      cores available. Default value of zero allows the
+     *                      algorithm to set the maximal number of threads within
+     *                      these constraints.  The default value is '0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
+     *                      TRUCK_SERVICE_LIMIT}: For the {@code
+     *                      match_supply_demand} solver only. If specified (greather
+     *                      than zero), any truck's total service cost (distance or
+     *                      time) will be limited by the specified value including
+     *                      multiple rounds (if set).  The default value is '0.0'.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
+     *                      ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand}
+     *                      solver only. If specified (true), all trucks can be
+     *                      scheduled for second rounds from their originating
+     *                      depots.
+     *                      Supported values:
+     *                      <ul>
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                      Allows reusing trucks for scheduling again.
+     *                              <li> {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                      FALSE}: Trucks are scheduled only once from their
+     *                      depots.
+     *                      </ul>
+     *                      The default value is {@link
+     *                      com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                      FALSE}.
+     *                      </ul>
+     *                      The default value is an empty {@link Map}.
+     */
+    public MatchGraphRequest(String graphName, List<String> samplePoints, String solveMethod, String solutionTable, Map<String, String> options) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        this.samplePoints = (samplePoints == null) ? new ArrayList<String>() : samplePoints;
+        this.solveMethod = (solveMethod == null) ? "" : solveMethod;
+        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Name of the underlying geospatial graph resource to match to
+     * using {@code samplePoints}.
+     */
+    public String getGraphName() {
+        return graphName;
+    }
+
+    /**
+     * @param graphName Name of the underlying geospatial graph resource to
+     *                  match to using {@code samplePoints}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MatchGraphRequest setGraphName(String graphName) {
+        this.graphName = (graphName == null) ? "" : graphName;
+        return this;
+    }
+
+    /**
+     * @return Sample points used to match to an underlying geospatial graph.
+     * Sample points must be specified using <a
+     * href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
+     * target="_top">identifiers</a>; identifiers are grouped as <a
+     * href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
+     * target="_top">combinations</a>. Identifiers can be used with:
+     * existing column names, e.g., 'table.column AS SAMPLE_X';
+     * expressions, e.g., 'ST_MAKEPOINT(table.x, table.y) AS
+     * SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10} AS
+     * SAMPLE_TRIPID'.
+     */
+    public List<String> getSamplePoints() {
+        return samplePoints;
+    }
+
+    /**
+     * @param samplePoints Sample points used to match to an underlying
+     *                     geospatial graph. Sample points must be specified
+     *                     using <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
+     *                     target="_top">identifiers</a>; identifiers are
+     *                     grouped as <a
+     *                     href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
+     *                     target="_top">combinations</a>. Identifiers can be
+     *                     used with: existing column names, e.g.,
+     *                     'table.column AS SAMPLE_X'; expressions, e.g.,
+     *                     'ST_MAKEPOINT(table.x, table.y) AS
+     *                     SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10}
+     *                     AS SAMPLE_TRIPID'.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MatchGraphRequest setSamplePoints(List<String> samplePoints) {
+        this.samplePoints = (samplePoints == null) ? new ArrayList<String>() : samplePoints;
+        return this;
+    }
+
+    /**
+     * @return The type of solver to use for graph matching.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     * MARKOV_CHAIN}: Matches {@code samplePoints} to the graph using
+     * the Hidden Markov Model (HMM)-based method, which conducts a
+     * range-tree closest-edge search to find the best combinations of
+     * possible road segments ({@code num_segments}) for each sample
+     * point to create the best route. The route is secured one point
+     * at a time while looking ahead {@code chain_width} number of
+     * points, so the prediction is corrected after each point. This
+     * solution type is the most accurate but also the most
+     * computationally intensive. Related options: {@code num_segments}
+     * and {@code chain_width}.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
+     * MATCH_OD_PAIRS}: Matches {@code samplePoints} to find the most
+     * probable path between origin and destination pairs with cost
+     * constraints.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
+     * MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints} to optimize
+     * scheduling multiple supplies (trucks) with varying sizes to
+     * varying demand sites with varying capacities per depot. Related
+     * options: {@code partial_loading} and {@code max_combinations}.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
+     * MATCH_BATCH_SOLVES}: Matches {@code samplePoints} source and
+     * destination pairs for the shortest path solves in batch mode.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     * MARKOV_CHAIN}.
+     */
+    public String getSolveMethod() {
+        return solveMethod;
+    }
+
+    /**
+     * @param solveMethod The type of solver to use for graph matching.
+     *                    Supported values:
+     *                    <ul>
+     *                            <li> {@link
+     *                    com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     *                    MARKOV_CHAIN}: Matches {@code samplePoints} to the
+     *                    graph using the Hidden Markov Model (HMM)-based
+     *                    method, which conducts a range-tree closest-edge
+     *                    search to find the best combinations of possible
+     *                    road segments ({@code num_segments}) for each sample
+     *                    point to create the best route. The route is secured
+     *                    one point at a time while looking ahead {@code
+     *                    chain_width} number of points, so the prediction is
+     *                    corrected after each point. This solution type is
+     *                    the most accurate but also the most computationally
+     *                    intensive. Related options: {@code num_segments} and
+     *                    {@code chain_width}.
+     *                            <li> {@link
+     *                    com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
+     *                    MATCH_OD_PAIRS}: Matches {@code samplePoints} to
+     *                    find the most probable path between origin and
+     *                    destination pairs with cost constraints.
+     *                            <li> {@link
+     *                    com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
+     *                    MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints}
+     *                    to optimize scheduling multiple supplies (trucks)
+     *                    with varying sizes to varying demand sites with
+     *                    varying capacities per depot. Related options:
+     *                    {@code partial_loading} and {@code
+     *                    max_combinations}.
+     *                            <li> {@link
+     *                    com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
+     *                    MATCH_BATCH_SOLVES}: Matches {@code samplePoints}
+     *                    source and destination pairs for the shortest path
+     *                    solves in batch mode.
+     *                    </ul>
+     *                    The default value is {@link
+     *                    com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
+     *                    MARKOV_CHAIN}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MatchGraphRequest setSolveMethod(String solveMethod) {
+        this.solveMethod = (solveMethod == null) ? "" : solveMethod;
+        return this;
+    }
+
+    /**
+     * @return The name of the table used to store the results; this table
+     * contains a <a
+     * href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
+     * target="_top">track</a> of geospatial points for the matched
+     * portion of the graph, a track ID, and a score value. Also
+     * outputs a details table containing a trip ID (that matches the
+     * track ID), the latitude/longitude pair, the timestamp the point
+     * was recorded at, and an edge ID corresponding to the matched
+     * road segment. Has the same naming restrictions as <a
+     * href="../../../../../concepts/tables.html"
+     * target="_top">tables</a>. Must not be an existing table of the
+     * same name.  The default value is ''.
+     */
+    public String getSolutionTable() {
+        return solutionTable;
+    }
+
+    /**
+     * @param solutionTable The name of the table used to store the results;
+     *                      this table contains a <a
+     *                      href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
+     *                      target="_top">track</a> of geospatial points for
+     *                      the matched portion of the graph, a track ID, and
+     *                      a score value. Also outputs a details table
+     *                      containing a trip ID (that matches the track ID),
+     *                      the latitude/longitude pair, the timestamp the
+     *                      point was recorded at, and an edge ID
+     *                      corresponding to the matched road segment. Has the
+     *                      same naming restrictions as <a
+     *                      href="../../../../../concepts/tables.html"
+     *                      target="_top">tables</a>. Must not be an existing
+     *                      table of the same name.  The default value is ''.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MatchGraphRequest setSolutionTable(String solutionTable) {
+        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
+        return this;
+    }
+
+    /**
+     * @return Additional parameters
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
+     * GPS_NOISE}: GPS noise value (in meters) to remove redundant
+     * sample points. Use -1 to disable noise reduction. The default
+     * value accounts for 95% of point variation (+ or -5 meters).  The
+     * default value is '5.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
+     * NUM_SEGMENTS}: Maximum number of potentially matching road
+     * segments for each sample point. For the {@code markov_chain}
+     * solver, the default is 3.  The default value is '3'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
+     * SEARCH_RADIUS}: Maximum search radius used when snapping sample
+     * points onto potentially matching surrounding segments. The
+     * default value corresponds to approximately 100 meters.  The
+     * default value is '0.001'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
+     * CHAIN_WIDTH}: For the {@code markov_chain} solver only. Length
+     * of the sample points lookahead window within the Markov kernel;
+     * the larger the number, the more accurate the solution.  The
+     * default value is '9'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#SOURCE SOURCE}:
+     * Optional WKT starting point from {@code samplePoints} for the
+     * solver. The default behavior for the endpoint is to use time to
+     * determine the starting point.  The default value is 'POINT
+     * NULL'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
+     * DESTINATION}: Optional WKT ending point from {@code
+     * samplePoints} for the solver. The default behavior for the
+     * endpoint is to use time to determine the destination point.  The
+     * default value is 'POINT NULL'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
+     * PARTIAL_LOADING}: For the {@code match_supply_demand} solver
+     * only. When false (non-default), trucks do not off-load at the
+     * demand (store) side if the remainder is less than the store's
+     * need
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Partial
+     * off-loading at multiple store (demand) locations
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}: No
+     * partial off-loading allowed if supply is less than the store's
+     * demand.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
+     * MAX_COMBINATIONS}: For the {@code match_supply_demand} solver
+     * only. This is the cutoff for the number of generated
+     * combinations for sequencing the demand locations - can increase
+     * this up to 2M.  The default value is '10000'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
+     * LEFT_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as 'left turn' if the 'add_turn' option parameter
+     * of the {@link com.gpudb.GPUdb#createGraph(CreateGraphRequest)}
+     * was invoked at graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
+     * RIGHT_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as' right turn' if the 'add_turn' option
+     * parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
+     * INTERSECTION_PENALTY}: This will add an additonal weight over
+     * the edges labelled as 'intersection' if the 'add_turn' option
+     * parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
+     * SHARP_TURN_PENALTY}: This will add an additonal weight over the
+     * edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn'
+     * option parameter of the {@link
+     * com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
+     * graph creation.  The default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
+     * AGGREGATED_OUTPUT}: For the {@code match_supply_demand} solver
+     * only. When it is true (default), each record in the output table
+     * shows a particular truck's scheduled cumulative round trip path
+     * (MULTILINESTRING) and the corresponding aggregated cost.
+     * Otherwise, each record shows a single scheduled truck route
+     * (LINESTRING) towards a particular demand location (store id)
+     * with its corresponding cost.  The default value is 'true'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
+     * MAX_TRIP_COST}: For the {@code match_supply_demand} solver only.
+     * If this constraint is greater than zero (default) then the
+     * trucks will skip travelling from one demand location to another
+     * if the cost between them is greater than this number (distance
+     * or time). Zero (default) value means no check is performed.  The
+     * default value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
+     * FILTER_FOLDING_PATHS}: For the {@code markov_chain} solver only.
+     * When true (non-default), the paths per sequence combination is
+     * checked for folding over patterns and can significantly increase
+     * the execution time depending on the chain width and the number
+     * of gps samples.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Filter
+     * out the folded paths.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}: Do
+     * not filter out the folded paths
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
+     * UNIT_UNLOADING_COST}: For the {@code match_supply_demand} solver
+     * only. The unit cost per load amount to be delivered. If this
+     * value is greater than zero (default) then the additional cost of
+     * this unit load multiplied by the total dropped load will be
+     * added over to the trip cost to the demand location.  The default
+     * value is '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
+     * MAX_NUM_THREADS}: For the {@code markov_chain} solver only. If
+     * specified (greater than zero), the maximum number of threads
+     * will not be greater than the specified value. It can be lower
+     * due to the memory and the number cores available. Default value
+     * of zero allows the algorithm to set the maximal number of
+     * threads within these constraints.  The default value is '0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
+     * TRUCK_SERVICE_LIMIT}: For the {@code match_supply_demand} solver
+     * only. If specified (greather than zero), any truck's total
+     * service cost (distance or time) will be limited by the specified
+     * value including multiple rounds (if set).  The default value is
+     * '0.0'.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
+     * ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand} solver
+     * only. If specified (true), all trucks can be scheduled for
+     * second rounds from their originating depots.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Allows
+     * reusing trucks for scheduling again.
+     *         <li> {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}:
+     * Trucks are scheduled only once from their depots.
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Additional parameters
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
+     *                GPS_NOISE}: GPS noise value (in meters) to remove
+     *                redundant sample points. Use -1 to disable noise
+     *                reduction. The default value accounts for 95% of point
+     *                variation (+ or -5 meters).  The default value is '5.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
+     *                NUM_SEGMENTS}: Maximum number of potentially matching
+     *                road segments for each sample point. For the {@code
+     *                markov_chain} solver, the default is 3.  The default
+     *                value is '3'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
+     *                SEARCH_RADIUS}: Maximum search radius used when snapping
+     *                sample points onto potentially matching surrounding
+     *                segments. The default value corresponds to approximately
+     *                100 meters.  The default value is '0.001'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
+     *                CHAIN_WIDTH}: For the {@code markov_chain} solver only.
+     *                Length of the sample points lookahead window within the
+     *                Markov kernel; the larger the number, the more accurate
+     *                the solution.  The default value is '9'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#SOURCE
+     *                SOURCE}: Optional WKT starting point from {@code
+     *                samplePoints} for the solver. The default behavior for
+     *                the endpoint is to use time to determine the starting
+     *                point.  The default value is 'POINT NULL'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
+     *                DESTINATION}: Optional WKT ending point from {@code
+     *                samplePoints} for the solver. The default behavior for
+     *                the endpoint is to use time to determine the destination
+     *                point.  The default value is 'POINT NULL'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
+     *                PARTIAL_LOADING}: For the {@code match_supply_demand}
+     *                solver only. When false (non-default), trucks do not
+     *                off-load at the demand (store) side if the remainder is
+     *                less than the store's need
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                Partial off-loading at multiple store (demand) locations
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                FALSE}: No partial off-loading allowed if supply is less
+     *                than the store's demand.
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
+     *                MAX_COMBINATIONS}: For the {@code match_supply_demand}
+     *                solver only. This is the cutoff for the number of
+     *                generated combinations for sequencing the demand
+     *                locations - can increase this up to 2M.  The default
+     *                value is '10000'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
+     *                LEFT_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'left turn' if the 'add_turn'
+     *                option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
+     *                RIGHT_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as' right turn' if the
+     *                'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
+     *                INTERSECTION_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'intersection' if the
+     *                'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
+     *                SHARP_TURN_PENALTY}: This will add an additonal weight
+     *                over the edges labelled as 'sharp turn' or 'u-turn' if
+     *                the 'add_turn' option parameter of the {@link
+     *                com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
+     *                invoked at graph creation.  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
+     *                AGGREGATED_OUTPUT}: For the {@code match_supply_demand}
+     *                solver only. When it is true (default), each record in
+     *                the output table shows a particular truck's scheduled
+     *                cumulative round trip path (MULTILINESTRING) and the
+     *                corresponding aggregated cost. Otherwise, each record
+     *                shows a single scheduled truck route (LINESTRING)
+     *                towards a particular demand location (store id) with its
+     *                corresponding cost.  The default value is 'true'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
+     *                MAX_TRIP_COST}: For the {@code match_supply_demand}
+     *                solver only. If this constraint is greater than zero
+     *                (default) then the trucks will skip travelling from one
+     *                demand location to another if the cost between them is
+     *                greater than this number (distance or time). Zero
+     *                (default) value means no check is performed.  The
+     *                default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
+     *                FILTER_FOLDING_PATHS}: For the {@code markov_chain}
+     *                solver only. When true (non-default), the paths per
+     *                sequence combination is checked for folding over
+     *                patterns and can significantly increase the execution
+     *                time depending on the chain width and the number of gps
+     *                samples.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                Filter out the folded paths.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                FALSE}: Do not filter out the folded paths
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
+     *                UNIT_UNLOADING_COST}: For the {@code
+     *                match_supply_demand} solver only. The unit cost per load
+     *                amount to be delivered. If this value is greater than
+     *                zero (default) then the additional cost of this unit
+     *                load multiplied by the total dropped load will be added
+     *                over to the trip cost to the demand location.  The
+     *                default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
+     *                MAX_NUM_THREADS}: For the {@code markov_chain} solver
+     *                only. If specified (greater than zero), the maximum
+     *                number of threads will not be greater than the specified
+     *                value. It can be lower due to the memory and the number
+     *                cores available. Default value of zero allows the
+     *                algorithm to set the maximal number of threads within
+     *                these constraints.  The default value is '0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
+     *                TRUCK_SERVICE_LIMIT}: For the {@code
+     *                match_supply_demand} solver only. If specified (greather
+     *                than zero), any truck's total service cost (distance or
+     *                time) will be limited by the specified value including
+     *                multiple rounds (if set).  The default value is '0.0'.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
+     *                ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand}
+     *                solver only. If specified (true), all trucks can be
+     *                scheduled for second rounds from their originating
+     *                depots.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
+     *                Allows reusing trucks for scheduling again.
+     *                        <li> {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                FALSE}: Trucks are scheduled only once from their
+     *                depots.
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.MatchGraphRequest.Options#FALSE
+     *                FALSE}.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public MatchGraphRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.graphName;
+
+            case 1:
+                return this.samplePoints;
+
+            case 2:
+                return this.solveMethod;
+
+            case 3:
+                return this.solutionTable;
+
+            case 4:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.graphName = (String) value;
+                break;
+
+            case 1:
+                this.samplePoints = (List<String>) value;
+                break;
+
+            case 2:
+                this.solveMethod = (String) value;
+                break;
+
+            case 3:
+                this.solutionTable = (String) value;
+                break;
+
+            case 4:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        MatchGraphRequest that = (MatchGraphRequest) obj;
+
+        return (this.graphName.equals(that.graphName)
+                && this.samplePoints.equals(that.samplePoints)
+                && this.solveMethod.equals(that.solveMethod)
+                && this.solutionTable.equals(that.solutionTable)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("samplePoints"));
+        builder.append(": ");
+        builder.append(gd.toString(this.samplePoints));
+        builder.append(", ");
+        builder.append(gd.toString("solveMethod"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solveMethod));
+        builder.append(", ");
+        builder.append(gd.toString("solutionTable"));
+        builder.append(": ");
+        builder.append(gd.toString(this.solutionTable));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.graphName.hashCode();
+        hashCode = (31 * hashCode) + this.samplePoints.hashCode();
+        hashCode = (31 * hashCode) + this.solveMethod.hashCode();
+        hashCode = (31 * hashCode) + this.solutionTable.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * The type of solver to use for graph matching.
@@ -125,9 +1067,9 @@ public class MatchGraphRequest implements IndexedRecord {
          */
         public static final String MATCH_BATCH_SOLVES = "match_batch_solves";
 
-        private SolveMethod() {  }
+        private SolveMethod() {
+        }
     }
-
 
     /**
      * Additional parameters
@@ -474,987 +1416,8 @@ public class MatchGraphRequest implements IndexedRecord {
          */
         public static final String ENABLE_TRUCK_REUSE = "enable_truck_reuse";
 
-        private Options() {  }
-    }
-
-    private String graphName;
-    private List<String> samplePoints;
-    private String solveMethod;
-    private String solutionTable;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs a MatchGraphRequest object with default parameters.
-     */
-    public MatchGraphRequest() {
-        graphName = "";
-        samplePoints = new ArrayList<>();
-        solveMethod = "";
-        solutionTable = "";
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs a MatchGraphRequest object with the specified parameters.
-     * 
-     * @param graphName  Name of the underlying geospatial graph resource to
-     *                   match to using {@code samplePoints}.
-     * @param samplePoints  Sample points used to match to an underlying
-     *                      geospatial graph. Sample points must be specified
-     *                      using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with: existing column names, e.g.,
-     *                      'table.column AS SAMPLE_X'; expressions, e.g.,
-     *                      'ST_MAKEPOINT(table.x, table.y) AS
-     *                      SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10}
-     *                      AS SAMPLE_TRIPID'.
-     * @param solveMethod  The type of solver to use for graph matching.
-     *                     Supported values:
-     *                     <ul>
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *                     MARKOV_CHAIN}: Matches {@code samplePoints} to the
-     *                     graph using the Hidden Markov Model (HMM)-based
-     *                     method, which conducts a range-tree closest-edge
-     *                     search to find the best combinations of possible
-     *                     road segments ({@code num_segments}) for each sample
-     *                     point to create the best route. The route is secured
-     *                     one point at a time while looking ahead {@code
-     *                     chain_width} number of points, so the prediction is
-     *                     corrected after each point. This solution type is
-     *                     the most accurate but also the most computationally
-     *                     intensive. Related options: {@code num_segments} and
-     *                     {@code chain_width}.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
-     *                     MATCH_OD_PAIRS}: Matches {@code samplePoints} to
-     *                     find the most probable path between origin and
-     *                     destination pairs with cost constraints.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
-     *                     MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints}
-     *                     to optimize scheduling multiple supplies (trucks)
-     *                     with varying sizes to varying demand sites with
-     *                     varying capacities per depot. Related options:
-     *                     {@code partial_loading} and {@code
-     *                     max_combinations}.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
-     *                     MATCH_BATCH_SOLVES}: Matches {@code samplePoints}
-     *                     source and destination pairs for the shortest path
-     *                     solves in batch mode.
-     *                     </ul>
-     *                     The default value is {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *                     MARKOV_CHAIN}.
-     * @param solutionTable  The name of the table used to store the results;
-     *                       this table contains a <a
-     *                       href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
-     *                       target="_top">track</a> of geospatial points for
-     *                       the matched portion of the graph, a track ID, and
-     *                       a score value. Also outputs a details table
-     *                       containing a trip ID (that matches the track ID),
-     *                       the latitude/longitude pair, the timestamp the
-     *                       point was recorded at, and an edge ID
-     *                       corresponding to the matched road segment. Has the
-     *                       same naming restrictions as <a
-     *                       href="../../../../../concepts/tables.html"
-     *                       target="_top">tables</a>. Must not be an existing
-     *                       table of the same name.  The default value is ''.
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
-     *                 GPS_NOISE}: GPS noise value (in meters) to remove
-     *                 redundant sample points. Use -1 to disable noise
-     *                 reduction. The default value accounts for 95% of point
-     *                 variation (+ or -5 meters).  The default value is '5.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
-     *                 NUM_SEGMENTS}: Maximum number of potentially matching
-     *                 road segments for each sample point. For the {@code
-     *                 markov_chain} solver, the default is 3.  The default
-     *                 value is '3'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
-     *                 SEARCH_RADIUS}: Maximum search radius used when snapping
-     *                 sample points onto potentially matching surrounding
-     *                 segments. The default value corresponds to approximately
-     *                 100 meters.  The default value is '0.001'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
-     *                 CHAIN_WIDTH}: For the {@code markov_chain} solver only.
-     *                 Length of the sample points lookahead window within the
-     *                 Markov kernel; the larger the number, the more accurate
-     *                 the solution.  The default value is '9'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SOURCE
-     *                 SOURCE}: Optional WKT starting point from {@code
-     *                 samplePoints} for the solver. The default behavior for
-     *                 the endpoint is to use time to determine the starting
-     *                 point.  The default value is 'POINT NULL'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
-     *                 DESTINATION}: Optional WKT ending point from {@code
-     *                 samplePoints} for the solver. The default behavior for
-     *                 the endpoint is to use time to determine the destination
-     *                 point.  The default value is 'POINT NULL'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
-     *                 PARTIAL_LOADING}: For the {@code match_supply_demand}
-     *                 solver only. When false (non-default), trucks do not
-     *                 off-load at the demand (store) side if the remainder is
-     *                 less than the store's need
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Partial off-loading at multiple store (demand) locations
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: No partial off-loading allowed if supply is less
-     *                 than the store's demand.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
-     *                 MAX_COMBINATIONS}: For the {@code match_supply_demand}
-     *                 solver only. This is the cutoff for the number of
-     *                 generated combinations for sequencing the demand
-     *                 locations - can increase this up to 2M.  The default
-     *                 value is '10000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
-     *                 LEFT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'left turn' if the 'add_turn'
-     *                 option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
-     *                 RIGHT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as' right turn' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
-     *                 INTERSECTION_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'intersection' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
-     *                 SHARP_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'sharp turn' or 'u-turn' if
-     *                 the 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
-     *                 AGGREGATED_OUTPUT}: For the {@code match_supply_demand}
-     *                 solver only. When it is true (default), each record in
-     *                 the output table shows a particular truck's scheduled
-     *                 cumulative round trip path (MULTILINESTRING) and the
-     *                 corresponding aggregated cost. Otherwise, each record
-     *                 shows a single scheduled truck route (LINESTRING)
-     *                 towards a particular demand location (store id) with its
-     *                 corresponding cost.  The default value is 'true'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
-     *                 MAX_TRIP_COST}: For the {@code match_supply_demand}
-     *                 solver only. If this constraint is greater than zero
-     *                 (default) then the trucks will skip travelling from one
-     *                 demand location to another if the cost between them is
-     *                 greater than this number (distance or time). Zero
-     *                 (default) value means no check is performed.  The
-     *                 default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
-     *                 FILTER_FOLDING_PATHS}: For the {@code markov_chain}
-     *                 solver only. When true (non-default), the paths per
-     *                 sequence combination is checked for folding over
-     *                 patterns and can significantly increase the execution
-     *                 time depending on the chain width and the number of gps
-     *                 samples.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Filter out the folded paths.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: Do not filter out the folded paths
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
-     *                 UNIT_UNLOADING_COST}: For the {@code
-     *                 match_supply_demand} solver only. The unit cost per load
-     *                 amount to be delivered. If this value is greater than
-     *                 zero (default) then the additional cost of this unit
-     *                 load multiplied by the total dropped load will be added
-     *                 over to the trip cost to the demand location.  The
-     *                 default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
-     *                 MAX_NUM_THREADS}: For the {@code markov_chain} solver
-     *                 only. If specified (greater than zero), the maximum
-     *                 number of threads will not be greater than the specified
-     *                 value. It can be lower due to the memory and the number
-     *                 cores available. Default value of zero allows the
-     *                 algorithm to set the maximal number of threads within
-     *                 these constraints.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
-     *                 TRUCK_SERVICE_LIMIT}: For the {@code
-     *                 match_supply_demand} solver only. If specified (greather
-     *                 than zero), any truck's total service cost (distance or
-     *                 time) will be limited by the specified value including
-     *                 multiple rounds (if set).  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
-     *                 ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand}
-     *                 solver only. If specified (true), all trucks can be
-     *                 scheduled for second rounds from their originating
-     *                 depots.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Allows reusing trucks for scheduling again.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: Trucks are scheduled only once from their
-     *                 depots.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public MatchGraphRequest(String graphName, List<String> samplePoints, String solveMethod, String solutionTable, Map<String, String> options) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        this.samplePoints = (samplePoints == null) ? new ArrayList<String>() : samplePoints;
-        this.solveMethod = (solveMethod == null) ? "" : solveMethod;
-        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Name of the underlying geospatial graph resource to match to
-     *         using {@code samplePoints}.
-     * 
-     */
-    public String getGraphName() {
-        return graphName;
-    }
-
-    /**
-     * 
-     * @param graphName  Name of the underlying geospatial graph resource to
-     *                   match to using {@code samplePoints}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MatchGraphRequest setGraphName(String graphName) {
-        this.graphName = (graphName == null) ? "" : graphName;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Sample points used to match to an underlying geospatial graph.
-     *         Sample points must be specified using <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
-     *         target="_top">identifiers</a>; identifiers are grouped as <a
-     *         href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
-     *         target="_top">combinations</a>. Identifiers can be used with:
-     *         existing column names, e.g., 'table.column AS SAMPLE_X';
-     *         expressions, e.g., 'ST_MAKEPOINT(table.x, table.y) AS
-     *         SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10} AS
-     *         SAMPLE_TRIPID'.
-     * 
-     */
-    public List<String> getSamplePoints() {
-        return samplePoints;
-    }
-
-    /**
-     * 
-     * @param samplePoints  Sample points used to match to an underlying
-     *                      geospatial graph. Sample points must be specified
-     *                      using <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#match-identifiers"
-     *                      target="_top">identifiers</a>; identifiers are
-     *                      grouped as <a
-     *                      href="../../../../../graph_solver/network_graph_solver.html#match-combinations"
-     *                      target="_top">combinations</a>. Identifiers can be
-     *                      used with: existing column names, e.g.,
-     *                      'table.column AS SAMPLE_X'; expressions, e.g.,
-     *                      'ST_MAKEPOINT(table.x, table.y) AS
-     *                      SAMPLE_WKTPOINT'; or raw values, e.g., '{1, 2, 10}
-     *                      AS SAMPLE_TRIPID'.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MatchGraphRequest setSamplePoints(List<String> samplePoints) {
-        this.samplePoints = (samplePoints == null) ? new ArrayList<String>() : samplePoints;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The type of solver to use for graph matching.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *         MARKOV_CHAIN}: Matches {@code samplePoints} to the graph using
-     *         the Hidden Markov Model (HMM)-based method, which conducts a
-     *         range-tree closest-edge search to find the best combinations of
-     *         possible road segments ({@code num_segments}) for each sample
-     *         point to create the best route. The route is secured one point
-     *         at a time while looking ahead {@code chain_width} number of
-     *         points, so the prediction is corrected after each point. This
-     *         solution type is the most accurate but also the most
-     *         computationally intensive. Related options: {@code num_segments}
-     *         and {@code chain_width}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
-     *         MATCH_OD_PAIRS}: Matches {@code samplePoints} to find the most
-     *         probable path between origin and destination pairs with cost
-     *         constraints.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
-     *         MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints} to optimize
-     *         scheduling multiple supplies (trucks) with varying sizes to
-     *         varying demand sites with varying capacities per depot. Related
-     *         options: {@code partial_loading} and {@code max_combinations}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
-     *         MATCH_BATCH_SOLVES}: Matches {@code samplePoints} source and
-     *         destination pairs for the shortest path solves in batch mode.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *         MARKOV_CHAIN}.
-     * 
-     */
-    public String getSolveMethod() {
-        return solveMethod;
-    }
-
-    /**
-     * 
-     * @param solveMethod  The type of solver to use for graph matching.
-     *                     Supported values:
-     *                     <ul>
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *                     MARKOV_CHAIN}: Matches {@code samplePoints} to the
-     *                     graph using the Hidden Markov Model (HMM)-based
-     *                     method, which conducts a range-tree closest-edge
-     *                     search to find the best combinations of possible
-     *                     road segments ({@code num_segments}) for each sample
-     *                     point to create the best route. The route is secured
-     *                     one point at a time while looking ahead {@code
-     *                     chain_width} number of points, so the prediction is
-     *                     corrected after each point. This solution type is
-     *                     the most accurate but also the most computationally
-     *                     intensive. Related options: {@code num_segments} and
-     *                     {@code chain_width}.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_OD_PAIRS
-     *                     MATCH_OD_PAIRS}: Matches {@code samplePoints} to
-     *                     find the most probable path between origin and
-     *                     destination pairs with cost constraints.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_SUPPLY_DEMAND
-     *                     MATCH_SUPPLY_DEMAND}: Matches {@code samplePoints}
-     *                     to optimize scheduling multiple supplies (trucks)
-     *                     with varying sizes to varying demand sites with
-     *                     varying capacities per depot. Related options:
-     *                     {@code partial_loading} and {@code
-     *                     max_combinations}.
-     *                             <li> {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MATCH_BATCH_SOLVES
-     *                     MATCH_BATCH_SOLVES}: Matches {@code samplePoints}
-     *                     source and destination pairs for the shortest path
-     *                     solves in batch mode.
-     *                     </ul>
-     *                     The default value is {@link
-     *                     com.gpudb.protocol.MatchGraphRequest.SolveMethod#MARKOV_CHAIN
-     *                     MARKOV_CHAIN}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MatchGraphRequest setSolveMethod(String solveMethod) {
-        this.solveMethod = (solveMethod == null) ? "" : solveMethod;
-        return this;
-    }
-
-    /**
-     * 
-     * @return The name of the table used to store the results; this table
-     *         contains a <a
-     *         href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
-     *         target="_top">track</a> of geospatial points for the matched
-     *         portion of the graph, a track ID, and a score value. Also
-     *         outputs a details table containing a trip ID (that matches the
-     *         track ID), the latitude/longitude pair, the timestamp the point
-     *         was recorded at, and an edge ID corresponding to the matched
-     *         road segment. Has the same naming restrictions as <a
-     *         href="../../../../../concepts/tables.html"
-     *         target="_top">tables</a>. Must not be an existing table of the
-     *         same name.  The default value is ''.
-     * 
-     */
-    public String getSolutionTable() {
-        return solutionTable;
-    }
-
-    /**
-     * 
-     * @param solutionTable  The name of the table used to store the results;
-     *                       this table contains a <a
-     *                       href="../../../../../geospatial/geo_objects.html#geospatial-tracks"
-     *                       target="_top">track</a> of geospatial points for
-     *                       the matched portion of the graph, a track ID, and
-     *                       a score value. Also outputs a details table
-     *                       containing a trip ID (that matches the track ID),
-     *                       the latitude/longitude pair, the timestamp the
-     *                       point was recorded at, and an edge ID
-     *                       corresponding to the matched road segment. Has the
-     *                       same naming restrictions as <a
-     *                       href="../../../../../concepts/tables.html"
-     *                       target="_top">tables</a>. Must not be an existing
-     *                       table of the same name.  The default value is ''.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MatchGraphRequest setSolutionTable(String solutionTable) {
-        this.solutionTable = (solutionTable == null) ? "" : solutionTable;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Additional parameters
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
-     *         GPS_NOISE}: GPS noise value (in meters) to remove redundant
-     *         sample points. Use -1 to disable noise reduction. The default
-     *         value accounts for 95% of point variation (+ or -5 meters).  The
-     *         default value is '5.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
-     *         NUM_SEGMENTS}: Maximum number of potentially matching road
-     *         segments for each sample point. For the {@code markov_chain}
-     *         solver, the default is 3.  The default value is '3'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
-     *         SEARCH_RADIUS}: Maximum search radius used when snapping sample
-     *         points onto potentially matching surrounding segments. The
-     *         default value corresponds to approximately 100 meters.  The
-     *         default value is '0.001'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
-     *         CHAIN_WIDTH}: For the {@code markov_chain} solver only. Length
-     *         of the sample points lookahead window within the Markov kernel;
-     *         the larger the number, the more accurate the solution.  The
-     *         default value is '9'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#SOURCE SOURCE}:
-     *         Optional WKT starting point from {@code samplePoints} for the
-     *         solver. The default behavior for the endpoint is to use time to
-     *         determine the starting point.  The default value is 'POINT
-     *         NULL'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
-     *         DESTINATION}: Optional WKT ending point from {@code
-     *         samplePoints} for the solver. The default behavior for the
-     *         endpoint is to use time to determine the destination point.  The
-     *         default value is 'POINT NULL'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
-     *         PARTIAL_LOADING}: For the {@code match_supply_demand} solver
-     *         only. When false (non-default), trucks do not off-load at the
-     *         demand (store) side if the remainder is less than the store's
-     *         need
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Partial
-     *         off-loading at multiple store (demand) locations
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}: No
-     *         partial off-loading allowed if supply is less than the store's
-     *         demand.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
-     *         MAX_COMBINATIONS}: For the {@code match_supply_demand} solver
-     *         only. This is the cutoff for the number of generated
-     *         combinations for sequencing the demand locations - can increase
-     *         this up to 2M.  The default value is '10000'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
-     *         LEFT_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as 'left turn' if the 'add_turn' option parameter
-     *         of the {@link com.gpudb.GPUdb#createGraph(CreateGraphRequest)}
-     *         was invoked at graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
-     *         RIGHT_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as' right turn' if the 'add_turn' option
-     *         parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
-     *         INTERSECTION_PENALTY}: This will add an additonal weight over
-     *         the edges labelled as 'intersection' if the 'add_turn' option
-     *         parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
-     *         SHARP_TURN_PENALTY}: This will add an additonal weight over the
-     *         edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn'
-     *         option parameter of the {@link
-     *         com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was invoked at
-     *         graph creation.  The default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
-     *         AGGREGATED_OUTPUT}: For the {@code match_supply_demand} solver
-     *         only. When it is true (default), each record in the output table
-     *         shows a particular truck's scheduled cumulative round trip path
-     *         (MULTILINESTRING) and the corresponding aggregated cost.
-     *         Otherwise, each record shows a single scheduled truck route
-     *         (LINESTRING) towards a particular demand location (store id)
-     *         with its corresponding cost.  The default value is 'true'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
-     *         MAX_TRIP_COST}: For the {@code match_supply_demand} solver only.
-     *         If this constraint is greater than zero (default) then the
-     *         trucks will skip travelling from one demand location to another
-     *         if the cost between them is greater than this number (distance
-     *         or time). Zero (default) value means no check is performed.  The
-     *         default value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
-     *         FILTER_FOLDING_PATHS}: For the {@code markov_chain} solver only.
-     *         When true (non-default), the paths per sequence combination is
-     *         checked for folding over patterns and can significantly increase
-     *         the execution time depending on the chain width and the number
-     *         of gps samples.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Filter
-     *         out the folded paths.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}: Do
-     *         not filter out the folded paths
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
-     *         UNIT_UNLOADING_COST}: For the {@code match_supply_demand} solver
-     *         only. The unit cost per load amount to be delivered. If this
-     *         value is greater than zero (default) then the additional cost of
-     *         this unit load multiplied by the total dropped load will be
-     *         added over to the trip cost to the demand location.  The default
-     *         value is '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
-     *         MAX_NUM_THREADS}: For the {@code markov_chain} solver only. If
-     *         specified (greater than zero), the maximum number of threads
-     *         will not be greater than the specified value. It can be lower
-     *         due to the memory and the number cores available. Default value
-     *         of zero allows the algorithm to set the maximal number of
-     *         threads within these constraints.  The default value is '0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
-     *         TRUCK_SERVICE_LIMIT}: For the {@code match_supply_demand} solver
-     *         only. If specified (greather than zero), any truck's total
-     *         service cost (distance or time) will be limited by the specified
-     *         value including multiple rounds (if set).  The default value is
-     *         '0.0'.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
-     *         ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand} solver
-     *         only. If specified (true), all trucks can be scheduled for
-     *         second rounds from their originating depots.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}: Allows
-     *         reusing trucks for scheduling again.
-     *                 <li> {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}:
-     *         Trucks are scheduled only once from their depots.
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.MatchGraphRequest.Options#FALSE FALSE}.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Additional parameters
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#GPS_NOISE
-     *                 GPS_NOISE}: GPS noise value (in meters) to remove
-     *                 redundant sample points. Use -1 to disable noise
-     *                 reduction. The default value accounts for 95% of point
-     *                 variation (+ or -5 meters).  The default value is '5.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#NUM_SEGMENTS
-     *                 NUM_SEGMENTS}: Maximum number of potentially matching
-     *                 road segments for each sample point. For the {@code
-     *                 markov_chain} solver, the default is 3.  The default
-     *                 value is '3'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SEARCH_RADIUS
-     *                 SEARCH_RADIUS}: Maximum search radius used when snapping
-     *                 sample points onto potentially matching surrounding
-     *                 segments. The default value corresponds to approximately
-     *                 100 meters.  The default value is '0.001'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#CHAIN_WIDTH
-     *                 CHAIN_WIDTH}: For the {@code markov_chain} solver only.
-     *                 Length of the sample points lookahead window within the
-     *                 Markov kernel; the larger the number, the more accurate
-     *                 the solution.  The default value is '9'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SOURCE
-     *                 SOURCE}: Optional WKT starting point from {@code
-     *                 samplePoints} for the solver. The default behavior for
-     *                 the endpoint is to use time to determine the starting
-     *                 point.  The default value is 'POINT NULL'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#DESTINATION
-     *                 DESTINATION}: Optional WKT ending point from {@code
-     *                 samplePoints} for the solver. The default behavior for
-     *                 the endpoint is to use time to determine the destination
-     *                 point.  The default value is 'POINT NULL'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#PARTIAL_LOADING
-     *                 PARTIAL_LOADING}: For the {@code match_supply_demand}
-     *                 solver only. When false (non-default), trucks do not
-     *                 off-load at the demand (store) side if the remainder is
-     *                 less than the store's need
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Partial off-loading at multiple store (demand) locations
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: No partial off-loading allowed if supply is less
-     *                 than the store's demand.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_COMBINATIONS
-     *                 MAX_COMBINATIONS}: For the {@code match_supply_demand}
-     *                 solver only. This is the cutoff for the number of
-     *                 generated combinations for sequencing the demand
-     *                 locations - can increase this up to 2M.  The default
-     *                 value is '10000'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#LEFT_TURN_PENALTY
-     *                 LEFT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'left turn' if the 'add_turn'
-     *                 option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#RIGHT_TURN_PENALTY
-     *                 RIGHT_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as' right turn' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#INTERSECTION_PENALTY
-     *                 INTERSECTION_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'intersection' if the
-     *                 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#SHARP_TURN_PENALTY
-     *                 SHARP_TURN_PENALTY}: This will add an additonal weight
-     *                 over the edges labelled as 'sharp turn' or 'u-turn' if
-     *                 the 'add_turn' option parameter of the {@link
-     *                 com.gpudb.GPUdb#createGraph(CreateGraphRequest)} was
-     *                 invoked at graph creation.  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#AGGREGATED_OUTPUT
-     *                 AGGREGATED_OUTPUT}: For the {@code match_supply_demand}
-     *                 solver only. When it is true (default), each record in
-     *                 the output table shows a particular truck's scheduled
-     *                 cumulative round trip path (MULTILINESTRING) and the
-     *                 corresponding aggregated cost. Otherwise, each record
-     *                 shows a single scheduled truck route (LINESTRING)
-     *                 towards a particular demand location (store id) with its
-     *                 corresponding cost.  The default value is 'true'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_TRIP_COST
-     *                 MAX_TRIP_COST}: For the {@code match_supply_demand}
-     *                 solver only. If this constraint is greater than zero
-     *                 (default) then the trucks will skip travelling from one
-     *                 demand location to another if the cost between them is
-     *                 greater than this number (distance or time). Zero
-     *                 (default) value means no check is performed.  The
-     *                 default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FILTER_FOLDING_PATHS
-     *                 FILTER_FOLDING_PATHS}: For the {@code markov_chain}
-     *                 solver only. When true (non-default), the paths per
-     *                 sequence combination is checked for folding over
-     *                 patterns and can significantly increase the execution
-     *                 time depending on the chain width and the number of gps
-     *                 samples.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Filter out the folded paths.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: Do not filter out the folded paths
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#UNIT_UNLOADING_COST
-     *                 UNIT_UNLOADING_COST}: For the {@code
-     *                 match_supply_demand} solver only. The unit cost per load
-     *                 amount to be delivered. If this value is greater than
-     *                 zero (default) then the additional cost of this unit
-     *                 load multiplied by the total dropped load will be added
-     *                 over to the trip cost to the demand location.  The
-     *                 default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#MAX_NUM_THREADS
-     *                 MAX_NUM_THREADS}: For the {@code markov_chain} solver
-     *                 only. If specified (greater than zero), the maximum
-     *                 number of threads will not be greater than the specified
-     *                 value. It can be lower due to the memory and the number
-     *                 cores available. Default value of zero allows the
-     *                 algorithm to set the maximal number of threads within
-     *                 these constraints.  The default value is '0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUCK_SERVICE_LIMIT
-     *                 TRUCK_SERVICE_LIMIT}: For the {@code
-     *                 match_supply_demand} solver only. If specified (greather
-     *                 than zero), any truck's total service cost (distance or
-     *                 time) will be limited by the specified value including
-     *                 multiple rounds (if set).  The default value is '0.0'.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#ENABLE_TRUCK_REUSE
-     *                 ENABLE_TRUCK_REUSE}: For the {@code match_supply_demand}
-     *                 solver only. If specified (true), all trucks can be
-     *                 scheduled for second rounds from their originating
-     *                 depots.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#TRUE TRUE}:
-     *                 Allows reusing trucks for scheduling again.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}: Trucks are scheduled only once from their
-     *                 depots.
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.MatchGraphRequest.Options#FALSE
-     *                 FALSE}.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public MatchGraphRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.graphName;
-
-            case 1:
-                return this.samplePoints;
-
-            case 2:
-                return this.solveMethod;
-
-            case 3:
-                return this.solutionTable;
-
-            case 4:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.graphName = (String)value;
-                break;
-
-            case 1:
-                this.samplePoints = (List<String>)value;
-                break;
-
-            case 2:
-                this.solveMethod = (String)value;
-                break;
-
-            case 3:
-                this.solutionTable = (String)value;
-                break;
-
-            case 4:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        MatchGraphRequest that = (MatchGraphRequest)obj;
-
-        return ( this.graphName.equals( that.graphName )
-                 && this.samplePoints.equals( that.samplePoints )
-                 && this.solveMethod.equals( that.solveMethod )
-                 && this.solutionTable.equals( that.solutionTable )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "samplePoints" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.samplePoints ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solveMethod" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solveMethod ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "solutionTable" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.solutionTable ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.graphName.hashCode();
-        hashCode = (31 * hashCode) + this.samplePoints.hashCode();
-        hashCode = (31 * hashCode) + this.solveMethod.hashCode();
-        hashCode = (31 * hashCode) + this.solutionTable.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

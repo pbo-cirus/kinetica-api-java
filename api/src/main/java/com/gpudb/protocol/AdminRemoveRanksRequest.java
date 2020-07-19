@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,22 +35,315 @@ public class AdminRemoveRanksRequest implements IndexedRecord {
             .record("AdminRemoveRanksRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("ranks").type().array().items().intType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("ranks").type().array().items().intType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
+    private List<Integer> ranks;
+    private Map<String, String> options;
 
+    /**
+     * Constructs an AdminRemoveRanksRequest object with default parameters.
+     */
+    public AdminRemoveRanksRequest() {
+        ranks = new ArrayList<>();
+        options = new LinkedHashMap<>();
+    }
+    /**
+     * Constructs an AdminRemoveRanksRequest object with the specified
+     * parameters.
+     *
+     * @param ranks   Rank numbers of the ranks to be removed from the cluster.
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
+     *                REBALANCE_SHARDED_DATA}: When {@code true}, data with
+     *                primary keys or shard keys will be rebalanced to other
+     *                ranks prior to rank removal. Note that for big clusters,
+     *                this data transfer could be time consuming and result in
+     *                delayed query responses.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
+     *                REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded
+     *                data (data without primary keys and without shard keys)
+     *                will be rebalanced to other ranks prior to rank removal.
+     *                Note that for big clusters, this data transfer could be
+     *                time consuming and result in delayed query responses.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
+     *                AGGRESSIVENESS}: Influences how much data to send per
+     *                rebalance round, during the rebalance portion of
+     *                removing ranks.  A higher aggressiveness setting will
+     *                complete the rebalance faster.  A lower aggressiveness
+     *                setting will take longer, but allow for better
+     *                interleaving between the rebalance and other queries.
+     *                Allowed values are 1 through 10.  The default value is
+     *                '1'.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     */
+    public AdminRemoveRanksRequest(List<Integer> ranks, Map<String, String> options) {
+        this.ranks = (ranks == null) ? new ArrayList<Integer>() : ranks;
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
 
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
+     *
+     * @return the schema for the class.
      */
     public static Schema getClassSchema() {
         return schema$;
     }
 
+    /**
+     * @return Rank numbers of the ranks to be removed from the cluster.
+     */
+    public List<Integer> getRanks() {
+        return ranks;
+    }
+
+    /**
+     * @param ranks Rank numbers of the ranks to be removed from the cluster.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AdminRemoveRanksRequest setRanks(List<Integer> ranks) {
+        this.ranks = (ranks == null) ? new ArrayList<Integer>() : ranks;
+        return this;
+    }
+
+    /**
+     * @return Optional parameters.
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
+     * REBALANCE_SHARDED_DATA}: When {@code true}, data with primary
+     * keys or shard keys will be rebalanced to other ranks prior to
+     * rank removal. Note that for big clusters, this data transfer
+     * could be time consuming and result in delayed query responses.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
+     * REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded data
+     * (data without primary keys and without shard keys) will be
+     * rebalanced to other ranks prior to rank removal. Note that for
+     * big clusters, this data transfer could be time consuming and
+     * result in delayed query responses.
+     * Supported values:
+     * <ul>
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE FALSE}
+     * </ul>
+     * The default value is {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}.
+     *         <li> {@link
+     * com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
+     * AGGRESSIVENESS}: Influences how much data to send per rebalance
+     * round, during the rebalance portion of removing ranks.  A higher
+     * aggressiveness setting will complete the rebalance faster.  A
+     * lower aggressiveness setting will take longer, but allow for
+     * better interleaving between the rebalance and other queries.
+     * Allowed values are 1 through 10.  The default value is '1'.
+     * </ul>
+     * The default value is an empty {@link Map}.
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options Optional parameters.
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
+     *                REBALANCE_SHARDED_DATA}: When {@code true}, data with
+     *                primary keys or shard keys will be rebalanced to other
+     *                ranks prior to rank removal. Note that for big clusters,
+     *                this data transfer could be time consuming and result in
+     *                delayed query responses.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
+     *                REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded
+     *                data (data without primary keys and without shard keys)
+     *                will be rebalanced to other ranks prior to rank removal.
+     *                Note that for big clusters, this data transfer could be
+     *                time consuming and result in delayed query responses.
+     *                Supported values:
+     *                <ul>
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
+     *                FALSE}
+     *                </ul>
+     *                The default value is {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
+     *                TRUE}.
+     *                        <li> {@link
+     *                com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
+     *                AGGRESSIVENESS}: Influences how much data to send per
+     *                rebalance round, during the rebalance portion of
+     *                removing ranks.  A higher aggressiveness setting will
+     *                complete the rebalance faster.  A lower aggressiveness
+     *                setting will take longer, but allow for better
+     *                interleaving between the rebalance and other queries.
+     *                Allowed values are 1 through 10.  The default value is
+     *                '1'.
+     *                </ul>
+     *                The default value is an empty {@link Map}.
+     * @return {@code this} to mimic the builder pattern.
+     */
+    public AdminRemoveRanksRequest setOptions(Map<String, String> options) {
+        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+        return this;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema object describing this class.
+     */
+    @Override
+    public Schema getSchema() {
+        return schema$;
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to get
+     * @return value of the field with the given index.
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    public Object get(int index) {
+        switch (index) {
+            case 0:
+                return this.ranks;
+
+            case 1:
+                return this.options;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
+     * @throws IndexOutOfBoundsException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void put(int index, Object value) {
+        switch (index) {
+            case 0:
+                this.ranks = (List<Integer>) value;
+                break;
+
+            case 1:
+                this.options = (Map<String, String>) value;
+                break;
+
+            default:
+                throw new IndexOutOfBoundsException("Invalid index specified.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+
+        AdminRemoveRanksRequest that = (AdminRemoveRanksRequest) obj;
+
+        return (this.ranks.equals(that.ranks)
+                && this.options.equals(that.options));
+    }
+
+    @Override
+    public String toString() {
+        GenericData gd = GenericData.get();
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(gd.toString("ranks"));
+        builder.append(": ");
+        builder.append(gd.toString(this.ranks));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = (31 * hashCode) + this.ranks.hashCode();
+        hashCode = (31 * hashCode) + this.options.hashCode();
+        return hashCode;
+    }
 
     /**
      * Optional parameters.
@@ -144,323 +438,8 @@ public class AdminRemoveRanksRequest implements IndexedRecord {
          */
         public static final String AGGRESSIVENESS = "aggressiveness";
 
-        private Options() {  }
-    }
-
-    private List<Integer> ranks;
-    private Map<String, String> options;
-
-
-    /**
-     * Constructs an AdminRemoveRanksRequest object with default parameters.
-     */
-    public AdminRemoveRanksRequest() {
-        ranks = new ArrayList<>();
-        options = new LinkedHashMap<>();
-    }
-
-    /**
-     * Constructs an AdminRemoveRanksRequest object with the specified
-     * parameters.
-     * 
-     * @param ranks  Rank numbers of the ranks to be removed from the cluster.
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
-     *                 REBALANCE_SHARDED_DATA}: When {@code true}, data with
-     *                 primary keys or shard keys will be rebalanced to other
-     *                 ranks prior to rank removal. Note that for big clusters,
-     *                 this data transfer could be time consuming and result in
-     *                 delayed query responses.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
-     *                 REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded
-     *                 data (data without primary keys and without shard keys)
-     *                 will be rebalanced to other ranks prior to rank removal.
-     *                 Note that for big clusters, this data transfer could be
-     *                 time consuming and result in delayed query responses.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
-     *                 AGGRESSIVENESS}: Influences how much data to send per
-     *                 rebalance round, during the rebalance portion of
-     *                 removing ranks.  A higher aggressiveness setting will
-     *                 complete the rebalance faster.  A lower aggressiveness
-     *                 setting will take longer, but allow for better
-     *                 interleaving between the rebalance and other queries.
-     *                 Allowed values are 1 through 10.  The default value is
-     *                 '1'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     */
-    public AdminRemoveRanksRequest(List<Integer> ranks, Map<String, String> options) {
-        this.ranks = (ranks == null) ? new ArrayList<Integer>() : ranks;
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-    }
-
-    /**
-     * 
-     * @return Rank numbers of the ranks to be removed from the cluster.
-     * 
-     */
-    public List<Integer> getRanks() {
-        return ranks;
-    }
-
-    /**
-     * 
-     * @param ranks  Rank numbers of the ranks to be removed from the cluster.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AdminRemoveRanksRequest setRanks(List<Integer> ranks) {
-        this.ranks = (ranks == null) ? new ArrayList<Integer>() : ranks;
-        return this;
-    }
-
-    /**
-     * 
-     * @return Optional parameters.
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
-     *         REBALANCE_SHARDED_DATA}: When {@code true}, data with primary
-     *         keys or shard keys will be rebalanced to other ranks prior to
-     *         rank removal. Note that for big clusters, this data transfer
-     *         could be time consuming and result in delayed query responses.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
-     *         REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded data
-     *         (data without primary keys and without shard keys) will be
-     *         rebalanced to other ranks prior to rank removal. Note that for
-     *         big clusters, this data transfer could be time consuming and
-     *         result in delayed query responses.
-     *         Supported values:
-     *         <ul>
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE FALSE}
-     *         </ul>
-     *         The default value is {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE TRUE}.
-     *                 <li> {@link
-     *         com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
-     *         AGGRESSIVENESS}: Influences how much data to send per rebalance
-     *         round, during the rebalance portion of removing ranks.  A higher
-     *         aggressiveness setting will complete the rebalance faster.  A
-     *         lower aggressiveness setting will take longer, but allow for
-     *         better interleaving between the rebalance and other queries.
-     *         Allowed values are 1 through 10.  The default value is '1'.
-     *         </ul>
-     *         The default value is an empty {@link Map}.
-     * 
-     */
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    /**
-     * 
-     * @param options  Optional parameters.
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_SHARDED_DATA
-     *                 REBALANCE_SHARDED_DATA}: When {@code true}, data with
-     *                 primary keys or shard keys will be rebalanced to other
-     *                 ranks prior to rank removal. Note that for big clusters,
-     *                 this data transfer could be time consuming and result in
-     *                 delayed query responses.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#REBALANCE_UNSHARDED_DATA
-     *                 REBALANCE_UNSHARDED_DATA}: When {@code true}, unsharded
-     *                 data (data without primary keys and without shard keys)
-     *                 will be rebalanced to other ranks prior to rank removal.
-     *                 Note that for big clusters, this data transfer could be
-     *                 time consuming and result in delayed query responses.
-     *                 Supported values:
-     *                 <ul>
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#FALSE
-     *                 FALSE}
-     *                 </ul>
-     *                 The default value is {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#TRUE
-     *                 TRUE}.
-     *                         <li> {@link
-     *                 com.gpudb.protocol.AdminRemoveRanksRequest.Options#AGGRESSIVENESS
-     *                 AGGRESSIVENESS}: Influences how much data to send per
-     *                 rebalance round, during the rebalance portion of
-     *                 removing ranks.  A higher aggressiveness setting will
-     *                 complete the rebalance faster.  A lower aggressiveness
-     *                 setting will take longer, but allow for better
-     *                 interleaving between the rebalance and other queries.
-     *                 Allowed values are 1 through 10.  The default value is
-     *                 '1'.
-     *                 </ul>
-     *                 The default value is an empty {@link Map}.
-     * 
-     * @return {@code this} to mimic the builder pattern.
-     * 
-     */
-    public AdminRemoveRanksRequest setOptions(Map<String, String> options) {
-        this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
-        return this;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return the schema object describing this class.
-     * 
-     */
-    @Override
-    public Schema getSchema() {
-        return schema$;
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
-     * @return value of the field with the given index.
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    public Object get(int index) {
-        switch (index) {
-            case 0:
-                return this.ranks;
-
-            case 1:
-                return this.options;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
+        private Options() {
         }
-    }
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
-     * @throws IndexOutOfBoundsException
-     * 
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void put(int index, Object value) {
-        switch (index) {
-            case 0:
-                this.ranks = (List<Integer>)value;
-                break;
-
-            case 1:
-                this.options = (Map<String, String>)value;
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException("Invalid index specified.");
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if( obj == this ) {
-            return true;
-        }
-
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
-            return false;
-        }
-
-        AdminRemoveRanksRequest that = (AdminRemoveRanksRequest)obj;
-
-        return ( this.ranks.equals( that.ranks )
-                 && this.options.equals( that.options ) );
-    }
-
-    @Override
-    public String toString() {
-        GenericData gd = GenericData.get();
-        StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "ranks" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.ranks ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
-
-        return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        hashCode = (31 * hashCode) + this.ranks.hashCode();
-        hashCode = (31 * hashCode) + this.options.hashCode();
-        return hashCode;
     }
 
 }

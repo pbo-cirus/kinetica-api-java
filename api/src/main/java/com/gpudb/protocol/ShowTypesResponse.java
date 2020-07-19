@@ -5,14 +5,15 @@
  */
 package com.gpudb.protocol;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -24,92 +25,79 @@ public class ShowTypesResponse implements IndexedRecord {
             .record("ShowTypesResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("typeIds").type().array().items().stringType().noDefault()
-                .name("typeSchemas").type().array().items().stringType().noDefault()
-                .name("labels").type().array().items().stringType().noDefault()
-                .name("properties").type().array().items().map().values().array().items().stringType().noDefault()
-                .name("info").type().map().values().stringType().noDefault()
+            .name("typeIds").type().array().items().stringType().noDefault()
+            .name("typeSchemas").type().array().items().stringType().noDefault()
+            .name("labels").type().array().items().stringType().noDefault()
+            .name("properties").type().array().items().map().values().array().items().stringType().noDefault()
+            .name("info").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private List<String> typeIds;
     private List<String> typeSchemas;
     private List<String> labels;
     private List<Map<String, List<String>>> properties;
     private Map<String, String> info;
-
-
     /**
      * Constructs a ShowTypesResponse object with default parameters.
      */
     public ShowTypesResponse() {
     }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
     public List<String> getTypeIds() {
         return typeIds;
     }
 
     /**
-     * 
      * @param typeIds
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTypesResponse setTypeIds(List<String> typeIds) {
         this.typeIds = (typeIds == null) ? new ArrayList<String>() : typeIds;
         return this;
     }
+
     public List<String> getTypeSchemas() {
         return typeSchemas;
     }
 
     /**
-     * 
      * @param typeSchemas
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTypesResponse setTypeSchemas(List<String> typeSchemas) {
         this.typeSchemas = (typeSchemas == null) ? new ArrayList<String>() : typeSchemas;
         return this;
     }
+
     public List<String> getLabels() {
         return labels;
     }
 
     /**
-     * 
      * @param labels
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTypesResponse setLabels(List<String> labels) {
         this.labels = (labels == null) ? new ArrayList<String>() : labels;
         return this;
     }
+
     public List<Map<String, List<String>>> getProperties() {
         return properties;
     }
 
     /**
-     * 
      * @param properties
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTypesResponse setProperties(List<Map<String, List<String>>> properties) {
         this.properties = (properties == null) ? new ArrayList<Map<String, List<String>>>() : properties;
@@ -117,20 +105,15 @@ public class ShowTypesResponse implements IndexedRecord {
     }
 
     /**
-     * 
      * @return Additional information.
-     * 
      */
     public Map<String, String> getInfo() {
         return info;
     }
 
     /**
-     * 
-     * @param info  Additional information.
-     * 
+     * @param info Additional information.
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public ShowTypesResponse setInfo(Map<String, String> info) {
         this.info = (info == null) ? new LinkedHashMap<String, String>() : info;
@@ -140,9 +123,8 @@ public class ShowTypesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -152,13 +134,10 @@ public class ShowTypesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -186,35 +165,33 @@ public class ShowTypesResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.typeIds = (List<String>)value;
+                this.typeIds = (List<String>) value;
                 break;
 
             case 1:
-                this.typeSchemas = (List<String>)value;
+                this.typeSchemas = (List<String>) value;
                 break;
 
             case 2:
-                this.labels = (List<String>)value;
+                this.labels = (List<String>) value;
                 break;
 
             case 3:
-                this.properties = (List<Map<String, List<String>>>)value;
+                this.properties = (List<Map<String, List<String>>>) value;
                 break;
 
             case 4:
-                this.info = (Map<String, String>)value;
+                this.info = (Map<String, String>) value;
                 break;
 
             default:
@@ -224,48 +201,48 @@ public class ShowTypesResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ShowTypesResponse that = (ShowTypesResponse)obj;
+        ShowTypesResponse that = (ShowTypesResponse) obj;
 
-        return ( this.typeIds.equals( that.typeIds )
-                 && this.typeSchemas.equals( that.typeSchemas )
-                 && this.labels.equals( that.labels )
-                 && this.properties.equals( that.properties )
-                 && this.info.equals( that.info ) );
+        return (this.typeIds.equals(that.typeIds)
+                && this.typeSchemas.equals(that.typeSchemas)
+                && this.labels.equals(that.labels)
+                && this.properties.equals(that.properties)
+                && this.info.equals(that.info));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "typeIds" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeIds ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "typeSchemas" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.typeSchemas ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "labels" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.labels ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "properties" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.properties ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "info" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.info ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("typeIds"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeIds));
+        builder.append(", ");
+        builder.append(gd.toString("typeSchemas"));
+        builder.append(": ");
+        builder.append(gd.toString(this.typeSchemas));
+        builder.append(", ");
+        builder.append(gd.toString("labels"));
+        builder.append(": ");
+        builder.append(gd.toString(this.labels));
+        builder.append(", ");
+        builder.append(gd.toString("properties"));
+        builder.append(": ");
+        builder.append(gd.toString(this.properties));
+        builder.append(", ");
+        builder.append(gd.toString("info"));
+        builder.append(": ");
+        builder.append(gd.toString(this.info));
+        builder.append("}");
 
         return builder.toString();
     }

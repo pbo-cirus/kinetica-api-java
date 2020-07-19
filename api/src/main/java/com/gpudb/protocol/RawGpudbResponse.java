@@ -5,11 +5,12 @@
  */
 package com.gpudb.protocol;
 
-import java.nio.ByteBuffer;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.nio.ByteBuffer;
 
 
 /**
@@ -20,107 +21,92 @@ public class RawGpudbResponse implements IndexedRecord {
             .record("RawGpudbResponse")
             .namespace("com.gpudb")
             .fields()
-                .name("status").type().stringType().noDefault()
-                .name("message").type().stringType().noDefault()
-                .name("dataType").type().stringType().noDefault()
-                .name("data").type().bytesType().noDefault()
-                .name("dataStr").type().stringType().noDefault()
+            .name("status").type().stringType().noDefault()
+            .name("message").type().stringType().noDefault()
+            .name("dataType").type().stringType().noDefault()
+            .name("data").type().bytesType().noDefault()
+            .name("dataStr").type().stringType().noDefault()
             .endRecord();
-
-
-    /**
-     * This method supports the Avro framework and is not intended to be called
-     * directly by the user.
-     * 
-     * @return  the schema for the class.
-     * 
-     */
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
     private String status;
     private String message;
     private String dataType;
     private ByteBuffer data;
     private String dataStr;
-
-
     /**
      * Constructs a RawGpudbResponse object with default parameters.
      */
     public RawGpudbResponse() {
     }
+
+    /**
+     * This method supports the Avro framework and is not intended to be called
+     * directly by the user.
+     *
+     * @return the schema for the class.
+     */
+    public static Schema getClassSchema() {
+        return schema$;
+    }
+
     public String getStatus() {
         return status;
     }
 
     /**
-     * 
      * @param status
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGpudbResponse setStatus(String status) {
         this.status = (status == null) ? "" : status;
         return this;
     }
+
     public String getMessage() {
         return message;
     }
 
     /**
-     * 
      * @param message
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGpudbResponse setMessage(String message) {
         this.message = (message == null) ? "" : message;
         return this;
     }
+
     public String getDataType() {
         return dataType;
     }
 
     /**
-     * 
      * @param dataType
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGpudbResponse setDataType(String dataType) {
         this.dataType = (dataType == null) ? "" : dataType;
         return this;
     }
+
     public ByteBuffer getData() {
         return data;
     }
 
     /**
-     * 
      * @param data
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGpudbResponse setData(ByteBuffer data) {
-        this.data = (data == null) ? ByteBuffer.wrap( new byte[0] ) : data;
+        this.data = (data == null) ? ByteBuffer.wrap(new byte[0]) : data;
         return this;
     }
+
     public String getDataStr() {
         return dataStr;
     }
 
     /**
-     * 
      * @param dataStr
-     * 
      * @return {@code this} to mimic the builder pattern.
-     * 
      */
     public RawGpudbResponse setDataStr(String dataStr) {
         this.dataStr = (dataStr == null) ? "" : dataStr;
@@ -130,9 +116,8 @@ public class RawGpudbResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
+     *
      * @return the schema object describing this class.
-     * 
      */
     @Override
     public Schema getSchema() {
@@ -142,13 +127,10 @@ public class RawGpudbResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to get
-     * 
+     *
+     * @param index the position of the field to get
      * @return value of the field with the given index.
-     * 
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     public Object get(int index) {
@@ -176,35 +158,33 @@ public class RawGpudbResponse implements IndexedRecord {
     /**
      * This method supports the Avro framework and is not intended to be called
      * directly by the user.
-     * 
-     * @param index  the position of the field to set
-     * @param value  the value to set
-     * 
+     *
+     * @param index the position of the field to set
+     * @param value the value to set
      * @throws IndexOutOfBoundsException
-     * 
      */
     @Override
     @SuppressWarnings("unchecked")
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.status = (String)value;
+                this.status = (String) value;
                 break;
 
             case 1:
-                this.message = (String)value;
+                this.message = (String) value;
                 break;
 
             case 2:
-                this.dataType = (String)value;
+                this.dataType = (String) value;
                 break;
 
             case 3:
-                this.data = (ByteBuffer)value;
+                this.data = (ByteBuffer) value;
                 break;
 
             case 4:
-                this.dataStr = (String)value;
+                this.dataStr = (String) value;
                 break;
 
             default:
@@ -214,48 +194,48 @@ public class RawGpudbResponse implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        RawGpudbResponse that = (RawGpudbResponse)obj;
+        RawGpudbResponse that = (RawGpudbResponse) obj;
 
-        return ( this.status.equals( that.status )
-                 && this.message.equals( that.message )
-                 && this.dataType.equals( that.dataType )
-                 && this.data.equals( that.data )
-                 && this.dataStr.equals( that.dataStr ) );
+        return (this.status.equals(that.status)
+                && this.message.equals(that.message)
+                && this.dataType.equals(that.dataType)
+                && this.data.equals(that.data)
+                && this.dataStr.equals(that.dataStr));
     }
 
     @Override
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "status" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.status ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "message" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.message ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "dataType" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.dataType ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "data" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.data ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "dataStr" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.dataStr ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("status"));
+        builder.append(": ");
+        builder.append(gd.toString(this.status));
+        builder.append(", ");
+        builder.append(gd.toString("message"));
+        builder.append(": ");
+        builder.append(gd.toString(this.message));
+        builder.append(", ");
+        builder.append(gd.toString("dataType"));
+        builder.append(": ");
+        builder.append(gd.toString(this.dataType));
+        builder.append(", ");
+        builder.append(gd.toString("data"));
+        builder.append(": ");
+        builder.append(gd.toString(this.data));
+        builder.append(", ");
+        builder.append(gd.toString("dataStr"));
+        builder.append(": ");
+        builder.append(gd.toString(this.dataStr));
+        builder.append("}");
 
         return builder.toString();
     }

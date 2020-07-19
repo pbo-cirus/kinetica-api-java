@@ -7,12 +7,13 @@
 package com.gpudb.protocol;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class ListGraphRequest implements IndexedRecord {
@@ -21,28 +22,24 @@ public class ListGraphRequest implements IndexedRecord {
             .record("ListGraphRequest")
             .namespace("com.gpudb")
             .fields()
-                .name("graphName").type().stringType().noDefault()
-                .name("options").type().map().values().stringType().noDefault()
+            .name("graphName").type().stringType().noDefault()
+            .name("options").type().map().values().stringType().noDefault()
             .endRecord();
-
-
-    public static Schema getClassSchema() {
-        return schema$;
-    }
-
-
     private String graphName;
     private Map<String, String> options;
-
-
     public ListGraphRequest() {
         graphName = "";
         options = new LinkedHashMap<>();
     }
 
+
     public ListGraphRequest(String graphName, Map<String, String> options) {
         this.graphName = (graphName == null) ? "" : graphName;
         this.options = (options == null) ? new LinkedHashMap<String, String>() : options;
+    }
+
+    public static Schema getClassSchema() {
+        return schema$;
     }
 
     public String getGraphName() {
@@ -87,11 +84,11 @@ public class ListGraphRequest implements IndexedRecord {
     public void put(int index, Object value) {
         switch (index) {
             case 0:
-                this.graphName = (String)value;
+                this.graphName = (String) value;
                 break;
 
             case 1:
-                this.options = (Map<String, String>)value;
+                this.options = (Map<String, String>) value;
                 break;
 
             default:
@@ -102,18 +99,18 @@ public class ListGraphRequest implements IndexedRecord {
 
     @Override
     public boolean equals(Object obj) {
-        if( obj == this ) {
+        if (obj == this) {
             return true;
         }
 
-        if( (obj == null) || (obj.getClass() != this.getClass()) ) {
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
 
-        ListGraphRequest that = (ListGraphRequest)obj;
+        ListGraphRequest that = (ListGraphRequest) obj;
 
-        return ( this.graphName.equals( that.graphName )
-                 && this.options.equals( that.options ) );
+        return (this.graphName.equals(that.graphName)
+                && this.options.equals(that.options));
     }
 
 
@@ -121,15 +118,15 @@ public class ListGraphRequest implements IndexedRecord {
     public String toString() {
         GenericData gd = GenericData.get();
         StringBuilder builder = new StringBuilder();
-        builder.append( "{" );
-        builder.append( gd.toString( "graphName" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.graphName ) );
-        builder.append( ", " );
-        builder.append( gd.toString( "options" ) );
-        builder.append( ": " );
-        builder.append( gd.toString( this.options ) );
-        builder.append( "}" );
+        builder.append("{");
+        builder.append(gd.toString("graphName"));
+        builder.append(": ");
+        builder.append(gd.toString(this.graphName));
+        builder.append(", ");
+        builder.append(gd.toString("options"));
+        builder.append(": ");
+        builder.append(gd.toString(this.options));
+        builder.append("}");
 
         return builder.toString();
     }
